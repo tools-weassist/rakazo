@@ -17,6 +17,7 @@ import {
   Download,
   FolderOpen,
   Gauge,
+  LifeBuoy,
   Link2,
   LogOut,
   Plug,
@@ -31,6 +32,7 @@ import {
 import { useLayoutEffect, useRef, useState } from "react";
 import { useSidebarUpdate } from "../../../components/DesktopUpdates";
 import { IconTooltip } from "../../../components/IconTooltip";
+import { WEA_SUPPORT_URL } from "../../../lib/brand/wea";
 import type { Organization } from "../../../lib/spaces/organizations";
 
 type Props = {
@@ -288,6 +290,16 @@ export function SidebarFooter({
               <BookOpen className="text-muted-foreground" strokeWidth={1.75} />
               <Trans>Docs</Trans>
             </a>
+            <a
+              className={`${buttonVariants({ variant: "ghost", size: "lg" })} w-full justify-start gap-2.5 font-normal`}
+              href={WEA_SUPPORT_URL}
+            >
+              <LifeBuoy className="text-muted-foreground" strokeWidth={1.75} />
+              <Trans>Support</Trans>
+            </a>
+            <p className="px-2.5 pt-1 text-body-sm text-muted-foreground">
+              <Trans>Wea is a WeAssist internal pilot</Trans>
+            </p>
             <div className="my-1 border-t border-border" />
             <Button
               variant="ghost"
