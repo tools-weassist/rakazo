@@ -49,6 +49,7 @@ msgstr "{0, plural, other {#個のスキル}}"
 
 #. placeholder {0}: availability.spaceIds.length
 #. placeholder {0}: chosen.length
+#: apps/mobile/components/settings/space-availability.tsx
 #: apps/web/src/components/integrations/space-availability.tsx
 msgid "{0, plural, one {# space} other {# spaces}}"
 msgstr "{0, plural, other {#個のスペース}}"
@@ -59,8 +60,7 @@ msgid "{0, plural, one {# tool} other {# tools}}"
 msgstr "{0, plural, other {#個のツール}}"
 
 #. placeholder {0}: Math.ceil(oauth.expiresInSeconds / 60)
-#: apps/web/src/pages/model-settings/connection-controls.tsx
-#: apps/web/src/pages/onboarding/model-step.tsx
+#: apps/web/src/components/models/DeviceCodeSignIn.tsx
 msgid "{0, plural, one {Waiting for sign-in — the code expires in about # minute.} other {Waiting for sign-in — the code expires in about # minutes.}}"
 msgstr "{0, plural, one {ログインを待っています。コードの有効期限はあと約#分です。} other {ログインを待っています。コードの有効期限はあと約#分です。}}"
 
@@ -141,6 +141,11 @@ msgstr "残り{0}"
 #: apps/web/src/components/messages/ArtifactFileCard.tsx
 msgid "{0} MB"
 msgstr "{0} MB"
+
+#. placeholder {0}: recurrence.count
+#: apps/mobile/lib/personal-calendar/device-calendar.ts
+msgid "{0} occurrences"
+msgstr ""
 
 #. placeholder {0}: sender.name
 #: apps/web/src/pages/settings/ExternalConversationSettings.tsx
@@ -253,6 +258,14 @@ msgstr "{commandVariable}は予約済みのため、コマンド変数として�
 msgid "{connectedCount, plural, one {# connected} other {# connected}}"
 msgstr "{connectedCount, plural, other {#件接続済み}}"
 
+#: apps/web/src/pages/model-settings/space-bots-model.tsx
+msgid "{count, plural, one {{names} keeps its own model} other {{names} keep their own model}}"
+msgstr ""
+
+#: apps/mobile/components/settings/space-bots-model.tsx
+msgid "{count, plural, one {# bot has its own model: {names}} other {# bots have their own model: {names}}}"
+msgstr ""
+
 #: apps/mobile/components/thread/peer-receipt-line.tsx
 #: apps/web/src/pages/shell/chat/message-view.tsx
 msgid "{count, plural, one {# message with {peer}} other {# messages with {peer}}}"
@@ -266,17 +279,17 @@ msgstr "{count, plural, one {# 行} other {# 行}}"
 msgid "{count, plural, one {# selected} other {# selected}}"
 msgstr "{count, plural, other {#件を選択中}}"
 
+#: apps/mobile/app/(settings)/skills.tsx
+msgid "{count, plural, one {# skill} other {# skills}}"
+msgstr ""
+
+#: apps/mobile/components/settings/space-bots-model.tsx
+msgid "{count, plural, one {Switch # bot to the space default?} other {Switch # bots to the space default?}}"
+msgstr ""
+
 #: apps/mobile/components/thread/thread-list-controls.tsx
 msgid "{count} agents working"
 msgstr "{count}個のエージェントが作業中"
-
-#: apps/mobile/components/settings/space-bots-model.tsx
-msgid "{count} bots have their own model:"
-msgstr "{count}個のボットが独自のモデルを使用しています:"
-
-#: apps/mobile/components/settings/space-bots-model.tsx
-msgid "{count} bots now use the space default."
-msgstr "{count}個のボットがスペースのデフォルトを使用するようになりました。"
 
 #: apps/mobile/app/(settings)/integrations.tsx
 msgid "{count} connectors"
@@ -312,14 +325,6 @@ msgstr "{count}件が要対応"
 #: apps/mobile/app/bot-profile.tsx
 msgid "{count} on"
 msgstr "{count}件オン"
-
-#: apps/mobile/app/(settings)/skills.tsx
-msgid "{count} skills"
-msgstr "{count} 件のスキル"
-
-#: apps/mobile/components/settings/space-availability.tsx
-msgid "{count} spaces"
-msgstr "{count} 個のスペース"
 
 #: apps/mobile/components/integrations/integration-detail.tsx
 msgid "{count} tools"
@@ -399,6 +404,14 @@ msgstr "{hidden, plural, one {+#件の前のステップ} other {+#件の前の�
 msgid "{hiddenSelectedCount, plural, one {# selected model is hidden by your search.} other {# selected models are hidden by your search.}}"
 msgstr "{hiddenSelectedCount, plural, other {選択中の#個のモデルが検索で非表示になっています。}}"
 
+#: packages/i18n/src/computer-usage.ts
+msgid "{hours} bot computer hours/month"
+msgstr ""
+
+#: packages/i18n/src/computer-usage.ts
+msgid "{hours} bot computer hours/month at Standard size · Up to {size}"
+msgstr ""
+
 #: apps/web/src/lib/locale/relative-time.ts
 msgid "{hours}h ago"
 msgstr "{hours}時間前"
@@ -429,9 +442,18 @@ msgstr "{memoryGb} GBのRAMと、{0}の{usage}倍のコンピューター時間�
 msgid "{minutes}m ago"
 msgstr "{minutes}分前"
 
+#: apps/mobile/components/settings/space-bots-model.tsx
+msgid "{moved, plural, one {# bot now uses the space default.} other {# bots now use the space default.}}"
+msgstr ""
+
 #: apps/mobile/lib/routines/cron.ts
 msgid "{n} {unit}"
 msgstr "{n}{unit}"
+
+#: apps/mobile/app/routine.tsx
+#: apps/web/src/pages/shell/use-routine-editor.ts
+msgid "{name} (copy)"
+msgstr ""
 
 #: apps/mobile/lib/thread/send/thread-attachments.ts
 msgid "{name} (could not read)"
@@ -515,14 +537,6 @@ msgstr "{name}、オン"
 #: apps/mobile/lib/computers/computer.ts
 msgid "{name}’s computer"
 msgstr "{name}のコンピューター"
-
-#: apps/web/src/pages/model-settings/space-bots-model.tsx
-msgid "{names} keep their own model"
-msgstr "{names}は独自のモデルを使い続けます"
-
-#: apps/web/src/pages/model-settings/space-bots-model.tsx
-msgid "{names} keeps its own model"
-msgstr "{names}は独自のモデルを使い続けます"
 
 #: apps/web/src/pages/settings/MessagingSettingsPanel.tsx
 msgid "{owner}'s {peer} wants to connect to {agent}"
@@ -877,14 +891,6 @@ msgstr "**木曜日**\n"
 msgid "/ month"
 msgstr "/ 月"
 
-#: apps/mobile/components/settings/space-bots-model.tsx
-msgid "1 bot has its own model:"
-msgstr "1個のボットが独自のモデルを使用しています:"
-
-#: apps/mobile/components/settings/space-bots-model.tsx
-msgid "1 bot now uses the space default."
-msgstr "1個のボットがスペースのデフォルトを使用するようになりました。"
-
 #: apps/mobile/app/(settings)/integrations.tsx
 msgid "1 connector"
 msgstr "1 件のコネクタ"
@@ -899,10 +905,6 @@ msgstr "1か月分の無料期間を獲得"
 msgid "1 hour"
 msgstr "1時間"
 
-#: apps/mobile/app/(settings)/skills.tsx
-msgid "1 skill"
-msgstr "1 件のスキル"
-
 #: apps/web/src/components/integrations/space-availability.tsx
 msgid "1 space"
 msgstr "1個のスペース"
@@ -914,6 +916,10 @@ msgstr "1個のツール"
 #: apps/mobile/components/inbox/unread-jump-overlay.tsx
 msgid "1 unread"
 msgstr "未読1件"
+
+#: apps/mobile/app/(settings)/model-connection.tsx
+msgid "2. Enter this code at {host}"
+msgstr ""
 
 #: apps/mobile/lib/inbox/inbox-swipe.ts
 #: apps/web/src/pages/shell/chat/bot-context-menu.tsx
@@ -949,16 +955,6 @@ msgstr "ボットが取り組めるチケットのかんばんボード"
 #: apps/web/src/components/settings/ApprovalRulesSettings.tsx
 msgid "A model approves routine actions and asks you about the rest."
 msgstr "モデルが日常的な操作を承認し、それ以外はあなたに確認します。"
-
-#: apps/mobile/app/(settings)/model-connection.tsx
-msgid "A sign-in page opened — enter this code there:"
-msgstr "ログインページが開きました。次のコードを入力してください:"
-
-#. placeholder {0}: oauth.verificationUri.replace(/^https:\/\//, "")
-#: apps/web/src/pages/model-settings/connection-controls.tsx
-#: apps/web/src/pages/onboarding/model-step.tsx
-msgid "A sign-in tab opened at <0>{0}</0>. Enter this code there — this window keeps waiting:"
-msgstr "<0>{0}</0>でログイン用のタブが開きました。そこでこのコードを入力してください。このウィンドウは待機を続けます:"
 
 #: apps/mobile/lib/bots/bot-template-copy.ts
 #: apps/web/src/components/bot-templates/bot-template-copy.ts
@@ -1008,6 +1004,11 @@ msgstr "アカウント"
 #: apps/web/src/pages/shell/bots/bot-settings-sections.tsx
 msgid "Account default"
 msgstr "アカウントのデフォルト"
+
+#: apps/mobile/app/page-share.tsx
+#: apps/web/src/components/pages/PagePeople.tsx
+msgid "Account email"
+msgstr ""
 
 #: apps/mobile/app/(settings)/model-connection.tsx
 #: apps/web/src/pages/model-settings/connection-controls.tsx
@@ -1077,9 +1078,12 @@ msgstr "アクティビティログ"
 
 #: apps/mobile/app/(settings)/integrations.tsx
 #: apps/mobile/app/(settings)/plugin.tsx
+#: apps/mobile/app/page-share.tsx
 #: apps/mobile/components/thread/ask-block.tsx
+#: apps/mobile/lib/personal-calendar/device-calendar.ts
 #: apps/web/src/components/integrations/plugin-marketplace.tsx
 #: apps/web/src/components/messages/SecretAskCard.tsx
+#: apps/web/src/components/pages/PagePeople.tsx
 #: apps/web/src/pages/integrations/McpServerForm.tsx
 #: apps/web/src/pages/plugins/domain-search.tsx
 #: apps/web/src/pages/plugins/parts.tsx
@@ -1092,7 +1096,12 @@ msgstr "追加"
 msgid "Add {0} to the group"
 msgstr "{0}をグループに追加"
 
+#: apps/web/src/pages/plugins/parts.tsx
+msgid "Add {label}"
+msgstr ""
+
 #: apps/mobile/app/(settings)/integrations.tsx
+#: apps/web/src/components/integrations/plugin-marketplace.tsx
 msgid "Add {name}"
 msgstr "{name}を追加"
 
@@ -1167,6 +1176,10 @@ msgstr "別のものを追加"
 msgid "Add another {name}"
 msgstr "{name}をさらに追加"
 
+#: apps/mobile/lib/personal-calendar/device-calendar.ts
+msgid "Add calendar event?"
+msgstr ""
+
 #: apps/mobile/app/(settings)/billing.tsx
 #: apps/web/src/components/billing/ModelCredits.tsx
 msgid "Add credits"
@@ -1234,6 +1247,10 @@ msgstr "パスキーを追加"
 msgid "Add provider"
 msgstr "プロバイダーを追加"
 
+#: apps/mobile/lib/personal-calendar/device-calendar.ts
+msgid "Add reminder?"
+msgstr ""
+
 #: apps/mobile/app/(settings)/_layout.tsx
 #: apps/mobile/app/(settings)/approvals.tsx
 #: apps/web/src/components/settings/ApprovalRulesSettings.tsx
@@ -1284,6 +1301,10 @@ msgstr "追加済み"
 #: apps/web/src/pages/plugins/parts.tsx
 msgid "Added"
 msgstr "追加済み"
+
+#: apps/web/src/components/integrations/plugin-marketplace.tsx
+msgid "Added: {name}"
+msgstr ""
 
 #: apps/mobile/app/(settings)/plugin.tsx
 #: apps/web/src/components/integrations/plugin-marketplace.tsx
@@ -1377,6 +1398,10 @@ msgstr "{price}はすべてモデルの利用に充てられます。"
 msgid "All bots"
 msgstr "すべてのボット"
 
+#: apps/mobile/lib/personal-calendar/device-calendar.ts
+msgid "All day"
+msgstr ""
+
 #: apps/mobile/app/artifacts.tsx
 #: apps/web/src/pages/space/Artifacts.tsx
 msgid "All files"
@@ -1406,8 +1431,9 @@ msgid "Allow"
 msgstr "許可"
 
 #: apps/mobile/app/(settings)/messaging.tsx
+#: apps/mobile/lib/personal-calendar/device-calendar.ts
 #: apps/mobile/lib/settings/ai-consent.ts
-#: apps/web/src/components/call/VoiceConsentDialog.tsx
+#: apps/web/src/components/call/AiDataConsentDialog.tsx
 #: apps/web/src/components/settings/ApprovalRulesSettings.tsx
 #: apps/web/src/pages/settings/MessagingSettingsPanel.tsx
 msgid "Allow"
@@ -1613,6 +1639,11 @@ msgstr "@{ownerDomain} の全員"
 
 #: apps/mobile/app/page-share.tsx
 #: apps/web/src/components/pages/SharePopover.tsx
+msgid "Anyone can view. Removes people you added."
+msgstr ""
+
+#: apps/mobile/app/page-share.tsx
+#: apps/web/src/components/pages/SharePopover.tsx
 msgid "Anyone with the link"
 msgstr "リンクを知っている全員"
 
@@ -1764,6 +1795,11 @@ msgstr "成果物"
 #: apps/web/src/components/settings/ApprovalRulesSettings.tsx
 msgid "Ask"
 msgstr "確認"
+
+#: apps/mobile/lib/pages/page-review-comments.tsx
+#: apps/web/src/components/pages/PageReviewComments.tsx
+msgid "Ask bot to revise"
+msgstr ""
 
 #. js-lingui-explicit-id
 #: packages/i18n/src/vault.ts
@@ -1928,6 +1964,21 @@ msgstr "戻る・進む"
 msgid "Back to chat"
 msgstr "チャットに戻る"
 
+#: apps/mobile/app/page-review.tsx
+#: apps/web/src/components/pages/PageReviewHost.tsx
+msgid "Back to comments"
+msgstr ""
+
+#: apps/mobile/app/shared-pages.tsx
+msgid "Back to first page"
+msgstr ""
+
+#: apps/mobile/app/page-review.tsx
+#: apps/mobile/lib/pages/page-review-comments.tsx
+#: apps/web/src/components/pages/PageReviewHost.tsx
+msgid "Back to latest"
+msgstr ""
+
 #: apps/web/src/pages/shell/meetings/meetings-dialog.tsx
 msgid "Back to meetings"
 msgstr "会議に戻る"
@@ -2003,6 +2054,7 @@ msgstr "ブロック中"
 #: apps/mobile/app/(settings)/account.tsx
 #: apps/mobile/app/(settings)/labs.tsx
 #: apps/web/src/pages/settings/LabsSettingsPanel.tsx
+#: apps/web/src/pages/shell/app-rail.tsx
 #: apps/web/src/pages/shell/sidebar/sidebar-footer.tsx
 #: apps/web/src/pages/space/Board.tsx
 msgid "Board"
@@ -2038,6 +2090,7 @@ msgstr "ボット"
 #: apps/web/src/pages/Shell.tsx
 #: apps/web/src/pages/shell/bots/avatar-studio-popover.tsx
 #: apps/web/src/pages/shell/chat/message-view.tsx
+#: apps/web/src/pages/shell/chat/transcript.tsx
 #: apps/web/src/pages/space/SpaceSearch.tsx
 msgid "Bot"
 msgstr "ボット"
@@ -2050,6 +2103,14 @@ msgstr "ボット"
 #: apps/mobile/app/bot-profile.tsx
 msgid "Bot actions"
 msgstr "ボットの操作"
+
+#: packages/i18n/src/page-review.ts
+msgid "Bot couldn't draft a revision"
+msgstr ""
+
+#: packages/i18n/src/page-review.ts
+msgid "Bot draft requested"
+msgstr ""
 
 #: apps/mobile/components/bots/bot-email.tsx
 #: apps/web/src/components/vault/BotEmailAddresses.tsx
@@ -2258,6 +2319,7 @@ msgstr "画像を読み取れません"
 #: apps/mobile/app/meeting-transcript.tsx
 #: apps/mobile/app/new-bot.tsx
 #: apps/mobile/app/new-space.tsx
+#: apps/mobile/app/page-share.tsx
 #: apps/mobile/app/pages.tsx
 #: apps/mobile/app/routine.tsx
 #: apps/mobile/app/routines.tsx
@@ -2282,11 +2344,12 @@ msgstr "画像を読み取れません"
 #: apps/mobile/components/ui/name-dialog.tsx
 #: apps/mobile/components/vault/confirm-identity.tsx
 #: apps/mobile/components/vault/vault-item-editor.tsx
-#: apps/mobile/lib/account/account-name-editor.ts
 #: apps/mobile/lib/bots/bot-lifecycle.ts
 #: apps/mobile/lib/cards/ask-action-label.ts
+#: apps/mobile/lib/dialogs/text-prompt.ts
 #: apps/mobile/lib/inbox/sections/confirm-delete-section.ts
 #: apps/mobile/lib/inbox/use-inbox-chat-actions.ts
+#: apps/mobile/lib/personal-calendar/device-calendar.ts
 #: apps/mobile/lib/thread/send/unsent-send-warning.ts
 #: apps/mobile/lib/thread/thread-voice.ts
 #: apps/web/src/components/account/PasskeySettings.tsx
@@ -2469,6 +2532,7 @@ msgstr "ChatGPTサブスクリプション"
 
 #: apps/mobile/lib/bots/identity-display.ts
 #: apps/web/src/lib/bots/identity-display.ts
+#: apps/web/src/pages/shell/app-rail.tsx
 msgid "Chats"
 msgstr "チャット"
 
@@ -2499,6 +2563,7 @@ msgstr "状況を確認してください。"
 msgid "Check this yourself"
 msgstr "ご自身で確認してください"
 
+#: apps/web/src/components/pages/PageReviewHost.tsx
 #: apps/web/src/components/pages/PageView.tsx
 #: apps/web/src/components/pages/PageViewHost.tsx
 msgid "Check your connection and try again."
@@ -2553,6 +2618,11 @@ msgstr "プランを選択"
 #: apps/web/src/pages/onboarding/model-step.tsx
 msgid "Choose a provider"
 msgstr "プロバイダーを選択"
+
+#: apps/mobile/lib/pages/page-review-comments.tsx
+#: apps/web/src/components/pages/PageReviewComments.tsx
+msgid "Choose a section"
+msgstr ""
 
 #: apps/web/src/pages/shell/bots/agent-import.tsx
 msgid "Choose backup"
@@ -2774,6 +2844,11 @@ msgctxt "email sign-in"
 msgid "Code"
 msgstr "コード"
 
+#: apps/mobile/app/(settings)/model-connection.tsx
+#: apps/web/src/components/models/DeviceCodeSignIn.tsx
+msgid "Code copied, open again"
+msgstr ""
+
 #. placeholder {0}: headerName(group)
 #: apps/web/src/pages/shell/sidebar/sidebar-roster.tsx
 msgid "Collapse {0}"
@@ -2820,9 +2895,20 @@ msgstr "コマンドメニュー"
 msgid "Command variable"
 msgstr "コマンド変数"
 
+#: apps/mobile/lib/pages/page-review-comments.tsx
+#: apps/web/src/components/pages/PageReviewComments.tsx
 #: apps/web/src/pages/space/Board.tsx
 msgid "Comment"
 msgstr "コメント"
+
+#: apps/web/src/components/pages/PageReviewComments.tsx
+msgid "Comment actions"
+msgstr ""
+
+#: apps/mobile/app/page-review.tsx
+#: apps/web/src/components/pages/PageReviewHost.tsx
+msgid "Comments"
+msgstr ""
 
 #: apps/mobile/app/(settings)/integrations.tsx
 #: apps/web/src/pages/plugins/use-catalog-browse.ts
@@ -2834,9 +2920,14 @@ msgid "Compact"
 msgstr "コンパクト"
 
 #: apps/mobile/components/bots/bot-context-cards.tsx
+#: apps/mobile/lib/personal-calendar/device-calendar.ts
 #: apps/web/src/pages/space/ScratchpadSection.tsx
 msgid "Complete"
 msgstr "完了"
+
+#: apps/mobile/lib/personal-calendar/device-calendar.ts
+msgid "Complete reminder?"
+msgstr ""
 
 #: apps/mobile/components/thread/special-message-card.tsx
 #: apps/web/src/components/messages/SubagentCard.tsx
@@ -3209,18 +3300,17 @@ msgstr "コンテキストの保存と参照のために、会話、名前、検
 msgid "Conversations, names, memories, searches and bot and Space IDs are sent to store and recall context."
 msgstr "コンテキストの保存と参照のために、会話、名前、メモリ、検索内容、ボットとSpaceのIDが送信されます。"
 
-#: apps/mobile/app/(settings)/model-connection.tsx
+#: apps/mobile/components/bots/bot-email.tsx
 #: apps/mobile/components/messages/code-copy-button.tsx
 #: apps/web/src/components/BotEmailAddressField.tsx
 #: apps/web/src/components/messages/ArtifactFileCard.tsx
 #: apps/web/src/components/messages/markdown-copy.tsx
+#: apps/web/src/components/pages/PagePeople.tsx
 #: apps/web/src/components/pages/PublicPageShell.tsx
 #: apps/web/src/components/pages/SharePopover.tsx
 #: apps/web/src/components/spaces/InviteDialog.tsx
 #: apps/web/src/components/vault/BotEmailAddresses.tsx
 #: apps/web/src/components/vault/VaultItemDetail.tsx
-#: apps/web/src/pages/model-settings/connection-controls.tsx
-#: apps/web/src/pages/onboarding/model-step.tsx
 #: apps/web/src/pages/routines/routine-editor/trigger-cards.tsx
 #: apps/web/src/pages/shell/bots/agent-import.tsx
 #: apps/web/src/pages/shell/chat/message-hover-actions.tsx
@@ -3228,15 +3318,12 @@ msgstr "コンテキストの保存と参照のために、会話、名前、メ
 msgid "Copied"
 msgstr "コピーしました"
 
-#: apps/mobile/app/(settings)/model-connection.tsx
 #: apps/mobile/app/(settings)/vault.tsx
 #: apps/mobile/components/cards/run-error-sheet.tsx
 #: apps/mobile/components/thread/message-row.tsx
 #: apps/mobile/components/thread/selection-bar.tsx
 #: apps/mobile/components/vault/vault-item-sheet.tsx
 #: apps/web/src/components/vault/VaultItemDetail.tsx
-#: apps/web/src/pages/model-settings/connection-controls.tsx
-#: apps/web/src/pages/onboarding/model-step.tsx
 #: apps/web/src/pages/shell/chat/message-hover-actions.tsx
 msgid "Copy"
 msgstr "コピー"
@@ -3267,6 +3354,11 @@ msgstr "{name}をコピー"
 msgid "Copy code"
 msgstr "コードをコピー"
 
+#: apps/mobile/app/(settings)/model-connection.tsx
+#: apps/web/src/components/models/DeviceCodeSignIn.tsx
+msgid "Copy code and open"
+msgstr ""
+
 #: apps/web/src/components/messages/markdown-copy.tsx
 msgid "Copy diagram source"
 msgstr "ダイアグラムのソースをコピー"
@@ -3287,6 +3379,11 @@ msgstr "リンクをコピー"
 #: apps/web/src/pages/shell/bots/agent-import.tsx
 msgid "Copy prompt"
 msgstr "プロンプトをコピー"
+
+#: apps/mobile/app/page-share.tsx
+#: apps/web/src/components/pages/PagePeople.tsx
+msgid "Copy review link"
+msgstr ""
 
 #: apps/web/src/components/messages/markdown-copy.tsx
 msgid "Copy rows"
@@ -3877,6 +3974,7 @@ msgstr "このチャットを読み込めませんでした。"
 msgid "Could not load this file."
 msgstr "このファイルを読み込めませんでした。"
 
+#: apps/mobile/app/page-review.tsx
 #: apps/mobile/app/page-share.tsx
 #: apps/mobile/app/page.tsx
 msgid "Could not load this page."
@@ -4950,6 +5048,11 @@ msgstr "削除済み"
 msgid "Deleted"
 msgstr "削除済み"
 
+#: apps/mobile/lib/pages/page-review-comments.tsx
+#: apps/web/src/components/pages/PageReviewComments.tsx
+msgid "Deleted account"
+msgstr ""
+
 #: apps/web/src/pages/settings/UsageSettingsPanel.tsx
 #: apps/web/src/pages/shell/chat/transcript-member-name.ts
 msgid "Deleted bot"
@@ -5259,6 +5362,14 @@ msgstr "PDF をダウンロード"
 msgid "Downloading…"
 msgstr "ダウンロード中…"
 
+#: packages/i18n/src/page-review.ts
+msgid "Draft ready"
+msgstr ""
+
+#: apps/mobile/app/page-review.tsx
+msgid "Draft revision"
+msgstr ""
+
 #: apps/web/src/components/teach/SkillDraftCard.tsx
 msgid "Draft skill"
 msgstr "スキルの下書き"
@@ -5274,6 +5385,10 @@ msgstr "複製"
 #: apps/web/src/pages/integrations/McpServerForm.tsx
 msgid "Each name can be used once."
 msgstr "各名前は一度だけ使用できます。"
+
+#: packages/i18n/src/page-review.ts
+msgid "Earlier revision"
+msgstr ""
 
 #: apps/mobile/app/(settings)/vault.tsx
 #: apps/mobile/app/bot-profile.tsx
@@ -5431,6 +5546,11 @@ msgstr "HTTPSのURLを入力してください"
 #: apps/web/src/components/vault/VaultItemEditor.tsx
 msgid "Enter each site as an HTTPS address a login can be saved for."
 msgstr "各サイトは、ログインを保存できるHTTPSアドレスで入力してください。"
+
+#: apps/mobile/app/(settings)/model-connection.tsx
+#: apps/web/src/components/models/DeviceCodeSignIn.tsx
+msgid "Enter this code at {host}"
+msgstr ""
 
 #: apps/web/src/components/computers/ComputerProviderSettings.tsx
 msgid "Environment ID"
@@ -5637,6 +5757,10 @@ msgstr "非常に高い"
 #: apps/web/src/lib/models/model-catalog.ts
 msgid "Extra high"
 msgstr "非常に高い"
+
+#: packages/i18n/src/computer-usage.ts
+msgid "Extra large"
+msgstr ""
 
 #: packages/i18n/src/computer-usage.ts
 msgid "Extra large (uses {rate}× hours)"
@@ -6080,10 +6204,13 @@ msgstr "キーボードを非表示"
 msgid "Hide password"
 msgstr "パスワードを非表示"
 
-#: apps/mobile/components/calls/VoiceChatCard.tsx
 #: apps/web/src/components/call/VoiceChatCard.tsx
 msgid "Hide transcript"
 msgstr "文字起こしを非表示"
+
+#: apps/mobile/components/calls/VoiceChatCard.tsx
+msgid "Hide transcript: {title}, {duration}"
+msgstr ""
 
 #: apps/mobile/lib/models/thinking-level.ts
 #: apps/web/src/components/models/ProviderSettingsForm.tsx
@@ -6566,6 +6693,10 @@ msgid "Language"
 msgstr "言語"
 
 #: packages/i18n/src/computer-usage.ts
+msgid "Large"
+msgstr ""
+
+#: packages/i18n/src/computer-usage.ts
 msgid "Large (uses {rate}× hours)"
 msgstr "大（{rate}倍の時間を消費）"
 
@@ -6577,15 +6708,13 @@ msgstr "長いテキストの貼り付け"
 msgid "Large text pasted inline"
 msgstr "長いテキストが本文に貼り付けられました"
 
-#. placeholder {0}: new Date(state.checkedAt).toLocaleString()
 #: apps/web/src/pages/routines/routine-editor/trigger-cards.tsx
-msgid "Last check {0}: changed"
-msgstr "前回の確認 {0}: 変更あり"
+msgid "Last check {checkedAt}: changed"
+msgstr ""
 
-#. placeholder {0}: new Date(state.checkedAt).toLocaleString()
 #: apps/web/src/pages/routines/routine-editor/trigger-cards.tsx
-msgid "Last check {0}: no changes"
-msgstr "前回の確認 {0}: 変更なし"
+msgid "Last check {checkedAt}: no changes"
+msgstr ""
 
 #: apps/web/src/components/account/SocialSignInButtons.tsx
 msgid "Last used"
@@ -6873,6 +7002,11 @@ msgstr "ボットが作成"
 msgid "Main model"
 msgstr "メインモデル"
 
+#: apps/mobile/app/routine.tsx
+#: apps/web/src/pages/routines/RoutineEditor.tsx
+msgid "Make a copy"
+msgstr ""
+
 #: apps/mobile/app/(settings)/organization-members.tsx
 #: apps/web/src/components/spaces/OrganizationMembersSettings.tsx
 msgid "Make admin"
@@ -7119,6 +7253,11 @@ msgstr "{activeName}にメッセージを送信"
 msgid "Message {name}"
 msgstr "{name}にメッセージ"
 
+#. placeholder {0}: [speakerName, when].filter(Boolean).join(" ")
+#: apps/web/src/pages/shell/chat/message-hover-actions.tsx
+msgid "Message actions, {0}"
+msgstr ""
+
 #: apps/web/src/pages/shell/composer/composer.tsx
 msgid "Message composer"
 msgstr "メッセージ入力欄"
@@ -7148,6 +7287,11 @@ msgstr "メッセージ…"
 #: apps/web/src/pages/shell/chat/message-view.tsx
 msgid "Messaged {peer}"
 msgstr "{peer}にメッセージを送信しました"
+
+#: apps/mobile/lib/thread/send/thread-send.ts
+#: apps/web/src/pages/shell/composer/use-composer-actions.ts
+msgid "Messages can be up to {limit} characters."
+msgstr ""
 
 #: apps/mobile/lib/settings/ai-consent.ts
 msgid "Messages, chat history, bot instructions, memories, attachments, screenshots and connected-app content are sent to run your bots, including routines."
@@ -7222,6 +7366,7 @@ msgstr "モード"
 #: apps/web/src/pages/settings/UsageSettingsPanel.tsx
 #: apps/web/src/pages/shell/bots/agent-import-plan.tsx
 #: apps/web/src/pages/shell/chat/chat-model-picker.tsx
+#: apps/web/src/pages/shell/composer/composer-model-picker.tsx
 msgid "Model"
 msgstr "モデル"
 
@@ -7599,6 +7744,10 @@ msgstr "新しいチケット"
 msgid "New variable"
 msgstr "新しい変数"
 
+#: apps/mobile/lib/pages/page-review-comments.tsx
+msgid "Newest comments"
+msgstr ""
+
 #: apps/mobile/app/new-group.tsx
 msgid "Next"
 msgstr "次へ"
@@ -7622,6 +7771,10 @@ msgstr "次回の実行"
 #: apps/web/src/pages/settings/SettingsOverlay.tsx
 msgid "Next settings sections"
 msgstr "次の設定セクション"
+
+#: apps/web/src/pages/shell/keyboard-shortcuts-dialog.tsx
+msgid "Next thinking level"
+msgstr ""
 
 #: apps/mobile/lib/inbox/inbox-swipe.ts
 #: apps/web/src/pages/shell/chat/bot-context-menu.tsx
@@ -7668,6 +7821,10 @@ msgstr "ボットなし"
 #: apps/web/src/pages/space/GroupPanel.tsx
 msgid "No bots match"
 msgstr "一致するボットはありません"
+
+#: apps/mobile/lib/pages/page-review-comments.tsx
+msgid "No comments yet."
+msgstr ""
 
 #: packages/i18n/src/computer-usage.ts
 msgid "No computer hours used yet"
@@ -7737,6 +7894,11 @@ msgstr "OpenClaw、Hermes、またはエージェントのドキュメントが�
 msgid "No pages match “{query}”."
 msgstr "「{query}」に一致するページはありません。"
 
+#: apps/mobile/app/shared-pages.tsx
+#: apps/web/src/components/pages/PageReviewHost.tsx
+msgid "No pages shared with you yet."
+msgstr ""
+
 #: apps/mobile/app/(settings)/computers.tsx
 msgid "No paired computers"
 msgstr "ペアリング済みのコンピューターはありません"
@@ -7798,6 +7960,10 @@ msgstr "実行はまだありません"
 #: apps/mobile/app/page-share.tsx
 msgid "No sign-in needed"
 msgstr "サインイン不要"
+
+#: apps/web/src/components/integrations/skills-dialog.tsx
+msgid "No skills match your search."
+msgstr ""
 
 #: apps/web/src/pages/space/KnowledgeSection.tsx
 msgid "No skills yet"
@@ -7897,6 +8063,7 @@ msgstr "プラグインカタログにありません"
 
 #: apps/mobile/components/cards/McpApprovalCard.tsx
 #: apps/mobile/lib/auth/passkey.ts
+#: apps/mobile/lib/billing/self-hosted-support.ts
 #: apps/mobile/lib/composer/composer-dictation.ts
 #: apps/mobile/lib/settings/ai-consent.ts
 #: apps/mobile/lib/thread/thread-voice.ts
@@ -8012,6 +8179,11 @@ msgstr "オフライン"
 msgid "OK, switching to {name}."
 msgstr "了解しました。{name}に切り替えます。"
 
+#: apps/mobile/lib/pages/page-review-comments.tsx
+#: apps/web/src/components/pages/PageReviewComments.tsx
+msgid "Older comments"
+msgstr ""
+
 #: apps/mobile/components/calls/CallCard.tsx
 msgid "On a call with {name}"
 msgstr "{name}と通話中"
@@ -8048,6 +8220,10 @@ msgstr "1回のみ"
 #: apps/web/src/components/billing/ModelCredits.tsx
 msgid "One-time purchase. Credits do not expire."
 msgstr "1回限りの購入です。クレジットは失効しません。"
+
+#: apps/web/src/pages/routines/routine-editor/access-note.tsx
+msgid "Only {name} can change this routine."
+msgstr ""
 
 #: apps/web/src/components/messages/SecretAskCard.tsx
 msgid "Only enter a code {codeHost} sent you."
@@ -8113,12 +8289,6 @@ msgstr "{name}を開く"
 #: apps/web/src/components/pages/PageCard.tsx
 msgid "Open {title}"
 msgstr "{title} を開く"
-
-#. placeholder {0}: oauth.verificationUri.replace(/^https:\/\//, "")
-#: apps/web/src/pages/model-settings/connection-controls.tsx
-#: apps/web/src/pages/onboarding/model-step.tsx
-msgid "Open <0>{0}</0> and enter this code:"
-msgstr "<0>{0}</0>を開いて、このコードを入力してください:"
 
 #: apps/web/src/pages/shell/chat/chat-header.tsx
 msgid "Open call"
@@ -8291,6 +8461,7 @@ msgstr "専用コンピューター"
 
 #: apps/mobile/app/(settings)/organization-members.tsx
 #: apps/mobile/app/page-share.tsx
+#: apps/mobile/app/routine.tsx
 #: apps/mobile/app/space-members.tsx
 #: apps/mobile/lib/bots/identity-display.ts
 #: apps/web/src/components/pages/SharePopover.tsx
@@ -8301,11 +8472,16 @@ msgstr "専用コンピューター"
 msgid "Owner"
 msgstr "オーナー"
 
+#: apps/mobile/app/_layout.tsx
 #: apps/mobile/lib/pages/page-card.tsx
 #: apps/web/src/components/pages/PageCard.tsx
 #: apps/web/src/components/pages/PageView.tsx
 msgid "Page"
 msgstr "ページ"
+
+#: apps/web/src/components/pages/PageCard.tsx
+msgid "Page · {sharing} · {when}"
+msgstr ""
 
 #: apps/web/src/components/pages/PageCard.tsx
 msgid "Page · {when}"
@@ -8314,10 +8490,6 @@ msgstr "ページ · {when}"
 #: apps/web/src/components/pages/PageCard.tsx
 msgid "Page · Deleted"
 msgstr "ページ · 削除済み"
-
-#: apps/web/src/components/pages/PageCard.tsx
-msgid "Page · Shared · {when}"
-msgstr "ページ · 共有中 · {when}"
 
 #: apps/web/src/components/pages/PageCard.tsx
 msgid "Page · Updated below"
@@ -8353,6 +8525,13 @@ msgstr "ページのタイトル"
 #: apps/web/src/pages/space/GroupPanel.tsx
 msgid "Pages"
 msgstr "ページ"
+
+#: apps/mobile/app/(settings)/account.tsx
+#: apps/mobile/app/shared-pages.tsx
+#: apps/web/src/components/pages/PageReviewHost.tsx
+#: apps/web/src/pages/shell/sidebar/sidebar-footer.tsx
+msgid "Pages shared with you"
+msgstr ""
 
 #: apps/mobile/app/pages.tsx
 msgid "Pages this bot builds for you appear here."
@@ -8448,6 +8627,10 @@ msgstr "APIキーを貼り付け"
 #: apps/mobile/components/media/audio-attachment.tsx
 msgid "Pause"
 msgstr "一時停止"
+
+#: apps/mobile/components/media/audio-attachment.tsx
+msgid "Pause {name}"
+msgstr ""
 
 #: apps/mobile/lib/cards/import-setup.ts
 #: apps/mobile/lib/routines/routine.ts
@@ -8555,6 +8738,7 @@ msgstr "プラン"
 msgid "Play"
 msgstr "再生"
 
+#: apps/mobile/components/media/audio-attachment.tsx
 #: apps/web/src/components/messages/ArtifactFileCard.tsx
 msgid "Play {name}"
 msgstr "{name}を再生"
@@ -8598,6 +8782,11 @@ msgstr "送信元を新しいWebhookに向けてください"
 msgid "Post a chat message when a check finds no changes. The routine won't run."
 msgstr "確認で変更が見つからなかったときにチャットメッセージを投稿します。ルーティンは実行されません。"
 
+#: apps/mobile/lib/pages/page-review-comments.tsx
+#: apps/web/src/components/pages/PageReviewComments.tsx
+msgid "Post comment"
+msgstr ""
+
 #: apps/mobile/lib/bots/bot-template-copy.ts
 #: apps/web/src/components/bot-templates/bot-template-copy.ts
 msgid "PR reviewer"
@@ -8625,6 +8814,11 @@ msgstr "プレビュー"
 msgid "Preview {0}"
 msgstr "{0}をプレビュー"
 
+#: apps/mobile/lib/pages/page-review-comments.tsx
+#: apps/web/src/components/pages/PageReviewComments.tsx
+msgid "Preview draft"
+msgstr ""
+
 #: apps/web/src/pages/space/Artifacts.tsx
 msgid "Preview isn't available for this file type — download it to view it."
 msgstr "このファイル形式はプレビューできません。ダウンロードして表示してください。"
@@ -8645,6 +8839,10 @@ msgstr "前の設定セクション"
 msgid "Priority"
 msgstr "優先度"
 
+#: apps/mobile/lib/billing/self-hosted-support.ts
+msgid "Priority support for $100 / month"
+msgstr ""
+
 #: apps/mobile/app/paywall.tsx
 msgid "Privacy"
 msgstr "プライバシー"
@@ -8653,7 +8851,7 @@ msgstr "プライバシー"
 msgid "Privacy policies"
 msgstr "プライバシーポリシー"
 
-#: apps/web/src/components/call/VoiceConsentDialog.tsx
+#: apps/web/src/components/call/AiDataConsentDialog.tsx
 msgid "Privacy policy"
 msgstr "プライバシーポリシー"
 
@@ -8720,6 +8918,15 @@ msgstr "プロバイダー"
 msgid "Public servers need https://. HTTP only works on your local network."
 msgstr "公開サーバーには https:// が必要です。HTTPはローカルネットワークでのみ使用できます。"
 
+#: apps/mobile/app/page-review.tsx
+#: apps/web/src/components/pages/PageReviewHost.tsx
+msgid "Publish revision"
+msgstr ""
+
+#: packages/i18n/src/page-review.ts
+msgid "Published in revision {version}"
+msgstr ""
+
 #: apps/mobile/components/thread/special-message-card.tsx
 #: apps/web/src/components/messages/CloudAgentCard.tsx
 msgid "Pull request"
@@ -8762,9 +8969,17 @@ msgstr "Rakazo"
 msgid "Rakazo credits"
 msgstr "Rakazoクレジット"
 
+#: apps/mobile/lib/billing/self-hosted-support.ts
+msgid "Rakazo is free to self-host. If you'd like to support it, subscribers can email support@rakazo.com for help."
+msgstr ""
+
 #: apps/web/src/components/models/ProviderSettingsForm.tsx
 msgid "rakazo-shared and IDs starting with bot- are reserved for Rakazo."
 msgstr "rakazo-sharedおよびbot-で始まるIDはRakazo用に予約されています。"
+
+#: apps/mobile/app/(settings)/account.tsx
+msgid "Rate Rakazo"
+msgstr ""
 
 #: apps/mobile/components/thread/message-row.tsx
 #: apps/web/src/pages/shell/chat/message-hover-actions.tsx
@@ -8775,10 +8990,18 @@ msgstr "リアクション"
 msgid "Reactions"
 msgstr "リアクション"
 
+#: apps/mobile/lib/personal-calendar/device-calendar.ts
+msgid "Read calendar events?"
+msgstr ""
+
 #: apps/mobile/components/cards/ask-receipt.tsx
 #: apps/web/src/components/messages/AskCard.tsx
 msgid "Read from the page, not checked"
 msgstr "ページから読み取り、未確認"
+
+#: apps/mobile/lib/personal-calendar/device-calendar.ts
+msgid "Read reminders?"
+msgstr ""
 
 #: apps/mobile/app/bot-settings.tsx
 #: apps/web/src/pages/shell/bots/bot-panel.tsx
@@ -9077,6 +9300,19 @@ msgstr "{secretName}を削除しますか？ボットはこれを使用できな
 msgid "Remove {site}"
 msgstr "{site} を削除"
 
+#: apps/mobile/app/page-share.tsx
+msgid "Remove access"
+msgstr ""
+
+#. placeholder {0}: person.email
+#: apps/web/src/components/pages/PagePeople.tsx
+msgid "Remove access for {0}"
+msgstr ""
+
+#: apps/mobile/app/page-share.tsx
+msgid "Remove access?"
+msgstr ""
+
 #: apps/web/src/pages/routines/routine-editor/trigger-cards.tsx
 msgid "Remove change trigger"
 msgstr "変更トリガーを削除"
@@ -9134,6 +9370,11 @@ msgstr "スキルを削除"
 msgid "Remove webhook"
 msgstr "Webhookを削除"
 
+#: apps/mobile/app/page-share.tsx
+#: apps/web/src/components/pages/SharePopover.tsx
+msgid "Removes everyone you added"
+msgstr ""
+
 #: apps/mobile/app/(settings)/integrations.tsx
 #: apps/mobile/app/(settings)/plugin.tsx
 #: apps/web/src/components/integrations/plugin-marketplace.tsx
@@ -9177,6 +9418,8 @@ msgstr "更新日"
 msgid "Renews {day}"
 msgstr "{day}に更新"
 
+#: apps/mobile/lib/pages/page-review-comments.tsx
+#: apps/web/src/components/pages/PageReviewComments.tsx
 #: apps/web/src/pages/space/ScratchpadSection.tsx
 msgid "Reopen"
 msgstr "再度開く"
@@ -9185,6 +9428,16 @@ msgstr "再度開く"
 #: packages/i18n/src/vault.ts
 msgid "Repeated in the file"
 msgstr "ファイル内で重複"
+
+#. placeholder {0}: recurrence.interval
+#: apps/mobile/lib/personal-calendar/device-calendar.ts
+msgid "Repeats every {0} day(s)"
+msgstr ""
+
+#. placeholder {0}: recurrence.interval
+#: apps/mobile/lib/personal-calendar/device-calendar.ts
+msgid "Repeats every {0} week(s)"
+msgstr ""
 
 #: apps/mobile/app/(settings)/model-connection.tsx
 #: apps/mobile/components/models/model-providers.tsx
@@ -9242,6 +9495,10 @@ msgstr "変更なしの確認を報告"
 #: apps/web/src/lib/query/user-error.ts
 msgid "Request a new code"
 msgstr "新しいコードをリクエスト"
+
+#: packages/i18n/src/page-review.ts
+msgid "Request cancelled"
+msgstr ""
 
 #: apps/mobile/lib/computers/use-computer-boot.ts
 msgid "Request timed out"
@@ -9325,6 +9582,15 @@ msgstr "ボットサイドバーのサイズを変更"
 #: apps/web/src/pages/shell/resizable-side-panel.tsx
 msgid "Resize panel"
 msgstr "パネルのサイズを変更"
+
+#: apps/mobile/lib/pages/page-review-comments.tsx
+#: apps/web/src/components/pages/PageReviewComments.tsx
+msgid "Resolve"
+msgstr ""
+
+#: packages/i18n/src/page-review.ts
+msgid "Resolved"
+msgstr ""
 
 #: apps/mobile/components/models/compatible-endpoint-form.tsx
 #: apps/web/src/pages/model-settings/compatible-model-fields.tsx
@@ -9448,10 +9714,25 @@ msgstr "受信トレイに戻る"
 msgid "Return to Rakazo"
 msgstr "Rakazoに戻る"
 
+#: apps/mobile/app/page.tsx
+#: apps/web/src/components/pages/PageViewHost.tsx
+msgid "Review page"
+msgstr ""
+
 #: apps/mobile/lib/bots/bot-template-copy.ts
 #: apps/web/src/components/bot-templates/bot-template-copy.ts
 msgid "Reviews pull requests waiting on you"
 msgstr "あなた待ちのプルリクエストをレビュー"
+
+#. placeholder {0}: comment.version
+#: apps/web/src/components/pages/PageReviewComments.tsx
+msgid "Revision {0}"
+msgstr ""
+
+#: apps/mobile/app/page-review.tsx
+#: apps/mobile/lib/pages/page-review-comments.tsx
+msgid "Revision {version}"
+msgstr ""
 
 #: apps/mobile/app/(settings)/messaging.tsx
 #: apps/web/src/pages/auth/AdminAccessPage.tsx
@@ -9615,7 +9896,7 @@ msgstr "土曜日"
 #: apps/mobile/components/ui/name-dialog-compose.tsx
 #: apps/mobile/components/ui/name-dialog.tsx
 #: apps/mobile/components/vault/vault-item-editor.tsx
-#: apps/mobile/lib/account/account-name-editor.ts
+#: apps/mobile/lib/dialogs/text-prompt.ts
 #: apps/mobile/lib/inbox/use-inbox-chat-actions.ts
 #: apps/web/src/components/account/PasskeySettings.tsx
 #: apps/web/src/components/billing/SpendingLimitSettings.tsx
@@ -9868,13 +10149,24 @@ msgstr "検索中…"
 msgid "Secret"
 msgstr "シークレット"
 
+#: apps/mobile/lib/pages/page-review-comments.tsx
+#: apps/web/src/components/pages/PageReviewComments.tsx
+msgid "Section"
+msgstr ""
+
 #: apps/mobile/components/inbox/inbox-render-item.tsx
 msgid "Section actions for {name}"
 msgstr "{name}のセクション操作"
 
 #: apps/mobile/components/inbox/bot-organize-modal.tsx
+#: apps/mobile/lib/pages/page-review-comments.tsx
+#: apps/web/src/components/pages/PageReviewComments.tsx
 msgid "Section name"
 msgstr "セクション名"
+
+#: apps/web/src/pages/shell/app-rail.tsx
+msgid "Sections"
+msgstr ""
 
 #: apps/web/src/pages/settings/AccountSettingsOverlay.tsx
 msgid "Security"
@@ -10075,6 +10367,7 @@ msgstr "形 {0}"
 msgid "Shape {number}"
 msgstr "形状{number}"
 
+#: apps/mobile/app/_layout.tsx
 #: apps/mobile/app/artifact.tsx
 #: apps/mobile/app/page-share.tsx
 #: apps/mobile/app/page.tsx
@@ -10084,7 +10377,6 @@ msgstr "形状{number}"
 msgid "Share"
 msgstr "共有"
 
-#: apps/mobile/app/page-share.tsx
 #: apps/web/src/components/pages/SharePopover.tsx
 msgid "Share “{title}”"
 msgstr "「{title}」を共有"
@@ -10093,6 +10385,10 @@ msgstr "「{title}」を共有"
 #: apps/mobile/components/media/image-artifact-viewer.tsx
 msgid "Share {name}"
 msgstr "{name}を共有"
+
+#: apps/web/src/components/call/AiDataConsentDialog.tsx
+msgid "Share data with {name}?"
+msgstr ""
 
 #: apps/mobile/app/(settings)/organization-members.tsx
 #: apps/mobile/app/space-members.tsx
@@ -10112,7 +10408,7 @@ msgstr "共有先"
 msgid "Share transcript with Space"
 msgstr "文字起こしをスペースと共有"
 
-#: apps/web/src/components/call/VoiceConsentDialog.tsx
+#: apps/web/src/components/call/AiDataConsentDialog.tsx
 msgid "Share voice data with {name}?"
 msgstr "音声データを{name}と共有しますか？"
 
@@ -10120,9 +10416,8 @@ msgstr "音声データを{name}と共有しますか？"
 msgid "Share, anyone with the link can view"
 msgstr "共有、リンクを知っている人は誰でも閲覧可能"
 
-#: apps/mobile/app/pages.tsx
-#: apps/web/src/components/pages/PagesList.tsx
 #: apps/web/src/pages/settings/MemorySettingsOverlay.tsx
+#: packages/i18n/src/page-review.ts
 msgid "Shared"
 msgstr "共有"
 
@@ -10173,8 +10468,10 @@ msgstr "一覧を表示"
 
 #: apps/mobile/app/(settings)/integrations.tsx
 #: apps/mobile/app/pages.tsx
+#: apps/mobile/app/shared-pages.tsx
 #: apps/mobile/components/bots/bot-context-cards.tsx
 #: apps/mobile/components/integrations/integration-plugins.tsx
+#: apps/web/src/components/pages/PageReviewHost.tsx
 #: apps/web/src/components/pages/PagesList.tsx
 #: apps/web/src/pages/plugins/plugin-browse.tsx
 #: apps/web/src/pages/space/KnowledgeSection.tsx
@@ -10196,10 +10493,13 @@ msgstr "選択中を表示"
 msgid "Show tool activity"
 msgstr "ツールのアクティビティを表示"
 
-#: apps/mobile/components/calls/VoiceChatCard.tsx
 #: apps/web/src/components/call/VoiceChatCard.tsx
 msgid "Show transcript"
 msgstr "文字起こしを表示"
+
+#: apps/mobile/components/calls/VoiceChatCard.tsx
+msgid "Show transcript: {title}, {duration}"
+msgstr ""
 
 #: apps/web/src/pages/settings/AccountSettingsOverlay.tsx
 msgid "Sidebar density"
@@ -10553,6 +10853,12 @@ msgstr "この返信を読み上げ"
 msgid "Speaking"
 msgstr "話しています"
 
+#: apps/mobile/app/page-share.tsx
+#: apps/web/src/components/pages/SharePopover.tsx
+#: packages/i18n/src/page-review.ts
+msgid "Specific people"
+msgstr ""
+
 #: apps/mobile/app/(settings)/voice.tsx
 #: apps/web/src/pages/settings/VoiceSettingsOverlay.tsx
 msgid "Speech model"
@@ -10789,6 +11095,15 @@ msgstr "要約と事実"
 msgid "Sunday"
 msgstr "日曜日"
 
+#: apps/mobile/lib/billing/self-hosted-support.ts
+msgid "Support for $25 / month"
+msgstr ""
+
+#: apps/mobile/app/(settings)/account.tsx
+#: apps/mobile/lib/billing/self-hosted-support.ts
+msgid "Support Rakazo"
+msgstr ""
+
 #: apps/mobile/app/(settings)/model-settings.tsx
 #: apps/web/src/pages/model-settings/model-settings-panel.tsx
 msgid "Supports images"
@@ -10808,17 +11123,13 @@ msgstr "思考に対応"
 msgid "Switch"
 msgstr "切り替え"
 
-#: apps/mobile/components/settings/space-bots-model.tsx
-msgid "Switch {count} bots to the space default?"
-msgstr "{count}個のボットをスペースのデフォルトに切り替えますか？"
-
-#: apps/mobile/components/settings/space-bots-model.tsx
-msgid "Switch 1 bot to the space default?"
-msgstr "1個のボットをスペースのデフォルトに切り替えますか？"
-
 #: apps/mobile/lib/thread/send/unsent-send-warning.ts
 msgid "Switch anyway"
 msgstr "それでも切り替える"
+
+#: apps/web/src/pages/shell/keyboard-shortcuts-dialog.tsx
+msgid "Switch model"
+msgstr ""
 
 #: apps/mobile/app/(settings)/billing.tsx
 msgid "Switch to {name}?"
@@ -11031,6 +11342,10 @@ msgstr "モデルが利用できない応答を返しました。もう一度お
 msgid "The owner may have turned off its link or deleted it."
 msgstr "所有者がリンクをオフにしたか、ページを削除した可能性があります。"
 
+#: packages/i18n/src/page-review.ts
+msgid "The page and selected comment are sent to draft a revision."
+msgstr ""
+
 #: apps/mobile/lib/cards/run-error-presentation.ts
 msgid "The provider couldn't serve the model selected for this bot."
 msgstr "プロバイダーはこのボットに選択されたモデルを提供できませんでした。"
@@ -11082,6 +11397,7 @@ msgstr "サーバーで問題が発生しました"
 msgid "The server had a problem. Try again in a moment."
 msgstr "サーバーで問題が発生しました。しばらくしてからもう一度お試しください。"
 
+#: apps/mobile/app/page-share.tsx
 #: apps/web/src/components/pages/SharePopover.tsx
 msgid "The shared link stops working"
 msgstr "共有リンクは使えなくなります"
@@ -11247,6 +11563,10 @@ msgstr "このアーティファクトの全{count}個のバージョンを削�
 msgid "This device"
 msgstr "このデバイス"
 
+#: apps/web/src/components/pages/PageReviewHost.tsx
+msgid "This draft isn't available"
+msgstr ""
+
 #: apps/web/src/lib/bots/agent-import-errors.ts
 msgid "This export is newer than Rakazo can read. Update Rakazo and try again."
 msgstr "このエクスポートは新しすぎてRakazoで読み込めません。Rakazoを更新してもう一度お試しください。"
@@ -11327,6 +11647,7 @@ msgstr "このメモは変更されました"
 msgid "This note no longer exists"
 msgstr "このメモはもう存在しません"
 
+#: apps/mobile/app/page-review.tsx
 #: apps/mobile/app/page.tsx
 #: apps/mobile/lib/pages/page-card.tsx
 #: apps/web/src/lib/pages/pages.ts
@@ -11335,13 +11656,16 @@ msgstr "このページを表示できませんでした。"
 
 #: apps/mobile/lib/pages/page-card.tsx
 #: apps/web/src/components/pages/PageCard.tsx
+#: apps/web/src/components/pages/PageReviewHost.tsx
 #: apps/web/src/components/pages/PageView.tsx
 #: apps/web/src/components/pages/PageViewHost.tsx
 msgid "This page couldn't load"
 msgstr "このページを読み込めませんでした"
 
+#: apps/mobile/app/page-review.tsx
 #: apps/mobile/app/page-share.tsx
 #: apps/mobile/app/page.tsx
+#: apps/web/src/components/pages/PageReviewHost.tsx
 #: apps/web/src/components/pages/PageViewHost.tsx
 #: apps/web/src/pages/SharedPage.tsx
 msgid "This page isn't available"
@@ -11482,6 +11806,10 @@ msgstr "追加予定"
 msgid "To do"
 msgstr "未着手"
 
+#: apps/mobile/lib/settings/ai-consent.ts
+msgid "To turn this off, use Withdraw all permissions in Account → AI data sharing."
+msgstr ""
+
 #: apps/mobile/components/composer/bot-chip-picker.tsx
 #: apps/web/src/pages/shell/bots/bot-picker.tsx
 msgid "To:"
@@ -11491,6 +11819,7 @@ msgstr "宛先:"
 #: apps/mobile/components/thread/time-separator.tsx
 #: apps/web/src/pages/settings/UsageSettingsPanel.tsx
 #: apps/web/src/pages/shell/chat/chat-context.tsx
+#: apps/web/src/pages/shell/chat/message-hover-actions.tsx
 #: apps/web/src/pages/space/Artifacts.tsx
 msgid "Today"
 msgstr "今日"
@@ -11640,6 +11969,7 @@ msgstr "信頼済みサイト"
 #: apps/mobile/components/ui/app-error-boundary.tsx
 #: apps/mobile/lib/pages/page-load-failure.tsx
 #: apps/web/src/components/pages/PageNotice.tsx
+#: apps/web/src/components/pages/PageReviewHost.tsx
 #: apps/web/src/components/pages/PagesList.tsx
 #: apps/web/src/pages/model-settings/compatible-model-fields.tsx
 #: apps/web/src/pages/onboarding/first-bot.tsx
@@ -11945,6 +12275,10 @@ msgstr "{0}を使用"
 msgid "Use {hostLabel}"
 msgstr "{hostLabel}を使用"
 
+#: apps/mobile/lib/dialogs/text-prompt.ts
+msgid "Use {maxLength} characters or fewer"
+msgstr ""
+
 #: apps/web/src/pages/integrations/McpServerForm.tsx
 msgid "Use {oauthEnvReference} for the access token."
 msgstr "アクセストークンには{oauthEnvReference}を使用してください。"
@@ -11953,10 +12287,6 @@ msgstr "アクセストークンには{oauthEnvReference}を使用してくだ�
 #: apps/web/src/components/BotEmailAddressField.tsx
 msgid "Use 2 to 64 characters"
 msgstr "2〜64文字で入力してください"
-
-#: apps/mobile/lib/account/account-name-editor.ts
-msgid "Use 80 characters or fewer"
-msgstr "80文字以内で入力してください"
 
 #: apps/mobile/app/sign-in.tsx
 msgid "Use a custom server"
@@ -12140,6 +12470,10 @@ msgstr "バージョン"
 #: apps/web/src/pages/plugins/plugin-browse.tsx
 msgid "View all"
 msgstr "すべて表示"
+
+#: apps/mobile/app/page-review.tsx
+msgid "View page"
+msgstr ""
 
 #: apps/mobile/app/(settings)/plugin.tsx
 #: apps/web/src/components/integrations/plugin-marketplace.tsx
@@ -12457,6 +12791,11 @@ msgstr "ChatGPT または Claude のプランで使えます。"
 msgid "Workspace"
 msgstr "ワークスペース"
 
+#: apps/mobile/lib/pages/page-review-comments.tsx
+#: apps/web/src/components/pages/PageReviewComments.tsx
+msgid "Write a comment"
+msgstr ""
+
 #: apps/mobile/app/routine.tsx
 msgid "Write what this routine should do."
 msgstr "このルーティンで行うことを書いてください。"
@@ -12475,6 +12814,7 @@ msgstr "年払い −{percent}%"
 
 #: apps/mobile/components/thread/time-separator.tsx
 #: apps/web/src/pages/shell/chat/chat-context.tsx
+#: apps/web/src/pages/shell/chat/message-hover-actions.tsx
 #: apps/web/src/pages/shell/sidebar/sidebar-roster.tsx
 msgid "Yesterday"
 msgstr "昨日"
@@ -12636,7 +12976,7 @@ msgid "Your recordings and the text you play are sent for transcription and spee
 msgstr "文字起こしと音声生成のために、録音と再生するテキストが送信されます。"
 
 #: apps/mobile/lib/settings/ai-consent.ts
-#: apps/web/src/components/call/VoiceConsentDialog.tsx
+#: apps/web/src/components/call/AiDataConsentDialog.tsx
 msgid "Your recordings are sent for transcription, and text you play is sent to generate speech."
 msgstr "録音は文字起こしのために送信され、再生するテキストは音声生成のために送信されます。"
 
