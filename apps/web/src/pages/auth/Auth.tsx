@@ -1,5 +1,5 @@
 import { Trans, useLingui } from "@lingui/react/macro";
-import { BOT_COLOR_LIST, signInProviders } from "@rakazo/contracts";
+import { signInProviders } from "@rakazo/contracts";
 import {
   credentialIssue,
   MAX_PASSWORD_LENGTH,
@@ -7,20 +7,13 @@ import {
   signupRequiresEmailVerification,
   suggestEmailCorrection,
 } from "@rakazo/core";
-import {
-  Button,
-  Input,
-  InputOTP,
-  InputOTPGroup,
-  InputOTPSlot,
-  Label,
-  LogoAvatar,
-} from "@rakazo/ui-web";
+import { Button, Input, InputOTP, InputOTPGroup, InputOTPSlot, Label } from "@rakazo/ui-web";
 import { ChevronLeft } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { Link, Navigate, useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import { PasskeySignIn, usePasskeySignIn } from "../../components/account/PasskeySignIn";
 import { SocialSignInButtons } from "../../components/account/SocialSignInButtons";
+import { WeaLockup, WeaPilotFooter } from "../../components/WeaBrand";
 import { WindowChrome } from "../../components/WindowChrome";
 import { authClient } from "../../lib/auth/auth";
 import type { AuthCapabilities } from "../../lib/auth/auth-capabilities";
@@ -89,7 +82,7 @@ export function AuthPage({ mode }: { mode: AuthMode }) {
     ) : presented && mode === "in" ? (
       <Trans>Welcome back</Trans>
     ) : mode === "in" ? (
-      <Trans>Sign in to Rakazo</Trans>
+      <Trans>Sign in to Wea</Trans>
     ) : mode === "up" ? (
       <Trans>Create your account</Trans>
     ) : (
@@ -703,11 +696,7 @@ export function AuthFrame({
         >
           {leading ? <div className="mb-4 self-start">{leading}</div> : null}
           <div className={surface ? "flex w-full flex-col items-center" : "contents"}>
-            <LogoAvatar
-              size={74}
-              avatarValue={BOT_COLOR_LIST.find((color) => color.id === "orange")?.hex}
-              motion={false}
-            />
+            <WeaLockup />
             <h1
               aria-live="polite"
               className={
@@ -722,6 +711,7 @@ export function AuthFrame({
           {children}
         </form>
       </div>
+      <WeaPilotFooter />
       {server ? (
         <div className="flex justify-center pb-6">
           <Button type="button" variant="text" size="sm" onClick={() => void server.change()}>

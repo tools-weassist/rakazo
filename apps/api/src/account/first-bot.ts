@@ -68,7 +68,8 @@ async function createFirstBot(deps: FirstBotDeps, actor: Actor): Promise<string 
     description: "",
     instructions: "",
     notifyOnFinish: true,
-    color: BOT_COLOR_LIST.find((color) => color.id === "orange")?.hex,
+    // Wea: the first bot wears the teal closest to the Wea brand instead of Rakazo orange.
+    color: BOT_COLOR_LIST.find((color) => color.id === "cyan")?.hex,
     spawnKey: FIRST_BOT_SPAWN_KEY,
   });
   // Each runs at most once per thread, and in this order: the focus card waits for an intro run

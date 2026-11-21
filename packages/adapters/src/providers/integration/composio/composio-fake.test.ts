@@ -286,7 +286,7 @@ describe("ComposioConnector over the fake Composio client", () => {
     expect(fake.executions).toEqual([]);
   });
 
-  it("requires an account in the session when several are pinned", async () => {
+  it("runs on the default account when several are pinned and none is named", async () => {
     const { fake, connector } = setup();
     const work = await connect(connector, "GMAIL");
     const personal = await connect(connector, "GMAIL");
@@ -298,8 +298,14 @@ describe("ComposioConnector over the fake Composio client", () => {
     });
 
     await expect(run(connector, "GMAIL_LIST_LABELS", {}, ctx)).resolves.toEqual([
-      { type: "error", message: "Select which GMAIL account to use" },
+      expect.objectContaining({ type: "result" }),
     ]);
+    expect(fake.created.at(-1)?.config.multiAccount).toEqual({
+      enable: true,
+      maxAccountsPerToolkit: 10,
+      requireExplicitSelection: false,
+    });
+    fake.executions.length = 0;
     await expect(
       run(connector, "COMPOSIO_MULTI_EXECUTE_TOOL", { tools: [listing("ca_other")] }, ctx),
     ).resolves.toEqual([
