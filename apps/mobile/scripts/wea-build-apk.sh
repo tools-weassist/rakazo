@@ -36,6 +36,7 @@ JS
 
 # Keep the build inside a small machine's memory.
 {
+  echo
   echo "org.gradle.jvmargs=-Xmx3072m -XX:MaxMetaspaceSize=768m -XX:+HeapDumpOnOutOfMemoryError"
   echo "org.gradle.workers.max=${WEA_GRADLE_WORKERS:-4}"
   echo "kotlin.daemon.jvmargs=-Xmx1536m"
