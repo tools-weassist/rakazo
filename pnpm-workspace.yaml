@@ -18,9 +18,12 @@ packageExtensions:
     dependencies:
       "@emnapi/runtime": 1.11.3
 
+# win32 too, so the Wea Windows desktop installer can be cross-built on Linux with the Windows
+# native binaries (koffi) present.
 supportedArchitectures:
   os:
     - current
+    - win32
   cpu:
     - current
     - x64
