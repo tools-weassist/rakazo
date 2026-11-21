@@ -1,12 +1,15 @@
 import type { BotTemplate, ConnectionCatalogItem } from "@rakazo/contracts";
 import { matchConnectedAppCatalog } from "../integrations/app-connect.js";
+import { VA_BOT_TEMPLATES } from "./va-bot-templates.js";
 
 /**
  * Reviewed, ready-made bots. Bump a template's `version` whenever any of its content changes:
  * a create from an older preview is refused, so what was shown is what gets made. Names,
  * summaries and samples are shown in the apps' languages; the rest is written for the bot.
+ * Wea's templates for virtual assistants and their clients come first.
  */
 export const BOT_TEMPLATES: readonly BotTemplate[] = [
+  ...VA_BOT_TEMPLATES,
   {
     id: "morning-briefing",
     version: 1,
