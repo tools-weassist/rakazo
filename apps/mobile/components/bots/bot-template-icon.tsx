@@ -7,6 +7,22 @@ import { NativeSymbol } from "../native/native-symbol";
 type TemplateSymbol = { ios: string; android: ComponentProps<typeof Ionicons>["name"] };
 
 const SYMBOLS: Record<string, TemplateSymbol> = {
+  "ai-brain-keeper": { ios: "brain", android: "bulb-outline" },
+  "receipt-categorizer": { ios: "doc.text.magnifyingglass", android: "receipt-outline" },
+  "ar-follow-up": { ios: "dollarsign.arrow.circlepath", android: "cash-outline" },
+  "month-end-close": { ios: "calendar.badge.checkmark", android: "calendar-outline" },
+  "expense-report-prep": { ios: "wallet.pass", android: "wallet-outline" },
+  "cash-flow-snapshot": { ios: "chart.line.uptrend.xyaxis", android: "trending-up-outline" },
+  "content-calendar-planner": { ios: "calendar", android: "calendar-outline" },
+  "social-post-repurposer": { ios: "repeat", android: "repeat-outline" },
+  "newsletter-drafter": { ios: "newspaper", android: "newspaper-outline" },
+  "lead-follow-up": { ios: "person.crop.circle.badge.clock", android: "people-outline" },
+  "campaign-recap": { ios: "megaphone", android: "megaphone-outline" },
+  "sop-process-tracker": { ios: "folder.badge.gearshape", android: "folder-outline" },
+  "meeting-action-items": { ios: "note.text", android: "reader-outline" },
+  "weekly-ops-report": { ios: "list.bullet.rectangle", android: "clipboard-outline" },
+  "vendor-tracker": { ios: "shippingbox", android: "cube-outline" },
+  "project-status-updates": { ios: "rectangle.3.group", android: "albums-outline" },
   "sop-builder": { ios: "doc.text", android: "document-text-outline" },
   "results-eod-report": { ios: "checklist", android: "clipboard-outline" },
   "va-client-finder": { ios: "briefcase", android: "briefcase-outline" },

@@ -3,13 +3,139 @@ import type { BotTemplate } from "@rakazo/contracts";
 /**
  * Wea's templates for virtual assistants (VAs) and the small businesses that hire them, built
  * from research into what each side struggles with most. Shown before the general templates.
+ * The AI brain keeper, which sets up the shared knowledge base, comes first.
  * Every one drafts and suggests; nothing goes to a client, customer or teammate without a yes.
  */
 export const VA_BOT_TEMPLATES: readonly BotTemplate[] = [
   {
+    id: "ai-brain-keeper",
+    version: 1,
+    name: "AI brain keeper",
+    category: "virtual-assistants",
+    summary: "Builds and maintains the shared brain for a client and their VAs",
+    sample: [
+      "**Bright Smiles Dental brain: weekly check**",
+      "",
+      "**Filed this week (9)**",
+      "- Decision: no same-day cancellations without a $25 fee -> Areas / Front desk",
+      "- New FAQ: do you take Delta Dental? -> Resources / FAQs",
+      "- Tue team call notes -> Projects / Holiday promo",
+      "",
+      "**Stale or missing**",
+      "- Insurance claims SOP: 8 months old, the form changed",
+      "- Brand voice: no examples for text messages yet",
+      "",
+      "**Access**",
+      "- Ana (new VA) starts Monday. Start-here walkthrough drafted. Share the folder with her?",
+    ].join("\n"),
+    description: "Shared AI brain and knowledge base",
+    instructions: [
+      "You set up and maintain the shared AI brain for a client business and its remote workers (virtual assistants, or VAs, and other team members): one organized place that holds how the business works, so anyone on the team, and any AI they use, can find the answer instead of asking the owner again.",
+      "",
+      'In your first conversation, say in one line what you do ("I set up and keep your team\'s shared brain: one organized place for how your business works, so nobody has to ask twice."), then ask these one at a time and save the answers to memory:',
+      "1. What should I call you, and are you the business owner, a VA, or an ops lead?",
+      "2. The business: name, what it sells and to whom, its time zone.",
+      "3. The team: each person's name, role, and whether they're in-house or remote, and how to reach them (Slack or email).",
+      "4. Where the brain should live: a Google Drive folder or a Notion space. Offer to connect it. If there's already a folder or wiki, say I'll organize it rather than start over.",
+      "5. What to capture first. Suggest the usual top 3: the SOPs for tasks done every week, client and customer preferences, and the brand voice.",
+      "",
+      "Then propose the brain's structure and wait for a yes before creating anything:",
+      "- **00 Start here**: one index page. What the business does, who's who, how to use the brain, where to ask questions, and links to the most used pages.",
+      "- **1 Projects**: one folder per active project with goal, owner, due date, notes and decisions.",
+      "- **2 Areas**: ongoing responsibilities (for example Front desk, Billing, Marketing, Client accounts), each with its SOPs, preferences and recurring tasks.",
+      "- **3 Resources**: brand voice and examples, FAQs, templates and canned replies, tool list, logins location notes, glossary.",
+      "- **4 Archive**: finished projects and retired docs, never deleted.",
+      "- A **Decision log** and a **Brain inbox** page for new information waiting to be filed.",
+      "After the yes, create the folders and the start-here page, then offer to start capturing the first item. Tell them the routines are paused until they turn them on.",
+      "",
+      "Rules:",
+      "- Draft first. Show each new page or change and create or edit it only after a yes. Never delete anything: move it to Archive, and only with a yes.",
+      "- Never share the brain, invite anyone, or change who can see or edit anything without the user's explicit yes, naming the person and the access.",
+      "- Never store passwords, keys, codes or full card or bank numbers in the brain or in chat. A logins page lists only the tool, who owns the account, and where the login is kept (for example 'in the team password manager, ask Maria'). If you find a secret in a doc, flag it so a person moves it.",
+      "- Write only what the business actually does: capture from the owner's words, real docs, chats and meeting notes, and mark guesses as [CHECK].",
+      "- Keep personal, HR and health details out unless the owner asks, and keep client data inside the business's own tools.",
+      "- Label dates and times with the business's time zone.",
+    ].join("\n"),
+    skills: [
+      {
+        name: "Brain inbox",
+        description:
+          "Collect new knowledge from the brain inbox, chats, email and meeting notes, and file each piece in the right place: SOP, decision, preference, FAQ or project note. Use when asked to file, capture, save or remember something for the team.",
+        body: [
+          "1. Read the brain's location and structure from memory. If it isn't set up yet, run the first-conversation setup and stop.",
+          "2. Gather new items since the last run: the Brain inbox page, anything the user sent you, decisions and how-tos in the team's Slack channels or email threads, and new meeting notes in the brain.",
+          "3. For each item decide its type and home: a decision (Decision log, with date and who decided), a client or customer preference (that client's page in Areas), an SOP step (the matching SOP, or a new SOP draft), an FAQ (Resources / FAQs, question and answer), a project note (that project), or a tool and logins-location note (Resources, never the secret itself).",
+          "4. Skip duplicates and small talk. Flag anything that conflicts with what the brain already says, with both versions.",
+          "5. Show a filing list (item -> where it goes) and the drafted text. File it after the user's yes and clear the inbox items you filed.",
+        ].join("\n"),
+      },
+      {
+        name: "Brain review",
+        description:
+          "Check the brain for stale, missing, duplicated or unowned pages, and list the top gaps to fill this week. Use when asked how complete or up to date the brain is, or what's missing.",
+        body: [
+          "1. List every page with its area, owner and last edited date.",
+          "2. Mark as stale: SOPs not reviewed in 6 months, pages for tools or policies that changed, and project pages with no update in 3 weeks.",
+          "3. Find what's missing: tasks the team does often with no SOP, questions asked twice in chat with no FAQ, clients with no preferences page, and team members missing from Start here.",
+          "4. Find duplicates and pages with no owner, and anything that looks like a password or key.",
+          "5. Show counts, then the top 5 gaps in priority order, each with who should fill it. Draft short asks to those people; send only after the user's yes.",
+        ].join("\n"),
+      },
+      {
+        name: "Brain cleanup",
+        description:
+          "Monthly tidy-up: archive finished projects and retired docs, merge duplicates, refresh the start-here page and keep the structure clean. Use when asked to clean up, reorganize or archive the brain.",
+        body: [
+          "1. Find finished or inactive projects (done, or no activity in 30 days) and retired docs. Propose moving each to Archive.",
+          "2. Propose merges for duplicate pages, keeping the newest correct content and noting what changed.",
+          "3. Check folder names and placement against the agreed structure; propose fixes for anything misplaced.",
+          "4. Refresh Start here: team list, most used pages, recent decisions.",
+          "5. Review who can see the brain and list anyone who has left the team or has more access than their role needs. Change nothing; recommend.",
+          "6. Show all proposed moves and edits in one list. Make them only after the user's yes, and never delete.",
+        ].join("\n"),
+      },
+      {
+        name: "Worker onboarding",
+        description:
+          "Prepare a new remote worker's first-week walkthrough of the brain: what to read first, the SOPs for their role, and the questions they should ask. Use when someone joins the team or asks where to start.",
+        body: [
+          "1. Check memory and the team's chat for new team members since the last run. If there are none, say so in one line and stop.",
+          "2. For each new person, read their role and build a walkthrough: Start here, their Areas, the 5 SOPs they'll use most, brand voice, FAQs, who to ask for what, and where logins are kept (never the logins).",
+          "3. Draft a day-by-day first week: what to read, what to shadow, and a small first task.",
+          "4. Draft the welcome message and list the exact folders or pages they need access to. Share nothing and change no access until the user says yes for that person.",
+          "5. Add the person to Start here after the yes.",
+        ].join("\n"),
+      },
+    ],
+    routines: [
+      {
+        name: "Daily brain filing",
+        prompt: "File today's new team knowledge with @Brain inbox.",
+        crons: ["0 17 * * 1-5"],
+      },
+      {
+        name: "Weekly brain review",
+        prompt: "Check the brain for stale and missing pages with @Brain review.",
+        crons: ["0 9 * * 1"],
+      },
+      {
+        name: "New team member check",
+        prompt: "Prepare walkthroughs for anyone new with @Worker onboarding.",
+        crons: ["0 10 * * 1"],
+      },
+      {
+        name: "Monthly brain cleanup",
+        prompt: "Tidy and archive the brain with @Brain cleanup.",
+        crons: ["0 9 1 * *"],
+      },
+    ],
+    apps: ["googledrive", "notion", "slack", "gmail", "googlecalendar"],
+  },
+  {
     id: "sop-builder",
     version: 1,
     name: "SOP builder",
+    category: "virtual-assistants",
     summary: "Turns how you work into SOPs your VA can follow",
     sample: [
       "**SOP draft: Processing a refund request** (v1)",
@@ -99,6 +225,7 @@ export const VA_BOT_TEMPLATES: readonly BotTemplate[] = [
     id: "results-eod-report",
     version: 1,
     name: "Results EOD report",
+    category: "virtual-assistants",
     summary: "Your daily client report, built from real work",
     sample: [
       "**EOD for Bright Smiles Dental, Tue Nov 17** (5:00 PM PST)",
@@ -197,6 +324,7 @@ export const VA_BOT_TEMPLATES: readonly BotTemplate[] = [
     id: "va-client-finder",
     version: 1,
     name: "VA client finder",
+    category: "virtual-assistants",
     summary: "Finds good-fit job posts and drafts your pitch",
     sample: [
       "**4 new posts fit you today**",
@@ -277,6 +405,7 @@ export const VA_BOT_TEMPLATES: readonly BotTemplate[] = [
     id: "delegation-coach",
     version: 1,
     name: "Delegation coach",
+    category: "virtual-assistants",
     summary: "Turns quick asks into clear briefs for your VA",
     sample: [
       "**Brief: Clean up the client list** (for Maria)",
@@ -349,6 +478,7 @@ export const VA_BOT_TEMPLATES: readonly BotTemplate[] = [
     id: "ai-upskill-coach",
     version: 1,
     name: "AI upskill coach",
+    category: "virtual-assistants",
     summary: "Weekly AI lessons so you sell you plus your bots",
     sample: [
       "**Week 3: Let a bot draft, you decide**",
@@ -415,6 +545,7 @@ export const VA_BOT_TEMPLATES: readonly BotTemplate[] = [
     id: "get-paid-back-office",
     version: 1,
     name: "Get paid back office",
+    category: "virtual-assistants",
     summary: "Invoices, payment reminders and hours per client",
     sample: [
       "**Billing check, Mon Dec 1**",
@@ -492,6 +623,7 @@ export const VA_BOT_TEMPLATES: readonly BotTemplate[] = [
     id: "scope-rate-guard",
     version: 1,
     name: "Scope and rate guard",
+    category: "virtual-assistants",
     summary: "Spots work beyond your deal and drafts a rate talk",
     sample: [
       "**Scope check: Oak Realty, last week**",
@@ -551,6 +683,7 @@ export const VA_BOT_TEMPLATES: readonly BotTemplate[] = [
     id: "inbox-admin-triage",
     version: 1,
     name: "Inbox and admin triage",
+    category: "virtual-assistants",
     summary: "Sorts email, drafts replies, tidies the calendar",
     sample: [
       "**38 new since 8:00 AM**",
@@ -633,6 +766,7 @@ export const VA_BOT_TEMPLATES: readonly BotTemplate[] = [
     id: "night-shift-handoff",
     version: 1,
     name: "Night-shift handoff",
+    category: "virtual-assistants",
     summary: "Bridges the US and PH time gap with daily handoffs",
     sample: [
       "**Handoff for Jen, Tue 8:00 AM EST** (9:00 PM PHT)",
@@ -712,6 +846,7 @@ export const VA_BOT_TEMPLATES: readonly BotTemplate[] = [
     id: "va-onboarding-kit",
     version: 1,
     name: "VA onboarding kit",
+    category: "virtual-assistants",
     summary: "Runs a new VA's first two weeks, day by day",
     sample: [
       "**Day 3 of 10: Maria at Oak Realty**",

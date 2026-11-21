@@ -12,6 +12,20 @@ const slug = z
   .max(64);
 
 /**
+ * The groups the templates page filters by, in the order it shows them. Names are shown in the
+ * apps' languages.
+ */
+export const BOT_TEMPLATE_CATEGORIES = [
+  "virtual-assistants",
+  "accounting-finance",
+  "marketing",
+  "operations",
+  "productivity",
+] as const;
+export const BotTemplateCategorySchema = z.enum(BOT_TEMPLATE_CATEGORIES);
+export type BotTemplateCategory = z.infer<typeof BotTemplateCategorySchema>;
+
+/**
  * A reviewed, ready-made bot: instructions, skills and routines that install paused, plus the
  * apps it works best with. Strict, and with no field for keys, memory, history, models or
  * servers, so a template cannot carry anything personal or secret.
@@ -21,6 +35,8 @@ export const BotTemplateSchema = z.strictObject({
   /** Bumped on any content change, so a create from an older preview is refused. */
   version: z.number().int().positive(),
   name: z.string().min(1).max(BOT_NAME_MAX_LENGTH),
+  /** Where the templates page files it. */
+  category: BotTemplateCategorySchema,
   /** One line. */
   summary: z.string().min(1).max(120),
   /** Markdown: an example of what the bot sends, shown before anything is created. */
