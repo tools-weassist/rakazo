@@ -45,7 +45,9 @@
     },
     "files": [
       "dist/**/*",
-      "package.json"
+      "package.json",
+      "!**/node_modules/@sentry/**",
+      "!**/node_modules/sentry/**"
     ],
     "extraResources": [
       {
