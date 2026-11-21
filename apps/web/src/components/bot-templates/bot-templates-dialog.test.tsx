@@ -57,6 +57,7 @@ const template: BotTemplateListing = {
   id: "weekly-digest",
   version: 3,
   name: "Weekly digest",
+  category: "productivity",
   summary: "A summary every Friday",
   sample: "**Friday**",
   description: "",
@@ -181,4 +182,43 @@ it("does not open a bot that arrives after the templates were closed", async () 
   expect(onOpenBot).not.toHaveBeenCalled();
   // The roster still on screen lists the new bot.
   await vi.waitFor(() => expect(bots.list).toHaveBeenCalledTimes(2));
+});
+
+it("filters the templates by category, with All showing every one", async () => {
+  bots.templates.mockResolvedValue([
+    template,
+    { ...template, id: "cash-check", name: "Cash check", category: "accounting-finance" },
+    { ...template, id: "close-list", name: "Close list", category: "accounting-finance" },
+  ]);
+  const client = new QueryClient({ defaultOptions: { queries: { retry: false } } });
+  await act(async () =>
+    root.render(
+      <QueryClientProvider client={client}>
+        <BotTemplatesDialog onClose={() => undefined} onOpenBot={onOpenBot} />
+      </QueryClientProvider>,
+    ),
+  );
+  const cards = () =>
+    [...container.querySelectorAll('[data-testid="bot-template-card"]')].map(
+      (card) => card.textContent,
+    );
+  await vi.waitFor(() => expect(cards()).toHaveLength(3));
+  const chips = () =>
+    [...container.querySelectorAll('[data-testid="bot-template-categories"] button')].map(
+      (chip) => [chip.textContent, chip.getAttribute("aria-pressed")],
+    );
+  // Categories follow the page's order and only appear when they have templates.
+  expect(chips()).toEqual([
+    ["All", "true"],
+    ["Accounting & finance", "false"],
+    ["Productivity", "false"],
+  ]);
+
+  await act(async () => button("Accounting & finance")?.click());
+  expect(cards()).toHaveLength(2);
+  expect(cards().every((text) => text?.includes("Weekly digest") === false)).toBe(true);
+  expect(chips()[1]).toEqual(["Accounting & finance", "true"]);
+
+  await act(async () => button("All")?.click());
+  expect(cards()).toHaveLength(3);
 });

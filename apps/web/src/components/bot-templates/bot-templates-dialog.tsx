@@ -1,7 +1,12 @@
 import { Trans, useLingui } from "@lingui/react/macro";
 import { ChatMarkdown } from "@rakazo/chat-ui/web";
-import type { Bot, BotTemplateListing, ConnectionCatalogItem } from "@rakazo/contracts";
-import { isBotTemplateChanged } from "@rakazo/contracts";
+import type {
+  Bot,
+  BotTemplateCategory,
+  BotTemplateListing,
+  ConnectionCatalogItem,
+} from "@rakazo/contracts";
+import { BOT_TEMPLATE_CATEGORIES, isBotTemplateChanged } from "@rakazo/contracts";
 import { botTemplateApps, formatCron } from "@rakazo/core";
 import {
   Button,
@@ -18,25 +23,41 @@ import type { LucideIcon } from "lucide-react";
 import {
   BookOpenCheck,
   Bot as BotIcon,
+  Brain,
   BriefcaseBusiness,
+  CalendarCheck,
+  CalendarDays,
+  ChartLine,
   Check,
   ChevronDown,
   ChevronLeft,
   ClipboardCheck,
+  ClipboardList,
   Clock,
+  FolderCheck,
   GitPullRequest,
   GraduationCap,
+  HandCoins,
   Inbox,
   LayoutTemplate,
   ListChecks,
+  Magnet,
   MailCheck,
+  Megaphone,
   MoonStar,
+  Newspaper,
+  NotebookPen,
   Receipt,
+  ReceiptText,
+  Repeat2,
   Scale,
   ScrollText,
+  SquareKanban,
   Sun,
   Telescope,
+  Truck,
   UserPlus,
+  Wallet,
   X,
 } from "lucide-react";
 import { useId, useState } from "react";
@@ -45,9 +66,10 @@ import { errorDetails } from "../../lib/query/user-error";
 import { cronLabels } from "../../lib/routines/cron";
 import { ErrorNotice } from "../ErrorNotice";
 import { PluginLogo, ROW_HOVER } from "../integrations/plugin-marketplace";
-import { useBotTemplateCopy } from "./bot-template-copy";
+import { useBotTemplateCategoryLabel, useBotTemplateCopy } from "./bot-template-copy";
 
 const ICONS: Record<string, LucideIcon> = {
+  "ai-brain-keeper": Brain,
   "sop-builder": BookOpenCheck,
   "results-eod-report": ClipboardCheck,
   "va-client-finder": BriefcaseBusiness,
@@ -58,6 +80,21 @@ const ICONS: Record<string, LucideIcon> = {
   "inbox-admin-triage": MailCheck,
   "night-shift-handoff": MoonStar,
   "va-onboarding-kit": UserPlus,
+  "receipt-categorizer": ReceiptText,
+  "ar-follow-up": HandCoins,
+  "month-end-close": CalendarCheck,
+  "expense-report-prep": Wallet,
+  "cash-flow-snapshot": ChartLine,
+  "content-calendar-planner": CalendarDays,
+  "social-post-repurposer": Repeat2,
+  "newsletter-drafter": Newspaper,
+  "lead-follow-up": Magnet,
+  "campaign-recap": Megaphone,
+  "sop-process-tracker": FolderCheck,
+  "meeting-action-items": NotebookPen,
+  "weekly-ops-report": ClipboardList,
+  "vendor-tracker": Truck,
+  "project-status-updates": SquareKanban,
   "morning-briefing": Sun,
   "inbox-triage": Inbox,
   "pr-reviewer": GitPullRequest,
@@ -97,10 +134,12 @@ export function BotTemplatesDialog({
   const { t } = useLingui();
   const queries = useSpaceQueries();
   const copy = useBotTemplateCopy();
+  const categoryLabel = useBotTemplateCategoryLabel();
   const cardId = useId();
   // Read afresh each time it opens: a template's bot may have been made or deleted since.
   const templates = useQuery({ ...queries.bots.templates.queryOptions(), staleTime: 0 });
   const [openId, setOpenId] = useState<string | null>(null);
+  const [category, setCategory] = useState<BotTemplateCategory | null>(null);
   const open = templates.data?.find((template) => template.id === openId);
 
   function content() {
@@ -127,46 +166,76 @@ export function BotTemplatesDialog({
           onChanged={() => void templates.refetch()}
         />
       );
+    // Only categories with templates get a chip; a stale choice falls back to All.
+    const categories = BOT_TEMPLATE_CATEGORIES.filter((name) =>
+      templates.data.some((template) => template.category === name),
+    );
+    const selected = category && categories.includes(category) ? category : null;
+    const shown = selected
+      ? templates.data.filter((template) => template.category === selected)
+      : templates.data;
     return (
-      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-        {templates.data.map((template, index) => {
-          const { name, summary, sample } = copy(template);
-          const titleId = `${cardId}-${index}-title`;
-          const summaryId = `${cardId}-${index}-summary`;
-          return (
-            <button
-              key={template.id}
-              type="button"
-              data-testid="bot-template-card"
-              aria-labelledby={titleId}
-              aria-describedby={summaryId}
-              onClick={() => setOpenId(template.id)}
-              className={`flex min-w-0 flex-col gap-3 rounded-2xl border border-border/70 p-4 text-start focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-ring/50 ${ROW_HOVER}`}
-            >
-              <span className="flex min-w-0 items-center gap-3">
-                <TemplateIcon id={template.id} />
-                <span className="min-w-0 flex-1">
-                  <span
-                    id={titleId}
-                    className="block truncate text-body-lg font-medium text-foreground"
-                  >
-                    {name}
-                  </span>
-                  <span
-                    id={summaryId}
-                    className="block truncate text-body-sm text-muted-foreground"
-                  >
-                    {summary}
+      <div className="flex flex-col gap-4">
+        {categories.length >= 2 ? (
+          <fieldset
+            aria-label={t`Filter templates by category`}
+            className="m-0 flex min-w-0 flex-wrap gap-2 border-0 p-0"
+            data-testid="bot-template-categories"
+          >
+            {[null, ...categories].map((name) => (
+              <Button
+                key={name ?? "all"}
+                type="button"
+                variant={selected === name ? "default" : "secondary"}
+                aria-pressed={selected === name}
+                className="rounded-full px-3.5 text-body-sm"
+                onClick={() => setCategory(name)}
+              >
+                {name ? categoryLabel(name) : <Trans>All</Trans>}
+              </Button>
+            ))}
+          </fieldset>
+        ) : null}
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+          {shown.map((template, index) => {
+            const { name, summary, sample } = copy(template);
+            const titleId = `${cardId}-${index}-title`;
+            const summaryId = `${cardId}-${index}-summary`;
+            return (
+              <button
+                key={template.id}
+                type="button"
+                data-testid="bot-template-card"
+                aria-labelledby={titleId}
+                aria-describedby={summaryId}
+                onClick={() => setOpenId(template.id)}
+                className={`flex min-w-0 flex-col gap-3 rounded-2xl border border-border/70 p-4 text-start focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-ring/50 ${ROW_HOVER}`}
+              >
+                <span className="flex min-w-0 items-center gap-3">
+                  <TemplateIcon id={template.id} />
+                  <span className="min-w-0 flex-1">
+                    <span
+                      id={titleId}
+                      className="block truncate text-body-lg font-medium text-foreground"
+                    >
+                      {name}
+                    </span>
+                    <span
+                      id={summaryId}
+                      className="block truncate text-body-sm text-muted-foreground"
+                    >
+                      {summary}
+                    </span>
                   </span>
                 </span>
-              </span>
-              {/* A glimpse of the example; the template's page shows all of it. */}
-              <span className="block h-40 overflow-hidden rounded-xl border border-border/60 bg-background px-3.5 py-2.5 text-body-sm mask-b-from-60%">
-                <ChatMarkdown>{sample}</ChatMarkdown>
-              </span>
-            </button>
-          );
-        })}
+                {/* A glimpse of the example; the template's page shows all of it. */}
+                <span className="block h-40 overflow-hidden rounded-xl border border-border/60 bg-background px-3.5 py-2.5 text-body-sm mask-b-from-60%">
+                  <ChatMarkdown>{sample}</ChatMarkdown>
+                </span>
+              </button>
+            );
+          })}
+        </div>
       </div>
     );
   }

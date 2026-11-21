@@ -1,19 +1,28 @@
 import type { BotTemplate, ConnectionCatalogItem } from "@rakazo/contracts";
 import { matchConnectedAppCatalog } from "../integrations/app-connect.js";
+import { FINANCE_BOT_TEMPLATES } from "./finance-bot-templates.js";
+import { MARKETING_BOT_TEMPLATES } from "./marketing-bot-templates.js";
+import { OPS_BOT_TEMPLATES } from "./ops-bot-templates.js";
 import { VA_BOT_TEMPLATES } from "./va-bot-templates.js";
 
 /**
  * Reviewed, ready-made bots. Bump a template's `version` whenever any of its content changes:
  * a create from an older preview is refused, so what was shown is what gets made. Names,
  * summaries and samples are shown in the apps' languages; the rest is written for the bot.
- * Wea's templates for virtual assistants and their clients come first.
+ * Wea's templates for virtual assistants and their clients come first, then accounting and
+ * finance, marketing and operations, then the general ones; the page groups them by `category`
+ * in the order of `BOT_TEMPLATE_CATEGORIES`.
  */
 export const BOT_TEMPLATES: readonly BotTemplate[] = [
   ...VA_BOT_TEMPLATES,
+  ...FINANCE_BOT_TEMPLATES,
+  ...MARKETING_BOT_TEMPLATES,
+  ...OPS_BOT_TEMPLATES,
   {
     id: "morning-briefing",
     version: 1,
     name: "Morning briefing",
+    category: "productivity",
     summary: "Your day at a glance, every weekday morning",
     sample: [
       "**Thursday**",
@@ -71,6 +80,7 @@ export const BOT_TEMPLATES: readonly BotTemplate[] = [
     id: "inbox-triage",
     version: 1,
     name: "Inbox triage",
+    category: "productivity",
     summary: "Sorts new email and drafts the replies",
     sample: [
       "**12 new since 8:00**",
@@ -125,6 +135,7 @@ export const BOT_TEMPLATES: readonly BotTemplate[] = [
     id: "pr-reviewer",
     version: 1,
     name: "PR reviewer",
+    category: "productivity",
     summary: "Reviews pull requests waiting on you",
     sample: [
       "**2 pull requests are waiting on you**",
@@ -177,6 +188,7 @@ export const BOT_TEMPLATES: readonly BotTemplate[] = [
     id: "topic-watch",
     version: 1,
     name: "Topic watch",
+    category: "productivity",
     summary: "A weekly digest of what changed on topics you follow",
     sample: [
       "**This week**",
