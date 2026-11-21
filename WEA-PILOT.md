@@ -26,6 +26,20 @@ Upstream ships analytics and error reporting off by default (`ANALYTICS_PROVIDER
 anonymous telemetry notice during `pnpm dev`; run `pnpm exec turbo telemetry disable` or set
 `TURBO_TELEMETRY_DISABLED=1` on machines that run the dev stack.
 
+## Android app (Expo, `apps/mobile`)
+
+- App name Wea, Android package and iOS bundle id `io.weassist.wea`, Wea icon, adaptive and
+  monochrome icons, splash and notification icon made from `apps/web/public/favicon.svg`.
+- Permission prompts and the main sign-in and welcome screens say Wea.
+- A release build opens to `https://wea.weassist.io` (`WEA_API` in `lib/api/server-config.ts`);
+  the server screen can still point the app elsewhere. `EXPO_PUBLIC_API_URL` overrides it.
+- Nothing points at upstream services: no Expo owner, no EAS project id, OTA updates off.
+  Error reporting only starts if the server hands out a Sentry DSN, and Wea's does not.
+- Push notifications are off until a Wea Firebase project and EAS project exist; the app
+  skips push registration without them.
+- `apps/mobile/scripts/wea-build-apk.sh` builds a release-signed APK on a local machine.
+  The keystore is never committed. Keep it: every update must be signed with the same key.
+
 ## Not yet rebranded
 
 Remaining "Rakazo" strings in other screens, the desktop (Electron) and mobile (Expo) apps,
