@@ -7,6 +7,16 @@ import { NativeSymbol } from "../native/native-symbol";
 type TemplateSymbol = { ios: string; android: ComponentProps<typeof Ionicons>["name"] };
 
 const SYMBOLS: Record<string, TemplateSymbol> = {
+  "sop-builder": { ios: "doc.text", android: "document-text-outline" },
+  "results-eod-report": { ios: "checklist", android: "clipboard-outline" },
+  "va-client-finder": { ios: "briefcase", android: "briefcase-outline" },
+  "delegation-coach": { ios: "list.bullet.clipboard", android: "checkbox-outline" },
+  "ai-upskill-coach": { ios: "graduationcap", android: "school-outline" },
+  "get-paid-back-office": { ios: "banknote", android: "receipt-outline" },
+  "scope-rate-guard": { ios: "scalemass", android: "scale-outline" },
+  "inbox-admin-triage": { ios: "envelope.badge", android: "mail-unread-outline" },
+  "night-shift-handoff": { ios: "moon.stars", android: "moon-outline" },
+  "va-onboarding-kit": { ios: "person.badge.plus", android: "person-add-outline" },
   "morning-briefing": { ios: "sun.max", android: "sunny-outline" },
   "inbox-triage": { ios: "tray", android: "file-tray-outline" },
   "pr-reviewer": { ios: "arrow.triangle.pull", android: "git-pull-request-outline" },
