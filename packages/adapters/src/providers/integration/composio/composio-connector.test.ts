@@ -544,7 +544,7 @@ describe("composio tool mapping", () => {
           multiAccount: {
             enable: true,
             maxAccountsPerToolkit: 10,
-            requireExplicitSelection: true,
+            requireExplicitSelection: false,
           },
         },
       });
@@ -1082,6 +1082,143 @@ describe("composio tool mapping", () => {
 
     expect(composioSdkState.executions).toEqual(executed);
     expect(events.at(-1)?.type).toBe(executed.length > 0 ? "result" : "error");
+  });
+
+  describe("naming the account of a multi-account toolkit", () => {
+    const slackConnections = [
+      {
+        id: "connection-weassist",
+        connectorId: "composio",
+        externalId: "slack",
+        displayName: "weassist",
+        providerRef: "ca_weassist",
+      },
+      {
+        id: "connection-workstackos",
+        connectorId: "composio",
+        externalId: "slack",
+        displayName: "workstackos",
+        providerRef: "ca_workstackos",
+      },
+    ];
+    const runWith = async (account?: string) => {
+      composioSdkState.created.length = 0;
+      composioSdkState.executions.length = 0;
+      composioSdkState.sessions.clear();
+      composioToolkitDirectory.invalidate();
+      const previous = composioSdkState.connectedAccounts.list;
+      composioSdkState.connectedAccounts.list = async () => ({
+        items: [
+          { id: "ca_weassist", wordId: "slack_tala-cancel" },
+          { id: "ca_workstackos", wordId: "slack_nappy-lim" },
+        ],
+      });
+      const events: ConnectorEvent[] = [];
+      try {
+        for await (const event of new ComposioConnector().execute(
+          {
+            tool: "COMPOSIO_MULTI_EXECUTE_TOOL",
+            args: {
+              tools: [
+                {
+                  tool_slug: "SLACK_FETCH_CONVERSATION_HISTORY",
+                  arguments: { channel: "C0CLAHVND88" },
+                  ...(account === undefined ? {} : { account }),
+                },
+              ],
+            },
+            executionId: "composio-slack-account",
+          },
+          {
+            operationId: "composio-slack-account",
+            traceId: "composio-slack-account",
+            spaceId: "workspace",
+            userId: "user-1",
+            signal: new AbortController().signal,
+            connectedConnections: slackConnections,
+          },
+        )) {
+          events.push(event);
+        }
+      } finally {
+        composioSdkState.connectedAccounts.list = previous;
+      }
+      const sent = composioSdkState.executions.at(-1)?.args.tools as
+        | Array<Record<string, unknown>>
+        | undefined;
+      return { events, sent: sent?.[0] };
+    };
+
+    it.each([
+      "workstackos",
+      "WorkStackOS",
+      "ca_workstackos",
+      "slack_nappy-lim",
+      "sla…-lim",
+      "slack_nap...lim",
+    ])("resolves %s to the pinned account id", async (account) => {
+      const { events, sent } = await runWith(account);
+      expect(events.at(-1)?.type).toBe("result");
+      expect(sent?.account).toBe("ca_workstackos");
+    });
+
+    it("leaves the account out so the default account serves the call", async () => {
+      const { events, sent } = await runWith();
+      expect(events.at(-1)?.type).toBe("result");
+      expect(sent).not.toHaveProperty("account");
+    });
+
+    it("refuses an unknown account and lists the values that work", async () => {
+      const { events } = await runWith("WeAssist Slack");
+      expect(composioSdkState.executions).toEqual([]);
+      expect(events).toEqual([
+        {
+          type: "error",
+          message:
+            'SLACK_FETCH_CONVERSATION_HISTORY: No connected account matches "WeAssist Slack". Pass one of: "weassist" (slack_tala-cancel), "workstackos" (slack_nappy-lim).',
+        },
+      ]);
+    });
+
+    it("leaves app tool descriptions alone when adding the account list", async () => {
+      composioSdkState.sessions.clear();
+      composioToolkitDirectory.invalidate();
+      const previous = composioSdkState.connectedAccounts.list;
+      composioSdkState.connectedAccounts.list = async () => ({
+        items: [{ id: "ca-personal" }, { id: "ca-work" }],
+      });
+      const previousCreate = composioSdkState.createThrows;
+      try {
+        const tools = await new ComposioConnector().discoverTools({
+          operationId: "composio-hint",
+          traceId: "composio-hint",
+          spaceId: "workspace",
+          userId: "user-1",
+          signal: new AbortController().signal,
+          connectedConnections: [
+            {
+              id: "c1",
+              connectorId: "composio",
+              externalId: "github",
+              displayName: "Personal",
+              providerRef: "ca-personal",
+            },
+            {
+              id: "c2",
+              connectorId: "composio",
+              externalId: "github",
+              displayName: "Work",
+              providerRef: "ca-work",
+            },
+          ],
+        });
+        // The mocked session exposes only GITHUB_GET_REPOS, which keeps its description.
+        expect(tools.map((tool) => tool.description)).toEqual(["List GitHub repositories"]);
+      } finally {
+        composioSdkState.connectedAccounts.list = previous;
+        composioSdkState.createThrows = previousCreate;
+      }
+    });
   });
 
   it("keeps mixed multi-execute calls in their original order", () => {
