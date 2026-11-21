@@ -4,10 +4,17 @@ import { parseServerHeaders } from "@rakazo/contracts";
 import { isLoopbackHost, isPrivateNetworkHost } from "@rakazo/contracts/network-host";
 import { t } from "../i18n.js";
 
+const SCHEME = /^[a-zA-Z][a-zA-Z0-9+.-]*:\/\//;
+
 /** Managed desktop origin; development keeps its usual web/API ports. */
 export const DEFAULT_LOCAL_WEB_URL = "http://127.0.0.1:45173";
-/** Hosted Rakazo; setup saves it as an `existing` server so it opens like any other. */
-export const RAKAZO_CLOUD_URL = "https://app.rakazo.com";
+/**
+ * The hosted server a first launch opens straight into (Wea: https://wea.weassist.io).
+ * Builds can point elsewhere with WEA_DESKTOP_SERVER_URL; setup saves it as an
+ * `existing` server so it opens like any other.
+ */
+export const RAKAZO_CLOUD_URL =
+  normalizeServerUrl(process.env.WEA_DESKTOP_SERVER_URL ?? "") ?? "https://wea.weassist.io";
 export const PROBE_RESPONSE_LIMIT_BYTES = 64 * 1024;
 
 export const SETUP_FILE_NAME = "setup.json";
@@ -15,8 +22,6 @@ export const SETUP_FILE_NAME = "setup.json";
 export type StartupTarget =
   | { kind: "app"; url: string; source: "env" | "saved" | "cloud" }
   | { kind: "setup" };
-
-const SCHEME = /^[a-zA-Z][a-zA-Z0-9+.-]*:\/\//;
 
 /**
  * Accepts what a person would actually type ("localhost:5173", "rakazo.example.com")

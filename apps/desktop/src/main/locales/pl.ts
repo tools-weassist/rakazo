@@ -4,7 +4,7 @@ export const PL_MESSAGES: Record<string, string> = {
   "Check for Updates…": "Sprawdź aktualizacje…",
   "Computer Access…": "Dostęp do komputera…",
   "Revoke Local Computer Access": "Cofnij dostęp do lokalnego komputera",
-  "Change Rakazo Server…": "Zmień serwer Rakazo…",
+  "Change Wea Server…": "Zmień serwer Wea…",
   "Hide {name}": "Ukryj {name}",
   "Hide Others": "Ukryj pozostałe",
   "Show All": "Pokaż wszystkie",
@@ -41,13 +41,13 @@ export const PL_MESSAGES: Record<string, string> = {
   "Checking for Updates…": "Sprawdzanie aktualizacji…",
   "Downloading Update…": "Pobieranie aktualizacji…",
   "Restart to Update…": "Uruchom ponownie, aby zaktualizować…",
-  "Downloading Rakazo {version}…": "Pobieranie Rakazo {version}…",
-  "Rakazo {version} is ready to install.": "Rakazo {version} jest gotowe do zainstalowania.",
+  "Downloading Wea {version}…": "Pobieranie Wea {version}…",
+  "Wea {version} is ready to install.": "Wea {version} jest gotowe do zainstalowania.",
   Restart: "Uruchom ponownie",
   Later: "Później",
   "Could not install the update.": "Nie udało się zainstalować aktualizacji.",
   "Could not check for updates.": "Nie udało się sprawdzić aktualizacji.",
-  "Rakazo is up to date.": "Rakazo jest aktualne.",
+  "Wea is up to date.": "Wea jest aktualne.",
   "Version {version}": "Wersja {version}",
   "Automatic updates are turned off for this install.":
     "Automatyczne aktualizacje są wyłączone w tej instalacji.",
@@ -55,12 +55,12 @@ export const PL_MESSAGES: Record<string, string> = {
     "Automatyczne aktualizacje działają tylko w zainstalowanej aplikacji.",
   "No desktop releases are published for this build yet.":
     "Dla tej kompilacji nie opublikowano jeszcze wersji desktopowej.",
-  "Move Rakazo to Applications to install updates.":
-    "Przenieś Rakazo do folderu Aplikacje, aby instalować aktualizacje.",
+  "Move Wea to Applications to install updates.":
+    "Przenieś Wea do folderu Aplikacje, aby instalować aktualizacje.",
   "Free up disk space to install updates.":
     "Zwolnij miejsce na dysku, aby zainstalować aktualizacje.",
-  "This update could not be verified. Reinstall Rakazo from a trusted download.":
-    "Nie udało się zweryfikować aktualizacji. Zainstaluj Rakazo ponownie z zaufanego źródła.",
+  "This update could not be verified. Reinstall Wea from a trusted download.":
+    "Nie udało się zweryfikować aktualizacji. Zainstaluj Wea ponownie z zaufanego źródła.",
   "The update could not be completed. Try again later.":
     "Nie udało się dokończyć aktualizacji. Spróbuj ponownie później.",
   "Could not reach the update server.": "Nie udało się połączyć z serwerem aktualizacji.",
@@ -83,15 +83,15 @@ export const PL_MESSAGES: Record<string, string> = {
     "Logowanie już trwa. Anuluj je i spróbuj ponownie.",
   "Could not open browser sign-in. Close other sign-in attempts and retry.":
     "Nie udało się otworzyć logowania w przeglądarce. Zamknij inne próby logowania i spróbuj ponownie.",
-  "Sign-in callback rejected. Return to Rakazo to retry.":
-    "Odrzucono odpowiedź logowania. Wróć do Rakazo i spróbuj ponownie.",
-  "You can close this tab and return to Rakazo.": "Możesz zamknąć tę kartę i wrócić do Rakazo.",
+  "Sign-in callback rejected. Return to Wea to retry.":
+    "Odrzucono odpowiedź logowania. Wróć do Wea i spróbuj ponownie.",
+  "You can close this tab and return to Wea.": "Możesz zamknąć tę kartę i wrócić do Wea.",
 
   // Setup window
-  "Set up Rakazo": "Skonfiguruj Rakazo",
-  "Quit Rakazo": "Zakończ Rakazo",
-  "Welcome to Rakazo": "Witaj w Rakazo",
-  "Choose where Rakazo runs.": "Wybierz, gdzie działa Rakazo.",
+  "Set up Wea": "Skonfiguruj Wea",
+  "Quit Wea": "Zakończ Wea",
+  "Welcome to Wea": "Witaj w Wea",
+  "Choose where Wea runs.": "Wybierz, gdzie działa Wea.",
   Instance: "Instancja",
   "This computer": "Ten komputer",
   "Existing instance": "Istniejąca instancja",
@@ -104,14 +104,14 @@ export const PL_MESSAGES: Record<string, string> = {
   Continue: "Kontynuuj",
   Retry: "Spróbuj ponownie",
   "Getting ready…": "Przygotowywanie…",
-  "Downloading Rakazo…": "Pobieranie Rakazo…",
-  "Starting Rakazo…": "Uruchamianie Rakazo…",
+  "Downloading Wea…": "Pobieranie Wea…",
+  "Starting Wea…": "Uruchamianie Wea…",
   "Almost ready…": "Prawie gotowe…",
-  "Rakazo is ready.": "Rakazo jest gotowe.",
+  "Wea is ready.": "Wea jest gotowe.",
   "{size} downloaded": "Pobrano {size}",
   "Connecting…": "Łączenie…",
   "Checking…": "Sprawdzanie…",
-  "Rakazo answered at {url}.": "Rakazo odpowiedziało pod adresem {url}.",
+  "Wea answered at {url}.": "Wea odpowiedziało pod adresem {url}.",
   "Enter a server address first.": "Najpierw wpisz adres serwera.",
   "Could not save that address.": "Nie udało się zapisać tego adresu.",
   "Could not save that address. Try again.": "Nie udało się zapisać tego adresu. Spróbuj ponownie.",
@@ -122,8 +122,8 @@ export const PL_MESSAGES: Record<string, string> = {
   "Could not run the connection check. Try again.":
     "Nie udało się sprawdzić połączenia. Spróbuj ponownie.",
   "Setup bridge unavailable.": "Moduł konfiguracji jest niedostępny.",
-  "Setup could not start. Quit Rakazo and try again.":
-    "Nie udało się rozpocząć konfiguracji. Zamknij Rakazo i spróbuj ponownie.",
+  "Setup could not start. Quit Wea and try again.":
+    "Nie udało się rozpocząć konfiguracji. Zamknij Wea i spróbuj ponownie.",
 
   // Connecting to a server
   "Enter a server address.": "Wpisz adres serwera.",
@@ -131,10 +131,10 @@ export const PL_MESSAGES: Record<string, string> = {
   "Enter a valid server address. Public servers require HTTPS; a new local instance must use localhost.":
     "Wpisz poprawny adres serwera. Serwery publiczne wymagają HTTPS. Nowa lokalna instancja musi używać localhost.",
   "Invalid custom headers": "Nieprawidłowe nagłówki niestandardowe",
-  "That address redirects elsewhere. Enter the final Rakazo server address.":
-    "Ten adres przekierowuje w inne miejsce. Wpisz docelowy adres serwera Rakazo.",
-  "That address did not respond like a Rakazo server.":
-    "Ten adres nie odpowiedział jak serwer Rakazo.",
+  "That address redirects elsewhere. Enter the final Wea server address.":
+    "Ten adres przekierowuje w inne miejsce. Wpisz docelowy adres serwera Wea.",
+  "That address did not respond like a Wea server.":
+    "Ten adres nie odpowiedział jak serwer Wea.",
   "The server answered with HTTP {status}.": "Serwer odpowiedział kodem HTTP {status}.",
   "Timed out reaching that address.": "Przekroczono czas oczekiwania na połączenie z tym adresem.",
   "Nothing is listening at that address yet.": "Pod tym adresem nie działa jeszcze żadna usługa.",
@@ -159,8 +159,8 @@ export const PL_MESSAGES: Record<string, string> = {
     "Nie udało się zapisać konfiguracji. Przywrócono poprzednią instancję.",
   "Connected, but could not save setup for the next launch. Try Continue again.":
     "Połączono, ale nie udało się zapisać konfiguracji na następne uruchomienie. Kliknij ponownie Kontynuuj.",
-  "The app-managed Rakazo services are not ready. Retry setup.":
-    "Usługi Rakazo zarządzane przez aplikację nie są gotowe. Ponów konfigurację.",
+  "The app-managed Wea services are not ready. Retry setup.":
+    "Usługi Wea zarządzane przez aplikację nie są gotowe. Ponów konfigurację.",
 
   // Docker
   "Docker is installed, but Docker Compose is missing. Install Docker Desktop or the docker-compose-plugin.":
@@ -183,10 +183,10 @@ export const PL_MESSAGES: Record<string, string> = {
     "Docker przestał odpowiadać. Uruchom Docker i spróbuj ponownie.",
   "Docker Compose is missing. Install Docker Desktop or the docker-compose-plugin, then retry.":
     "Brakuje Docker Compose. Zainstaluj Docker Desktop lub docker-compose-plugin i spróbuj ponownie.",
-  "Downloading Rakazo images failed. Check the output below, then retry.":
-    "Nie udało się pobrać obrazów Rakazo. Sprawdź poniższe komunikaty i spróbuj ponownie.",
-  "Rakazo services did not start. Check the output below, then retry.":
-    "Usługi Rakazo nie uruchomiły się. Sprawdź poniższe komunikaty i spróbuj ponownie.",
+  "Downloading Wea images failed. Check the output below, then retry.":
+    "Nie udało się pobrać obrazów Wea. Sprawdź poniższe komunikaty i spróbuj ponownie.",
+  "Wea services did not start. Check the output below, then retry.":
+    "Usługi Wea nie uruchomiły się. Sprawdź poniższe komunikaty i spróbuj ponownie.",
   "The stack started but the web app did not answer. Retry, and check the output below.":
     "Usługi uruchomiły się, ale aplikacja webowa nie odpowiedziała. Spróbuj ponownie i sprawdź poniższe komunikaty.",
   "Could not prepare the local stack. Retry.":
@@ -210,15 +210,15 @@ export const PL_MESSAGES: Record<string, string> = {
   "Chat Details": "Szczegóły czatu",
   Help: "Pomoc",
   "Keyboard Shortcuts": "Skróty klawiszowe",
-  "Downloading Rakazo failed. Check the internet connection, then retry.":
-    "Nie udało się pobrać Rakazo. Sprawdź połączenie z internetem i spróbuj ponownie.",
+  "Downloading Wea failed. Check the internet connection, then retry.":
+    "Nie udało się pobrać Wea. Sprawdź połączenie z internetem i spróbuj ponownie.",
   "Could not move your data from Docker. Check the output below, then retry.":
     "Nie udało się przenieść danych z Dockera. Sprawdź dane wyjściowe poniżej i spróbuj ponownie.",
   "The computer runtime already running is too old. Update or quit it, then retry.":
     "Uruchomione już środowisko komputerów jest zbyt stare. Zaktualizuj je lub zamknij, a potem spróbuj ponownie.",
-  "Your Rakazo data is in a different computer runtime. Quit the one running, then retry.":
-    "Twoje dane Rakazo są w innym środowisku komputerów. Zamknij to, które jest uruchomione, a potem spróbuj ponownie.",
-  "Run Rakazo without Docker?": "Uruchamiać Rakazo bez Dockera?",
+  "Your Wea data is in a different computer runtime. Quit the one running, then retry.":
+    "Twoje dane Wea są w innym środowisku komputerów. Zamknij to, które jest uruchomione, a potem spróbuj ponownie.",
+  "Run Wea without Docker?": "Uruchamiać Wea bez Dockera?",
   "Your bots and data move over. Docker is stopped, not removed.":
     "Twoje boty i dane zostaną przeniesione. Docker zostanie zatrzymany, nie usunięty.",
   Move: "Przenieś",
@@ -227,12 +227,12 @@ export const PL_MESSAGES: Record<string, string> = {
   "Your data stays on this computer.": "Twoje dane zostają na tym komputerze.",
   "Connect to a server you or your team already run.":
     "Połącz się z serwerem, który Ty lub Twój zespół już prowadzicie.",
-  "Rakazo needs Docker Desktop to run on this computer.":
-    "Rakazo potrzebuje Docker Desktop, aby działać na tym komputerze.",
-  "Rakazo needs Docker to run on this computer.":
-    "Rakazo potrzebuje Dockera, aby działać na tym komputerze.",
-  "Docker Desktop is a free app that runs Rakazo in the background. Install it and open it once.":
-    "Docker Desktop to darmowa aplikacja, która uruchamia Rakazo w tle. Zainstaluj ją i otwórz raz.",
+  "Wea needs Docker Desktop to run on this computer.":
+    "Wea potrzebuje Docker Desktop, aby działać na tym komputerze.",
+  "Wea needs Docker to run on this computer.":
+    "Wea potrzebuje Dockera, aby działać na tym komputerze.",
+  "Docker Desktop is a free app that runs Wea in the background. Install it and open it once.":
+    "Docker Desktop to darmowa aplikacja, która uruchamia Wea w tle. Zainstaluj ją i otwórz raz.",
   "Install Docker Engine and start it.": "Zainstaluj Docker Engine i uruchom go.",
   "Download Docker Desktop": "Pobierz Docker Desktop",
   "Install Docker": "Zainstaluj Dockera",
@@ -241,14 +241,14 @@ export const PL_MESSAGES: Record<string, string> = {
   "Starting {app}…": "Uruchamianie {app}…",
   "Docker is installed but not running. Start the Docker service to continue.":
     "Docker jest zainstalowany, ale nie działa. Uruchom usługę Docker, aby kontynuować.",
-  "Rakazo stopped unexpectedly.": "Rakazo zatrzymał się nieoczekiwanie.",
+  "Wea stopped unexpectedly.": "Wea zatrzymał się nieoczekiwanie.",
   Reload: "Odśwież",
   "Mac app control": "Sterowanie aplikacjami na Macu",
   "Set up Mac app control": "Skonfiguruj sterowanie aplikacjami na Macu",
-  "Commands already work. To use apps, allow Accessibility and Screen Recording for Rakazo in System Settings, then restart Rakazo.":
-    "Polecenia już działają. Aby używać aplikacji, zezwól Rakazo na dostęp do Ułatwień dostępu i Nagrywania ekranu w Ustawieniach systemowych, a następnie uruchom Rakazo ponownie.",
+  "Commands already work. To use apps, allow Accessibility and Screen Recording for Wea in System Settings, then restart Wea.":
+    "Polecenia już działają. Aby używać aplikacji, zezwól Wea na dostęp do Ułatwień dostępu i Nagrywania ekranu w Ustawieniach systemowych, a następnie uruchom Wea ponownie.",
   "Open System Settings": "Otwórz Ustawienia systemowe",
-  "Restart Rakazo": "Uruchom Rakazo ponownie",
+  "Restart Wea": "Uruchom Wea ponownie",
   "Not Now": "Nie teraz",
-  "Restart Rakazo to finish setup": "Uruchom Rakazo ponownie, aby ukończyć konfigurację",
+  "Restart Wea to finish setup": "Uruchom Wea ponownie, aby ukończyć konfigurację",
 };
