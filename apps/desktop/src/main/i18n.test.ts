@@ -23,12 +23,12 @@ import { readUiLocale, writeUiLocale } from "./setup/setup-store.js";
 const srcDir = path.resolve(import.meta.dirname, "..");
 /** Product and vendor names the setup page shows as they are. */
 const UNTRANSLATED = new Set([
-  "Rakazo",
-  "Rakazo Cloud",
+  "Wea",
+  "Wea Cloud",
   "Docker Desktop",
   "OrbStack",
   "Docker Engine",
-  "https://rakazo.example.com",
+  "https://wea.example.com",
 ]);
 
 /** Literal `t("…")` ids; the formatter keeps every string double-quoted. */
@@ -84,8 +84,8 @@ describe("desktop language", () => {
   it("starts in the saved language, ignoring a saved value that is not a language tag", () => {
     expect(startDesktopLocale("es-MX", "en-US")).toBe("es");
     expect(t("Check for Updates…")).toBe("Buscar actualizaciones…");
-    expect(t("Rakazo {version} is ready to install.", { version: "1.2.0" })).toBe(
-      "Rakazo 1.2.0 está listo para instalarse.",
+    expect(t("Wea {version} is ready to install.", { version: "1.2.0" })).toBe(
+      "Wea 1.2.0 está listo para instalarse.",
     );
     expect(desktopMessages()).toBe(ES_MESSAGES);
 
@@ -98,8 +98,8 @@ describe("desktop language", () => {
     expect(startDesktopLocale("pl-PL", "en-US")).toBe("pl");
     expect(desktopMessages()).toBe(PL_MESSAGES);
     expect(t("Check for Updates…")).toBe("Sprawdź aktualizacje…");
-    expect(t("Rakazo {version} is ready to install.", { version: "1.2.0" })).toBe(
-      "Rakazo 1.2.0 jest gotowe do zainstalowania.",
+    expect(t("Wea {version} is ready to install.", { version: "1.2.0" })).toBe(
+      "Wea 1.2.0 jest gotowe do zainstalowania.",
     );
   });
 
@@ -107,8 +107,8 @@ describe("desktop language", () => {
     expect(startDesktopLocale("th-TH", "en-US")).toBe("th");
     expect(desktopMessages()).toBe(TH_MESSAGES);
     expect(t("Check for Updates…")).toBe("ตรวจสอบการอัปเดต…");
-    expect(t("Rakazo {version} is ready to install.", { version: "1.2.0" })).toBe(
-      "Rakazo 1.2.0 พร้อมติดตั้งแล้ว",
+    expect(t("Wea {version} is ready to install.", { version: "1.2.0" })).toBe(
+      "Wea 1.2.0 พร้อมติดตั้งแล้ว",
     );
   });
 

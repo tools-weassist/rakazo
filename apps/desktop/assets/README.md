@@ -1,11 +1,9 @@
 # Desktop icons
 
-The shared editable source and export notes are in
-[`packages/ui-tokens/assets`](../../../packages/ui-tokens/assets/README.md).
+Wea build: `icon.png` (512px), `icon.ico` (16–256px), `icon.icns` and `icon-macos.png`
+(1024px with Dock margins) are rendered from the Wea logo at
+`apps/web/public/favicon.svg`. Re-render them from that SVG if the logo changes.
 
-Mac packaging requires Xcode 26 or newer. Electron builder compiles `Rakazo.icon`
-into `Assets.car` for Tahoe and generates `icon.icns` for older macOS versions.
-`icon-macos.png` is the matching development export with Dock margins.
-
-`icon.png` and `icon.ico` are matching orange exports for Linux and Windows.
-Refresh them with `pnpm --filter @rakazo/ui-tokens export:brand`.
+The original Rakazo sources and export notes are in
+[`packages/ui-tokens/assets`](../../../packages/ui-tokens/assets/README.md); `Rakazo.icon`
+there is no longer used by the Mac build.

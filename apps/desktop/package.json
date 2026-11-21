@@ -1,9 +1,9 @@
 {
   "name": "@rakazo/desktop",
-  "productName": "Rakazo",
-  "version": "0.13.0",
+  "productName": "Wea",
+  "version": "0.13.1",
   "author": {
-    "name": "Rakazo"
+    "name": "WeAssist"
   },
   "license": "Apache-2.0",
   "type": "module",
@@ -38,14 +38,18 @@
     "yaml": "2.9.1"
   },
   "build": {
-    "appId": "dev.rakazo.desktop",
+    "appId": "io.weassist.wea",
     "directories": {
       "output": "out",
       "buildResources": "assets"
     },
     "files": [
       "dist/**/*",
-      "package.json"
+      "package.json",
+      "!**/node_modules/@sentry/**",
+      "!**/node_modules/sentry/**",
+      "!**/node_modules/oxc-parser/**",
+      "!**/node_modules/@oxc-parser/**"
     ],
     "extraResources": [
       {
@@ -62,18 +66,18 @@
       }
     ],
     "extraMetadata": {
-      "name": "rakazo",
+      "name": "wea",
       "main": "dist/main.js"
     },
     "mac": {
-      "icon": "../../packages/ui-tokens/assets/Rakazo.icon",
+      "icon": "assets/icon.icns",
       "category": "public.app-category.productivity",
       "x64ArchFiles": "{**/node_modules/@koromix/koffi-darwin-*/darwin_*/koffi.node,**/node_modules/@oxc-parser/binding-darwin-*/parser.darwin-*.node}",
       "entitlements": "assets/entitlements.mac.plist",
       "entitlementsInherit": "assets/entitlements.mac.plist",
       "extendInfo": {
-        "NSMicrophoneUsageDescription": "Rakazo uses the microphone for dictation and voice calls with your bots.",
-        "NSSpeechRecognitionUsageDescription": "Rakazo turns what you say into text for dictation and voice calls with your bots."
+        "NSMicrophoneUsageDescription": "Wea uses the microphone for dictation and voice calls with your bots.",
+        "NSSpeechRecognitionUsageDescription": "Wea turns what you say into text for dictation and voice calls with your bots."
       },
       "extraResources": [
         {
@@ -131,7 +135,7 @@
       "verifyUpdateCodeSignature": true
     },
     "linux": {
-      "executableName": "rakazo",
+      "executableName": "wea",
       "icon": "assets/icon.png",
       "target": [
         "AppImage"
@@ -140,7 +144,7 @@
     "publish": [
       {
         "provider": "github",
-        "owner": "elie222",
+        "owner": "tools-weassist",
         "repo": "rakazo"
       }
     ]
