@@ -5,6 +5,7 @@ import { matchFeaturedConnectorId } from "../integrations/featured-connectors.js
 import { presetFromCron } from "../routines/schedule.js";
 import { extractRoutineSkillMentions } from "../skills/agent-skill.js";
 import { BOT_TEMPLATES, findBotTemplate } from "./bot-templates.js";
+import { VA_BOT_TEMPLATES } from "./va-bot-templates.js";
 
 describe("bot templates", () => {
   it("each validates strictly and has a unique id", () => {
@@ -15,6 +16,22 @@ describe("bot templates", () => {
     expect(new Set(ids).size).toBe(ids.length);
     expect(findBotTemplate("morning-briefing")?.name).toBe("Morning briefing");
     expect(findBotTemplate("missing")).toBeUndefined();
+  });
+
+  it("list the templates for virtual assistants first", () => {
+    expect(BOT_TEMPLATES.slice(0, VA_BOT_TEMPLATES.length)).toEqual(VA_BOT_TEMPLATES);
+    expect(VA_BOT_TEMPLATES.map((template) => template.id)).toEqual([
+      "sop-builder",
+      "results-eod-report",
+      "va-client-finder",
+      "delegation-coach",
+      "ai-upskill-coach",
+      "get-paid-back-office",
+      "scope-rate-guard",
+      "inbox-admin-triage",
+      "night-shift-handoff",
+      "va-onboarding-kit",
+    ]);
   });
 
   it("carry nothing shaped like a credential", () => {

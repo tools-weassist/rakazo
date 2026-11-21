@@ -16,17 +16,27 @@ import {
 import { useQuery } from "@tanstack/react-query";
 import type { LucideIcon } from "lucide-react";
 import {
+  BookOpenCheck,
   Bot as BotIcon,
+  BriefcaseBusiness,
   Check,
   ChevronDown,
   ChevronLeft,
+  ClipboardCheck,
   Clock,
   GitPullRequest,
+  GraduationCap,
   Inbox,
   LayoutTemplate,
+  ListChecks,
+  MailCheck,
+  MoonStar,
+  Receipt,
+  Scale,
   ScrollText,
   Sun,
   Telescope,
+  UserPlus,
   X,
 } from "lucide-react";
 import { useId, useState } from "react";
@@ -38,6 +48,16 @@ import { PluginLogo, ROW_HOVER } from "../integrations/plugin-marketplace";
 import { useBotTemplateCopy } from "./bot-template-copy";
 
 const ICONS: Record<string, LucideIcon> = {
+  "sop-builder": BookOpenCheck,
+  "results-eod-report": ClipboardCheck,
+  "va-client-finder": BriefcaseBusiness,
+  "delegation-coach": ListChecks,
+  "ai-upskill-coach": GraduationCap,
+  "get-paid-back-office": Receipt,
+  "scope-rate-guard": Scale,
+  "inbox-admin-triage": MailCheck,
+  "night-shift-handoff": MoonStar,
+  "va-onboarding-kit": UserPlus,
   "morning-briefing": Sun,
   "inbox-triage": Inbox,
   "pr-reviewer": GitPullRequest,
