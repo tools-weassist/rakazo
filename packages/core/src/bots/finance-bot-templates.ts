@@ -1,4 +1,5 @@
 import type { BotTemplate } from "@rakazo/contracts";
+import { DATE_RULE } from "./template-rules.js";
 
 /**
  * Accounting and finance helpers for small businesses and the virtual assistants (VAs) who run
@@ -8,7 +9,7 @@ import type { BotTemplate } from "@rakazo/contracts";
 export const FINANCE_BOT_TEMPLATES: readonly BotTemplate[] = [
   {
     id: "receipt-categorizer",
-    version: 1,
+    version: 2,
     name: "Receipt sorter",
     category: "accounting-finance",
     summary: "Finds receipts, sorts expenses and flags what's missing",
@@ -45,6 +46,7 @@ export const FINANCE_BOT_TEMPLATES: readonly BotTemplate[] = [
       "- Never invent amounts, dates or vendors. Use only what the receipt or message shows.",
       "- No card numbers, bank account numbers or passwords in chat or the sheet: the last 4 digits at most.",
       "- You don't give tax advice. When something looks like a tax question (personal vs business, deductibility), say so and suggest asking their accountant.",
+      DATE_RULE,
     ].join("\n"),
     skills: [
       {
@@ -74,7 +76,7 @@ export const FINANCE_BOT_TEMPLATES: readonly BotTemplate[] = [
   },
   {
     id: "ar-follow-up",
-    version: 1,
+    version: 2,
     name: "Invoice follow-up",
     category: "accounting-finance",
     summary: "Tracks who owes you and drafts polite reminders",
@@ -109,6 +111,8 @@ export const FINANCE_BOT_TEMPLATES: readonly BotTemplate[] = [
       "- Never invent amounts or dates. If the list and an email disagree, ask.",
       "- Keep every reminder courteous: no threats, no shaming. You don't give legal advice about collections; suggest a professional when asked.",
       "- No bank or card numbers in drafts; point to the payment link or method by name.",
+      DATE_RULE,
+      "- Never say a copy is attached unless you attached one; give the invoice number and point to the payment link instead.",
     ].join("\n"),
     skills: [
       {
@@ -151,7 +155,7 @@ export const FINANCE_BOT_TEMPLATES: readonly BotTemplate[] = [
   },
   {
     id: "month-end-close",
-    version: 1,
+    version: 2,
     name: "Month-end close",
     category: "accounting-finance",
     summary: "Runs your month-end checklist and chases what's missing",
@@ -189,6 +193,7 @@ export const FINANCE_BOT_TEMPLATES: readonly BotTemplate[] = [
       "- Draft every reminder to teammates; send only after the user's yes.",
       "- You don't give tax or accounting advice. Collect those questions for the accountant.",
       "- Dates labeled with the business's time zone.",
+      DATE_RULE,
     ].join("\n"),
     skills: [
       {
@@ -283,7 +288,7 @@ export const FINANCE_BOT_TEMPLATES: readonly BotTemplate[] = [
   },
   {
     id: "cash-flow-snapshot",
-    version: 1,
+    version: 2,
     name: "Cash-flow snapshot",
     category: "accounting-finance",
     summary: "A weekly look at cash in, cash out and what's coming",
@@ -318,6 +323,7 @@ export const FINANCE_BOT_TEMPLATES: readonly BotTemplate[] = [
       "- No account numbers or logins in chat or reports.",
       "- You don't give investment, lending or tax advice. Flag risks plainly and suggest talking to their accountant for big decisions.",
       "- Send the snapshot to others only after the user's yes, the first time and whenever recipients change.",
+      DATE_RULE,
     ].join("\n"),
     skills: [
       {

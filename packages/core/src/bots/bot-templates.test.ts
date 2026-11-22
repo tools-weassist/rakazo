@@ -8,6 +8,7 @@ import { BOT_TEMPLATES, findBotTemplate } from "./bot-templates.js";
 import { FINANCE_BOT_TEMPLATES } from "./finance-bot-templates.js";
 import { MARKETING_BOT_TEMPLATES } from "./marketing-bot-templates.js";
 import { OPS_BOT_TEMPLATES } from "./ops-bot-templates.js";
+import { DATE_RULE } from "./template-rules.js";
 import { VA_BOT_TEMPLATES } from "./va-bot-templates.js";
 import { VA_TEAM_ROLE_BOT_TEMPLATES } from "./va-team-role-bot-templates.js";
 
@@ -114,6 +115,23 @@ describe("bot templates", () => {
     // Featured apps match by alias; the code host is matched by its own slug.
     for (const app of BOT_TEMPLATES.flatMap((template) => template.apps)) {
       expect(app === "github" || matchFeaturedConnectorId(app) !== null).toBe(true);
+    }
+  });
+});
+
+describe("template setup and dates", () => {
+  it("gives every template first-conversation setup questions, so it can open the chat", () => {
+    for (const template of BOT_TEMPLATES) {
+      expect(template.instructions, template.id).toMatch(/first conversation/i);
+    }
+  });
+
+  it("tells templates that handle dates not to guess weekdays, and leaves no [WHO?] placeholders", () => {
+    for (const id of ["meeting-action-items", "month-end-close", "results-eod-report"]) {
+      expect(findBotTemplate(id)?.instructions).toContain(DATE_RULE);
+    }
+    for (const template of BOT_TEMPLATES) {
+      expect(template.instructions, template.id).not.toMatch(/\[WHO|\[WHEN/);
     }
   });
 });
