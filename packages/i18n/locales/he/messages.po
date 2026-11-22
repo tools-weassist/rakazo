@@ -13718,7 +13718,7 @@ msgstr "להתחיל את התוכנית עכשיו?"
 #: apps/mobile/lib/inbox/activity.ts
 #: apps/web/src/pages/routines/RoutineRunHistory.tsx
 msgid "Started {count}d late"
-msgstr "התחיל באיחור של {count} י׳"
+msgstr "{count, plural, one {התחיל באיחור של יום} other {התחיל באיחור של # ימים}}"
 
 #: apps/mobile/lib/inbox/activity.ts
 #: apps/web/src/pages/routines/RoutineRunHistory.tsx
