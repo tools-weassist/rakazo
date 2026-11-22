@@ -1488,6 +1488,15 @@ function SpaceShell() {
             // As after any new bot: the Space's sections and counts come from the server.
             void refreshBots().catch(() => undefined);
           }}
+          onOpenGroup={(group) => {
+            setGroups((current) =>
+              current.some((item) => item.id === group.id) ? current : [group, ...current],
+            );
+            navigate(`/app/g/${group.id}`);
+            setPanel(null);
+            // A team adds bots too.
+            void refreshBots().catch(() => undefined);
+          }}
         />
       </Suspense>
 

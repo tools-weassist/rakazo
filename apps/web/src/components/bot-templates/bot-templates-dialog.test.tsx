@@ -11,6 +11,8 @@ import { afterEach, beforeEach, expect, it, vi } from "vitest";
 
 const bots = vi.hoisted(() => ({
   templates: vi.fn(),
+  teamTemplates: vi.fn(),
+  createTeamFromTemplate: vi.fn(),
   createFromTemplate: vi.fn(),
   get: vi.fn(),
   list: vi.fn(),
@@ -101,6 +103,7 @@ beforeEach(() => {
   vi.stubGlobal("IS_REACT_ACT_ENVIRONMENT", true);
   for (const call of Object.values(bots)) call.mockReset();
   bots.list.mockResolvedValue([]);
+  bots.teamTemplates.mockResolvedValue([]);
   onOpenBot.mockReset();
   container = document.createElement("div");
   document.body.append(container);
@@ -226,4 +229,73 @@ it("filters the templates by category, with All showing every one", async () => 
 
   await act(async () => button("All")?.click());
   expect(cards()).toHaveLength(3);
+});
+
+it("lists teams under Teams, and creating one opens its group chat", async () => {
+  const team = {
+    id: "finance-team",
+    version: 2,
+    name: "Finance team",
+    summary: "Close the books together",
+    sample: "**Finance**",
+    lead: "weekly-digest",
+    members: [
+      { templateId: "weekly-digest", role: "Leads.", name: "Weekly digest", botId: null },
+      { templateId: "cash-check", role: "Watches cash.", name: "Cash check", botId: "bot-cash" },
+    ],
+    groupId: null,
+  };
+  const group = { id: "group-1", name: "Finance team" };
+  bots.templates.mockResolvedValue([
+    template,
+    { ...template, id: "cash-check", name: "Cash check", category: "accounting-finance" },
+  ]);
+  bots.teamTemplates.mockResolvedValue([team]);
+  bots.createTeamFromTemplate.mockResolvedValue({ group, members: [], created: true });
+  const onOpenGroup = vi.fn();
+  const client = new QueryClient({ defaultOptions: { queries: { retry: false } } });
+  await act(async () =>
+    root.render(
+      <QueryClientProvider client={client}>
+        <BotTemplatesDialog
+          onClose={() => undefined}
+          onOpenBot={onOpenBot}
+          onOpenGroup={onOpenGroup}
+        />
+      </QueryClientProvider>,
+    ),
+  );
+  await vi.waitFor(() => expect(button("Teams")).toBeTruthy());
+  await act(async () => button("Teams")?.click());
+  const card = container.querySelector<HTMLButtonElement>('[data-testid="team-template-card"]')!;
+  expect(card.textContent).toContain("Finance team");
+  expect(card.textContent).toContain("Weekly digest · Lead");
+  expect(container.querySelector('[data-testid="bot-template-card"]')).toBeNull();
+
+  await act(async () => card.click());
+  const detail = container.querySelector('[data-testid="team-template-detail"]')!;
+  expect(detail.textContent).toContain("Watches cash.");
+  expect(detail.textContent).toContain("Your existing bot joins the team");
+  await act(async () => button("Create team")?.click());
+  expect(bots.createTeamFromTemplate).toHaveBeenCalledWith({ teamId: "finance-team", version: 2 });
+  await vi.waitFor(() => expect(onOpenGroup).toHaveBeenCalledWith(group));
+});
+
+it("hides Teams when the dialog can't open a group", async () => {
+  bots.teamTemplates.mockResolvedValue([{ id: "finance-team" }]);
+  bots.templates.mockResolvedValue([
+    template,
+    { ...template, id: "cash-check", name: "Cash check", category: "accounting-finance" },
+  ]);
+  const client = new QueryClient({ defaultOptions: { queries: { retry: false } } });
+  await act(async () =>
+    root.render(
+      <QueryClientProvider client={client}>
+        <BotTemplatesDialog onClose={() => undefined} onOpenBot={onOpenBot} />
+      </QueryClientProvider>,
+    ),
+  );
+  await vi.waitFor(() => expect(button("All")).toBeTruthy());
+  expect(button("Teams")).toBeUndefined();
+  expect(bots.teamTemplates).not.toHaveBeenCalled();
 });
