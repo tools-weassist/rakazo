@@ -135,7 +135,7 @@ export const PREPARE_COMPUTER_PROXY = [
   "  pid=$(cat /run/rakazo-proxy/tinyproxy.pid 2>/dev/null || true)",
   '  [ -n "$pid" ] && [ "$(cat "/proc/$pid/comm" 2>/dev/null)" = tinyproxy ] && echo "$pid" || true',
   "}",
-  // Stops Rakazo's own instance and waits until its port is free, so a restart can bind it.
+  // Stops Wea's own instance and waits until its port is free, so a restart can bind it.
   "stop_computer_proxy() {",
   "  pid=$(computer_proxy_pid)",
   '  [ -n "$pid" ] || return 0',

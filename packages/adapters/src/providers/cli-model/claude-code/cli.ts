@@ -3,7 +3,7 @@ import { spawn } from "node:child_process";
 import { createInterface } from "node:readline";
 
 /**
- * Runs the official `claude` executable found on the server's PATH, exactly as installed. Rakazo
+ * Runs the official `claude` executable found on the server's PATH, exactly as installed. Wea
  * never signs it in, never reads its sign-in, and never passes it a key: the operator signs in
  * once with `claude auth login`, and every model request is the CLI's own.
  */
@@ -67,8 +67,8 @@ const PASSTHROUGH_ENV = new Set([
 ]);
 
 /**
- * Documented CLI settings. Rakazo owns the conversation, its compaction, memory and instructions,
- * so the CLI keeps none of its own, and every Rakazo tool is listed to the model up front.
+ * Documented CLI settings. Wea owns the conversation, its compaction, memory and instructions,
+ * so the CLI keeps none of its own, and every Wea tool is listed to the model up front.
  */
 const BRIDGE_ENV = {
   DISABLE_AUTOUPDATER: "1",
@@ -259,11 +259,11 @@ function versionAtLeast(version: string, minimum: string): boolean {
 }
 
 export const CLAUDE_CODE_NOT_INSTALLED_ERROR =
-  "Claude Code is not installed on this server. Install it for the user that runs the Rakazo worker, then run `claude auth login`.";
+  "Claude Code is not installed on this server. Install it for the user that runs the Wea worker, then run `claude auth login`.";
 
 /** Shaped like a provider HTTP error so the run error view classifies it as a sign-in problem. */
 export const CLAUDE_CODE_SIGNED_OUT_ERROR =
-  "Claude Code API error (401): Claude Code on this server is not signed in. Run `claude auth login` as the user that runs the Rakazo worker.";
+  "Claude Code API error (401): Claude Code on this server is not signed in. Run `claude auth login` as the user that runs the Wea worker.";
 
 const READY_CACHE_MS = 60_000;
 const ready = new Map<string, number>();

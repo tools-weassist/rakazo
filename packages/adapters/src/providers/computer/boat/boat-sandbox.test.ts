@@ -122,7 +122,7 @@ describe("stopped workspace files", () => {
     expect(download).toHaveBeenCalledOnce();
   });
 
-  it("ignores earlier snapshots after a forced stop or a newer Rakazo checkpoint", async () => {
+  it("ignores earlier snapshots after a forced stop or a newer Wea checkpoint", async () => {
     const download = vi.spyOn(FakeBoatApi.prototype, "getSnapshotFileRaw");
     const { api, computer, provider } = await boat();
     const bytes = new TextEncoder().encode("last saved content");

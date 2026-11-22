@@ -373,7 +373,7 @@ async function introspectGraphqlEndpoint(
     const response = await safeFetch(url, {
       method: "POST",
       headers,
-      body: JSON.stringify({ query: INTROSPECTION_QUERY, operationName: "RakazoIntrospection" }),
+      body: JSON.stringify({ query: INTROSPECTION_QUERY, operationName: "WeaIntrospection" }),
       signal: combineSignals(signal, AbortSignal.timeout(15_000)),
     });
     if (!response.ok)

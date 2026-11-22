@@ -42,7 +42,7 @@ describe("Android mobile platform contract", () => {
       mobileRoot,
       "modules/rakazo-notifications/android/src/main/java/com/rakazo/notifications",
     );
-    const service = readFileSync(resolve(nativeRoot, "RakazoNotificationService.kt"), "utf8");
+    const service = readFileSync(resolve(nativeRoot, "WeaNotificationService.kt"), "utf8");
     const module = readFileSync(resolve(nativeRoot, "RakazoNotificationsModule.kt"), "utf8");
     const allowlist = readFileSync(resolve(nativeRoot, "EndpointAllowlist.kt"), "utf8");
     expect(service).toContain("android.requestPromotedOngoing");
@@ -55,7 +55,7 @@ describe("Android mobile platform contract", () => {
     expect(service).toContain("if (!isAllowedNotificationEndpoint(endpoint)) throw IOException");
     expect(module).toContain("android.settings.APP_NOTIFICATION_PROMOTION_SETTINGS");
     expect(module).not.toContain("settings.copy(liveConnection = false)");
-    expect(module).toContain("RakazoNotificationService.clearSession(context)");
+    expect(module).toContain("WeaNotificationService.clearSession(context)");
     expect(module).toContain("isAllowedNotificationEndpoint(endpoint)");
     expect(module).toContain("storage.spaceId = spaceId");
     expect(allowlist).toContain("isAllowedNotificationEndpoint");
@@ -117,7 +117,7 @@ describe("Android mobile platform contract", () => {
     const service = readFileSync(
       resolve(
         mobileRoot,
-        "modules/rakazo-notifications/android/src/main/java/com/rakazo/notifications/RakazoNotificationService.kt",
+        "modules/rakazo-notifications/android/src/main/java/com/rakazo/notifications/WeaNotificationService.kt",
       ),
       "utf8",
     );
@@ -138,7 +138,7 @@ describe("Android mobile platform contract", () => {
     const service = readFileSync(
       resolve(
         mobileRoot,
-        "modules/rakazo-notifications/android/src/main/java/com/rakazo/notifications/RakazoNotificationService.kt",
+        "modules/rakazo-notifications/android/src/main/java/com/rakazo/notifications/WeaNotificationService.kt",
       ),
       "utf8",
     );

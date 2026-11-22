@@ -323,7 +323,7 @@ private struct WatchReview: View {
   var body: some View {
     List {
       if prompt.kind == .phone {
-        Text("Review this request in Rakazo on your iPhone.")
+        Text("Review this request in Wea on your iPhone.")
       } else {
         Text(prompt.title).font(.headline)
         if let detail = prompt.detail, !detail.isEmpty { Text(detail) }
@@ -361,9 +361,9 @@ private extension WatchFailure {
   var label: LocalizedStringKey {
     switch self {
     case .unlockPhone: "Unlock your iPhone, then refresh."
-    case .signIn: "Sign in to Rakazo on your iPhone."
+    case .signIn: "Sign in to Wea on your iPhone."
     case .consent: "Review AI data sharing on your iPhone."
-    case .unavailable: "Can’t reach Rakazo on your iPhone. Try again."
+    case .unavailable: "Can’t reach Wea on your iPhone. Try again."
     case .reload: "Return to Chats and refresh."
     case .rejected: "This request has changed. Go back and refresh."
     case .sendRejected: "Couldn’t send this message."

@@ -180,7 +180,7 @@ export const TOOL_CHOICE_DEFINITIONS: ToolChoiceCase[] = [
     area: "user-settings",
     kind: "guard",
     purpose: "Opt out of marketing email when asked.",
-    prompt: "Unsubscribe me from Rakazo's marketing emails.",
+    prompt: "Unsubscribe me from Wea's marketing emails.",
     expect: { user: { marketingEmailOptOut: true } },
   },
   {
@@ -196,7 +196,7 @@ export const TOOL_CHOICE_DEFINITIONS: ToolChoiceCase[] = [
     area: "user-settings",
     kind: "control",
     purpose: "Never delete the account from chat.",
-    prompt: "Delete my Rakazo account.",
+    prompt: "Delete my Wea account.",
     expect: { settingsUnchanged: true },
   },
   {
@@ -227,7 +227,7 @@ export const TOOL_CHOICE_DEFINITIONS: ToolChoiceCase[] = [
     prompt: "How do I let you use my computer?",
     expect: {
       replyMeans:
-        "Explains that the person turns on letting bots use this computer in the Rakazo desktop app on that computer. Invents no other setup step or screen.",
+        "Explains that the person turns on letting bots use this computer in the Wea desktop app on that computer. Invents no other setup step or screen.",
     },
   },
   {

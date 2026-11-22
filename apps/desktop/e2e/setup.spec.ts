@@ -11,7 +11,7 @@ import { _electron as electron, expect, test } from "@playwright/test";
 import type { RakazoDesktop } from "@rakazo/contracts";
 import { shownWindow } from "./shown-window.js";
 
-const APP_MARKER = "Existing Rakazo instance ready";
+const APP_MARKER = "Existing Wea instance ready";
 /**
  * The shell waits 20s for a page to mount the app before it rejects the server. A page that never
  * mounts is rejected the same way after any wait, so those specs shorten it instead of sitting out
@@ -111,16 +111,16 @@ function launch(extraEnv: Record<string, string> = {}) {
   });
 }
 
-test("setup offers Rakazo Cloud first, with local and existing instances", async () => {
+test("setup offers Wea Cloud first, with local and existing instances", async () => {
   app = await launch();
   if (process.env.RAKAZO_E2E_EXECUTABLE) {
     expect(await app.evaluate(({ app }) => app.isPackaged)).toBe(true);
   }
   const setup = await app.firstWindow();
 
-  await expect(setup.getByRole("heading", { name: "Welcome to Rakazo" })).toBeVisible();
-  await expect(setup.getByText("Choose where Rakazo runs.")).toBeVisible();
-  await expect(setup.getByText("Rakazo Cloud", { exact: true })).toBeVisible();
+  await expect(setup.getByRole("heading", { name: "Welcome to Wea" })).toBeVisible();
+  await expect(setup.getByText("Choose where Wea runs.")).toBeVisible();
+  await expect(setup.getByText("Wea Cloud", { exact: true })).toBeVisible();
   await expect(setup.getByText("This computer", { exact: true })).toBeVisible();
   await expect(setup.getByText("Existing instance", { exact: true })).toBeVisible();
   await expect(setup.locator(".card")).toHaveCount(0);
@@ -183,7 +183,7 @@ test("setup opens in the language the app last used", async () => {
 
   await expect(setup.locator("html")).toHaveAttribute("lang", "es");
   await expect(
-    setup.getByRole("heading", { name: "Te damos la bienvenida a Rakazo" }),
+    setup.getByRole("heading", { name: "Te damos la bienvenida a Wea" }),
   ).toBeVisible();
   await expect(setup.getByRole("button", { name: "Continuar" })).toBeEnabled();
   await setup.screenshot({
@@ -197,14 +197,14 @@ test("setup lays out right to left in Hebrew", async () => {
   const setup = await app.firstWindow();
 
   await expect(setup.locator("html")).toHaveAttribute("dir", "rtl");
-  await expect(setup.getByRole("heading", { name: "ברוכים הבאים ל-Rakazo" })).toBeVisible();
+  await expect(setup.getByRole("heading", { name: "ברוכים הבאים ל-Wea" })).toBeVisible();
   await expect(setup.getByRole("button", { name: "המשך" })).toBeEnabled();
   await setup.screenshot({
     path: path.join(import.meta.dirname, "screenshots", "11-setup-hebrew.png"),
   });
 });
 
-test("Rakazo Cloud saves the hosted address and is reselected when saved", async () => {
+test("Wea Cloud saves the hosted address and is reselected when saved", async () => {
   app = await launch();
   const setup = await app.firstWindow();
   await expect(setup.getByRole("radio", { name: /Rakazo Cloud/ })).toBeChecked();
@@ -556,10 +556,10 @@ test("a malformed address is rejected before anything is written", async () => {
   }).toPass();
 });
 
-test("a generic web page is not accepted as a Rakazo server", async () => {
+test("a generic web page is not accepted as a Wea server", async () => {
   const plain = createServer((_request, response) => {
     response.writeHead(200, { "content-type": "text/html; charset=utf-8" });
-    response.end("<!doctype html><p>not Rakazo</p>");
+    response.end("<!doctype html><p>not Wea</p>");
   });
   await new Promise<void>((resolve) => plain.listen(0, "127.0.0.1", resolve));
   const address = plain.address();
@@ -573,7 +573,7 @@ test("a generic web page is not accepted as a Rakazo server", async () => {
     await setup.getByRole("button", { name: "Continue" }).click();
 
     await expect(setup.locator("#status")).toHaveText(
-      "That address did not respond like a Rakazo server.",
+      "That address did not respond like a Wea server.",
     );
     await expect(async () => {
       await expect(readFile(path.join(userData, "setup.json"), "utf8")).rejects.toThrow();
@@ -627,7 +627,7 @@ test("an unreachable saved server falls back to setup with a recovery message", 
   app = await launch();
   const setup = await app.firstWindow();
 
-  await expect(setup.getByRole("heading", { name: "Welcome to Rakazo" })).toBeVisible();
+  await expect(setup.getByRole("heading", { name: "Welcome to Wea" })).toBeVisible();
   await expect(setup.getByRole("radio", { name: /Existing instance/ })).toBeChecked();
   await expect(setup.locator("#server-url")).toHaveValue(closedUrl);
   await expect(setup.locator("#status")).toContainText("Could not reconnect to the saved server.");
@@ -649,7 +649,7 @@ test("the native application menu can reopen setup without exposing setup IPC to
   });
   const setup = await setupPromise;
 
-  await expect(setup.getByRole("heading", { name: "Welcome to Rakazo" })).toBeVisible();
+  await expect(setup.getByRole("heading", { name: "Welcome to Wea" })).toBeVisible();
   await expect(setup.locator("#status")).toBeEmpty();
 
   // Closing setup without saving restores the connected instance.

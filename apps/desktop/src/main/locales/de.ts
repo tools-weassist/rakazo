@@ -3,7 +3,7 @@ export const DE_MESSAGES: Record<string, string> = {
   "Check for Updates…": "Nach Updates suchen …",
   "Computer Access…": "Computerzugriff …",
   "Revoke Local Computer Access": "Zugriff auf lokalen Computer widerrufen",
-  "Change Rakazo Server…": "Rakazo-Server wechseln …",
+  "Change Wea Server…": "Wea-Server wechseln …",
   "Hide {name}": "{name} ausblenden",
   "Hide Others": "Andere ausblenden",
   "Show All": "Alle einblenden",
@@ -38,13 +38,13 @@ export const DE_MESSAGES: Record<string, string> = {
   "Checking for Updates…": "Nach Updates wird gesucht …",
   "Downloading Update…": "Update wird geladen …",
   "Restart to Update…": "Zum Aktualisieren neu starten …",
-  "Downloading Rakazo {version}…": "Rakazo {version} wird geladen …",
-  "Rakazo {version} is ready to install.": "Rakazo {version} ist bereit zur Installation.",
+  "Downloading Wea {version}…": "Wea {version} wird geladen …",
+  "Wea {version} is ready to install.": "Wea {version} ist bereit zur Installation.",
   Restart: "Neu starten",
   Later: "Später",
   "Could not install the update.": "Das Update konnte nicht installiert werden.",
   "Could not check for updates.": "Es konnte nicht nach Updates gesucht werden.",
-  "Rakazo is up to date.": "Rakazo ist auf dem neuesten Stand.",
+  "Wea is up to date.": "Wea ist auf dem neuesten Stand.",
   "Version {version}": "Version {version}",
   "Automatic updates are turned off for this install.":
     "Automatische Updates sind für diese Installation deaktiviert.",
@@ -52,11 +52,11 @@ export const DE_MESSAGES: Record<string, string> = {
     "Automatische Updates funktionieren nur in einer installierten Version.",
   "No desktop releases are published for this build yet.":
     "Für diesen Build wurden noch keine Desktop-Versionen veröffentlicht.",
-  "Move Rakazo to Applications to install updates.":
-    "Bewege Rakazo in den Ordner „Programme“, um Updates zu installieren.",
+  "Move Wea to Applications to install updates.":
+    "Bewege Wea in den Ordner „Programme“, um Updates zu installieren.",
   "Free up disk space to install updates.": "Gib Speicherplatz frei, um Updates zu installieren.",
-  "This update could not be verified. Reinstall Rakazo from a trusted download.":
-    "Dieses Update konnte nicht überprüft werden. Installiere Rakazo erneut aus einer vertrauenswürdigen Quelle.",
+  "This update could not be verified. Reinstall Wea from a trusted download.":
+    "Dieses Update konnte nicht überprüft werden. Installiere Wea erneut aus einer vertrauenswürdigen Quelle.",
   "The update could not be completed. Try again later.":
     "Das Update konnte nicht abgeschlossen werden. Versuche es später erneut.",
   "Could not reach the update server.": "Der Update-Server ist nicht erreichbar.",
@@ -75,14 +75,14 @@ export const DE_MESSAGES: Record<string, string> = {
     "Eine Anmeldung läuft bereits. Brich sie ab und versuche es erneut.",
   "Could not open browser sign-in. Close other sign-in attempts and retry.":
     "Die Anmeldung im Browser konnte nicht geöffnet werden. Schließe andere Anmeldeversuche und versuche es erneut.",
-  "Sign-in callback rejected. Return to Rakazo to retry.":
-    "Die Anmeldeantwort wurde abgelehnt. Kehre zu Rakazo zurück, um es erneut zu versuchen.",
-  "You can close this tab and return to Rakazo.":
-    "Du kannst diesen Tab schließen und zu Rakazo zurückkehren.",
-  "Set up Rakazo": "Rakazo einrichten",
-  "Quit Rakazo": "Rakazo beenden",
-  "Welcome to Rakazo": "Willkommen bei Rakazo",
-  "Choose where Rakazo runs.": "Wähle, wo Rakazo läuft.",
+  "Sign-in callback rejected. Return to Wea to retry.":
+    "Die Anmeldeantwort wurde abgelehnt. Kehre zu Wea zurück, um es erneut zu versuchen.",
+  "You can close this tab and return to Wea.":
+    "Du kannst diesen Tab schließen und zu Wea zurückkehren.",
+  "Set up Wea": "Wea einrichten",
+  "Quit Wea": "Wea beenden",
+  "Welcome to Wea": "Willkommen bei Wea",
+  "Choose where Wea runs.": "Wähle, wo Wea läuft.",
   Instance: "Instanz",
   "This computer": "Dieser Computer",
   "Existing instance": "Bestehende Instanz",
@@ -95,14 +95,14 @@ export const DE_MESSAGES: Record<string, string> = {
   Continue: "Weiter",
   Retry: "Erneut versuchen",
   "Getting ready…": "Wird vorbereitet …",
-  "Downloading Rakazo…": "Rakazo wird heruntergeladen …",
-  "Starting Rakazo…": "Rakazo wird gestartet …",
+  "Downloading Wea…": "Wea wird heruntergeladen …",
+  "Starting Wea…": "Wea wird gestartet …",
   "Almost ready…": "Fast fertig …",
-  "Rakazo is ready.": "Rakazo ist bereit.",
+  "Wea is ready.": "Wea ist bereit.",
   "{size} downloaded": "{size} heruntergeladen",
   "Connecting…": "Verbindung wird hergestellt …",
   "Checking…": "Wird geprüft …",
-  "Rakazo answered at {url}.": "Rakazo hat unter {url} geantwortet.",
+  "Wea answered at {url}.": "Wea hat unter {url} geantwortet.",
   "Enter a server address first.": "Gib zuerst eine Serveradresse ein.",
   "Could not save that address.": "Diese Adresse konnte nicht gespeichert werden.",
   "Could not save that address. Try again.":
@@ -114,18 +114,18 @@ export const DE_MESSAGES: Record<string, string> = {
   "Could not run the connection check. Try again.":
     "Die Verbindungsprüfung konnte nicht ausgeführt werden. Versuche es erneut.",
   "Setup bridge unavailable.": "Die Einrichtungsbrücke ist nicht verfügbar.",
-  "Setup could not start. Quit Rakazo and try again.":
-    "Die Einrichtung konnte nicht starten. Beende Rakazo und versuche es erneut.",
+  "Setup could not start. Quit Wea and try again.":
+    "Die Einrichtung konnte nicht starten. Beende Wea und versuche es erneut.",
   "Enter a server address.": "Gib eine Serveradresse ein.",
   "Enter a valid http:// or https:// address.":
     "Gib eine gültige http://- oder https://-Adresse ein.",
   "Enter a valid server address. Public servers require HTTPS; a new local instance must use localhost.":
     "Gib eine gültige Serveradresse ein. Öffentliche Server erfordern HTTPS; eine neue lokale Instanz muss localhost verwenden.",
   "Invalid custom headers": "Ungültige benutzerdefinierte Header",
-  "That address redirects elsewhere. Enter the final Rakazo server address.":
-    "Diese Adresse leitet woanders hin weiter. Gib die endgültige Adresse des Rakazo-Servers ein.",
-  "That address did not respond like a Rakazo server.":
-    "Diese Adresse hat nicht wie ein Rakazo-Server geantwortet.",
+  "That address redirects elsewhere. Enter the final Wea server address.":
+    "Diese Adresse leitet woanders hin weiter. Gib die endgültige Adresse des Wea-Servers ein.",
+  "That address did not respond like a Wea server.":
+    "Diese Adresse hat nicht wie ein Wea-Server geantwortet.",
   "The server answered with HTTP {status}.": "Der Server hat mit HTTP {status} geantwortet.",
   "Timed out reaching that address.": "Zeitüberschreitung beim Erreichen dieser Adresse.",
   "Nothing is listening at that address yet.": "Unter dieser Adresse lauscht noch nichts.",
@@ -151,8 +151,8 @@ export const DE_MESSAGES: Record<string, string> = {
     "Die Einrichtung konnte nicht gespeichert werden. Die vorherige Instanz wurde wiederhergestellt.",
   "Connected, but could not save setup for the next launch. Try Continue again.":
     "Verbunden, aber die Einrichtung konnte nicht für den nächsten Start gespeichert werden. Klicke erneut auf „Weiter“.",
-  "The app-managed Rakazo services are not ready. Retry setup.":
-    "Die von der App verwalteten Rakazo-Dienste sind nicht bereit. Starte die Einrichtung erneut.",
+  "The app-managed Wea services are not ready. Retry setup.":
+    "Die von der App verwalteten Wea-Dienste sind nicht bereit. Starte die Einrichtung erneut.",
   "Docker is installed, but Docker Compose is missing. Install Docker Desktop or the docker-compose-plugin.":
     "Docker ist installiert, aber Docker Compose fehlt. Installiere Docker Desktop oder das docker-compose-plugin.",
   "Could not check Docker Compose. Check the output below, then retry.":
@@ -173,10 +173,10 @@ export const DE_MESSAGES: Record<string, string> = {
     "Docker antwortet nicht mehr. Starte Docker und versuche es erneut.",
   "Docker Compose is missing. Install Docker Desktop or the docker-compose-plugin, then retry.":
     "Docker Compose fehlt. Installiere Docker Desktop oder das docker-compose-plugin und versuche es erneut.",
-  "Downloading Rakazo images failed. Check the output below, then retry.":
-    "Die Rakazo-Images konnten nicht heruntergeladen werden. Sieh dir die Ausgabe unten an und versuche es erneut.",
-  "Rakazo services did not start. Check the output below, then retry.":
-    "Die Rakazo-Dienste wurden nicht gestartet. Sieh dir die Ausgabe unten an und versuche es erneut.",
+  "Downloading Wea images failed. Check the output below, then retry.":
+    "Die Wea-Images konnten nicht heruntergeladen werden. Sieh dir die Ausgabe unten an und versuche es erneut.",
+  "Wea services did not start. Check the output below, then retry.":
+    "Die Wea-Dienste wurden nicht gestartet. Sieh dir die Ausgabe unten an und versuche es erneut.",
   "The stack started but the web app did not answer. Retry, and check the output below.":
     "Der Stack wurde gestartet, aber die Web-App hat nicht geantwortet. Versuche es erneut und sieh dir die Ausgabe unten an.",
   "Could not prepare the local stack. Retry.":
@@ -201,15 +201,15 @@ export const DE_MESSAGES: Record<string, string> = {
   "Chat Details": "Chatdetails",
   Help: "Hilfe",
   "Keyboard Shortcuts": "Tastaturkurzbefehle",
-  "Downloading Rakazo failed. Check the internet connection, then retry.":
-    "Rakazo konnte nicht heruntergeladen werden. Prüfe die Internetverbindung und versuche es dann erneut.",
+  "Downloading Wea failed. Check the internet connection, then retry.":
+    "Wea konnte nicht heruntergeladen werden. Prüfe die Internetverbindung und versuche es dann erneut.",
   "Could not move your data from Docker. Check the output below, then retry.":
     "Deine Daten konnten nicht aus Docker übertragen werden. Prüfe die Ausgabe unten und versuche es dann erneut.",
   "The computer runtime already running is too old. Update or quit it, then retry.":
     "Die bereits laufende Computer-Laufzeitumgebung ist zu alt. Aktualisiere oder beende sie und versuche es dann erneut.",
-  "Your Rakazo data is in a different computer runtime. Quit the one running, then retry.":
-    "Deine Rakazo-Daten liegen in einer anderen Computer-Laufzeitumgebung. Beende die laufende und versuche es dann erneut.",
-  "Run Rakazo without Docker?": "Rakazo ohne Docker ausführen?",
+  "Your Wea data is in a different computer runtime. Quit the one running, then retry.":
+    "Deine Wea-Daten liegen in einer anderen Computer-Laufzeitumgebung. Beende die laufende und versuche es dann erneut.",
+  "Run Wea without Docker?": "Wea ohne Docker ausführen?",
   "Your bots and data move over. Docker is stopped, not removed.":
     "Deine Bots und Daten werden übernommen. Docker wird gestoppt, nicht entfernt.",
   Move: "Übertragen",
@@ -218,12 +218,12 @@ export const DE_MESSAGES: Record<string, string> = {
   "Your data stays on this computer.": "Deine Daten bleiben auf diesem Computer.",
   "Connect to a server you or your team already run.":
     "Mit einem Server verbinden, den du oder dein Team bereits betreibt.",
-  "Rakazo needs Docker Desktop to run on this computer.":
-    "Rakazo braucht Docker Desktop, um auf diesem Computer zu laufen.",
-  "Rakazo needs Docker to run on this computer.":
-    "Rakazo braucht Docker, um auf diesem Computer zu laufen.",
-  "Docker Desktop is a free app that runs Rakazo in the background. Install it and open it once.":
-    "Docker Desktop ist eine kostenlose App, die Rakazo im Hintergrund ausführt. Installiere sie und öffne sie einmal.",
+  "Wea needs Docker Desktop to run on this computer.":
+    "Wea braucht Docker Desktop, um auf diesem Computer zu laufen.",
+  "Wea needs Docker to run on this computer.":
+    "Wea braucht Docker, um auf diesem Computer zu laufen.",
+  "Docker Desktop is a free app that runs Wea in the background. Install it and open it once.":
+    "Docker Desktop ist eine kostenlose App, die Wea im Hintergrund ausführt. Installiere sie und öffne sie einmal.",
   "Install Docker Engine and start it.": "Installiere Docker Engine und starte es.",
   "Download Docker Desktop": "Docker Desktop herunterladen",
   "Install Docker": "Docker installieren",
@@ -232,14 +232,14 @@ export const DE_MESSAGES: Record<string, string> = {
   "Starting {app}…": "{app} wird gestartet …",
   "Docker is installed but not running. Start the Docker service to continue.":
     "Docker ist installiert, läuft aber nicht. Starte den Docker-Dienst, um fortzufahren.",
-  "Rakazo stopped unexpectedly.": "Rakazo wurde unerwartet beendet.",
+  "Wea stopped unexpectedly.": "Wea wurde unerwartet beendet.",
   Reload: "Neu laden",
   "Mac app control": "Mac-App-Steuerung",
   "Set up Mac app control": "Mac-App-Steuerung einrichten",
-  "Commands already work. To use apps, allow Accessibility and Screen Recording for Rakazo in System Settings, then restart Rakazo.":
-    "Befehle funktionieren bereits. Um Apps zu verwenden, erlaube Rakazo in den Systemeinstellungen Bedienungshilfen und Bildschirmaufnahme und starte Rakazo dann neu.",
+  "Commands already work. To use apps, allow Accessibility and Screen Recording for Wea in System Settings, then restart Wea.":
+    "Befehle funktionieren bereits. Um Apps zu verwenden, erlaube Wea in den Systemeinstellungen Bedienungshilfen und Bildschirmaufnahme und starte Wea dann neu.",
   "Open System Settings": "Systemeinstellungen öffnen",
-  "Restart Rakazo": "Rakazo neu starten",
+  "Restart Wea": "Wea neu starten",
   "Not Now": "Nicht jetzt",
-  "Restart Rakazo to finish setup": "Rakazo neu starten, um die Einrichtung abzuschließen",
+  "Restart Wea to finish setup": "Wea neu starten, um die Einrichtung abzuschließen",
 };

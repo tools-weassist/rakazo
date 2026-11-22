@@ -113,12 +113,12 @@ function conversationContext(request: SemanticMemoryConversationRequest): string
     ...new Set(request.turns.flatMap((turn) => (turn.speaker ? [turn.speaker] : []))),
   ];
   if (request.conversation === "group") {
-    return `Group chat in Rakazo with ${joinNames([...new Set([request.userName, request.botName, ...speakers])])}`;
+    return `Group chat in Wea with ${joinNames([...new Set([request.userName, request.botName, ...speakers])])}`;
   }
   if (speakers.length) {
-    return `Conversation in Rakazo with ${joinNames([...new Set([request.userName, request.botName, ...speakers])])}`;
+    return `Conversation in Wea with ${joinNames([...new Set([request.userName, request.botName, ...speakers])])}`;
   }
-  return `Chat in Rakazo between ${request.userName} and ${request.botName}, an AI assistant`;
+  return `Chat in Wea between ${request.userName} and ${request.botName}, an AI assistant`;
 }
 
 /**
@@ -158,7 +158,7 @@ export function parseRecallBanks(value: string | undefined): string[] {
   if (banks.some((bank) => bank === "." || bank === "..")) {
     throw new Error("recallBanks may not include . or ..");
   }
-  // Rakazo's own banks are recalled automatically; another Space's must never be named.
+  // Wea's own banks are recalled automatically; another Space's must never be named.
   if (banks.some((bank) => RESERVED_BANK.test(bank))) {
     throw new Error("Bank names starting with rakazo- are reserved.");
   }
@@ -545,7 +545,7 @@ export class HindsightMemoryProvider implements SemanticMemoryProvider {
     const item = {
       content: truncateUtf8(content, MAX_CONTENT_BYTES),
       context:
-        "A fact a Rakazo AI assistant chose to remember about the people it works for and their work",
+        "A fact a Wea AI assistant chose to remember about the people it works for and their work",
       timestamp: new Date().toISOString(),
     };
     // The same fact saved again by the same operation, as a retried tool call does, reuses its id,

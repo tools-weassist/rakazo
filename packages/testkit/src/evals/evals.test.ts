@@ -79,7 +79,7 @@ const judgeDown: EvalJudge = async () => {
 };
 
 describe("eval web", () => {
-  it("serves this checkout's docs at the docs URLs the Rakazo skill links", async () => {
+  it("serves this checkout's docs at the docs URLs the Wea skill links", async () => {
     const web = evalWeb();
     const page = await web.fetch(
       { url: "https://rakazo.com/docs/account.md" },

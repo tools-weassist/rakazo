@@ -1,5 +1,5 @@
 Pod::Spec.new do |s|
-  s.name           = 'RakazoCalendar'
+  s.name           = 'WeaCalendar'
   s.version        = '0.1.0'
   s.summary        = 'Accesses selected calendars and reminder lists'
   s.author         = ''

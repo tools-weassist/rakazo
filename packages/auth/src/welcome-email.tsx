@@ -23,33 +23,28 @@ export function welcomeEmail(
   return message(
     user.email,
     locale,
-    say("Welcome to Rakazo"),
+    say("Welcome to Wea"),
     <>
       <Text>{greeting(say, user.name)}</Text>
-      <Text>
-        {say("Welcome to Rakazo. The people who get the most out of it do three things:")}
-      </Text>
+      <Text>{say("Welcome to Wea. The people who get the most out of it do three things:")}</Text>
       <Text style={stepStyle}>
         <strong>1. {say("Get the apps")}</strong>
       </Text>
       <Text style={{ marginTop: 0 }}>
-        {withNodes(
-          say("Rakazo runs on {platforms}, so your bots can reach you wherever you are."),
-          {
-            // The language's own list ("A, B, and C", "A, B y C"), with each app a link.
-            platforms: new Intl.ListFormat(locale, { type: "conjunction" })
-              .formatToParts(Object.keys(APPS))
-              .map((part, index) =>
-                part.type === "element" ? (
-                  <Link key={part.value} href={APPS[part.value]} style={linkStyle}>
-                    {part.value}
-                  </Link>
-                ) : (
-                  <span key={`${index}${part.value}`}>{part.value}</span>
-                ),
+        {withNodes(say("Wea runs on {platforms}, so your bots can reach you wherever you are."), {
+          // The language's own list ("A, B, and C", "A, B y C"), with each app a link.
+          platforms: new Intl.ListFormat(locale, { type: "conjunction" })
+            .formatToParts(Object.keys(APPS))
+            .map((part, index) =>
+              part.type === "element" ? (
+                <Link key={part.value} href={APPS[part.value]} style={linkStyle}>
+                  {part.value}
+                </Link>
+              ) : (
+                <span key={`${index}${part.value}`}>{part.value}</span>
               ),
-          },
-        )}
+            ),
+        })}
       </Text>
       <Text style={stepStyle}>
         <strong>2. {say("Join the community")}</strong>
@@ -69,21 +64,18 @@ export function welcomeEmail(
         )}
       </Text>
       <Text style={stepStyle}>
-        <strong>3. {say("Star us on GitHub")}</strong>
+        <strong>3. Open-source licenses</strong>
       </Text>
       <Text style={{ marginTop: 0 }}>
-        {withNodes(say("Rakazo is open source. {star} helps more people find it."), {
-          star: (
-            <Link href="https://github.com/elie222/rakazo" style={linkStyle}>
-              {say("A star on GitHub")}
-            </Link>
-          ),
-        })}
+        Wea is built on Rakazo, open-source under the Apache License, Version 2.0. You'll find
+        the license in Settings.
       </Text>
-      <Text style={{ marginTop: "28px" }}>{say("Questions? Just reply. I read every one.")}</Text>
-      <Text>Elie</Text>
+      <Text style={{ marginTop: "28px" }}>
+        Questions? Reply to this email or write tools@weassist.io.
+      </Text>
+      <Text>Wea</Text>
     </>,
     unsubscribeUrl,
-    { src: "https://rakazo.com/email/welcome.jpg", alt: "Rakazo" },
+    { src: "https://wea.weassist.io/apple-touch-icon.png", alt: "Wea" },
   );
 }

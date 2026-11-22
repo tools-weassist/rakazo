@@ -34,7 +34,7 @@ type AppleCalendar = {
   completeReminder(target: Target, id: string): Promise<string>;
 };
 
-const apple = () => requireOptionalNativeModule<AppleCalendar>("RakazoCalendar");
+const apple = () => requireOptionalNativeModule<AppleCalendar>("WeaCalendar");
 type Prepared = { perform: () => Promise<CalendarResponse> } | CalendarResponse;
 const ok = (data: unknown): CalendarResponse => ({ status: "ok", data });
 const unavailable: CalendarResponse = { status: "unavailable" };

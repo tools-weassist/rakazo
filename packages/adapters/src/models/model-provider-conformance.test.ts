@@ -38,7 +38,7 @@ function catalogIds(provider: string) {
   return catalog.filter((entry) => entry.provider === provider).map((entry) => entry.id);
 }
 
-/** Hosts the bundled model registry sends this provider's requests to, read apart from Rakazo's own entry. */
+/** Hosts the bundled model registry sends this provider's requests to, read apart from Wea's own entry. */
 function catalogHosts(provider: string) {
   const models = builtinModels()
     .getProviders()
@@ -50,7 +50,7 @@ function catalogHosts(provider: string) {
 }
 
 describe.each(entries)("%s model provider", (id, definition) => {
-  it("is a provider the model registry lists, or one Rakazo runs itself", () => {
+  it("is a provider the model registry lists, or one Wea runs itself", () => {
     expect(catalogIds(id).length > 0 || outsideCatalog.includes(id)).toBe(true);
   });
 
