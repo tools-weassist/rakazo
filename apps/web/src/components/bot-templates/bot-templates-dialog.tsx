@@ -27,9 +27,12 @@ import {
   Bot as BotIcon,
   Brain,
   BriefcaseBusiness,
+  Building2,
   CalendarCheck,
+  CalendarClock,
   CalendarDays,
   ChartLine,
+  ChartNoAxesCombined,
   Check,
   ChevronDown,
   ChevronLeft,
@@ -40,6 +43,7 @@ import {
   GitPullRequest,
   GraduationCap,
   HandCoins,
+  Handshake,
   Inbox,
   LayoutTemplate,
   ListChecks,
@@ -63,6 +67,7 @@ import {
   Wallet,
   X,
 } from "lucide-react";
+import type { ReactNode } from "react";
 import { useId, useState } from "react";
 import { useSave, useSpaceQueries } from "../../lib/query/query";
 import { errorDetails } from "../../lib/query/user-error";
@@ -84,6 +89,10 @@ const ICONS: Record<string, LucideIcon> = {
   "inbox-admin-triage": MailCheck,
   "night-shift-handoff": MoonStar,
   "va-onboarding-kit": UserPlus,
+  "va-business-manager": ChartNoAxesCombined,
+  "client-va-sync": Handshake,
+  "calendar-keeper": CalendarClock,
+  "agency-ops-manager": Building2,
   "receipt-categorizer": ReceiptText,
   "ar-follow-up": HandCoins,
   "month-end-close": CalendarCheck,
@@ -632,6 +641,16 @@ function TeamDetail({
 
       <Sample text={copy.sample} />
 
+      <section className="space-y-2" data-testid="team-success-metric">
+        <SectionHeading className="px-1">
+          <Trans>Success metric</Trans>
+        </SectionHeading>
+        <div className="rounded-xl border border-border/70 px-4 py-3">
+          <div className="text-body-lg font-medium">{team.successMetric.name}</div>
+          <p className="text-body-sm text-muted-foreground">{team.successMetric.measure}</p>
+        </div>
+      </section>
+
       <section className="space-y-2">
         <SectionHeading className="px-1">
           <Trans>Team members</Trans>
@@ -664,6 +683,8 @@ function TeamDetail({
         </ul>
       </section>
 
+      <TeamBrief team={team} />
+
       <p className="text-body-sm text-muted-foreground">
         <Trans>
           Creates the missing bots and a group chat. Bots you already made from these templates are
@@ -685,5 +706,82 @@ function TeamDetail({
         )}
       </Button>
     </div>
+  );
+}
+
+/** One team brief section: a heading, an optional line under it, and a list. */
+function BriefList({
+  title,
+  intro,
+  items,
+  ordered = false,
+  testId,
+}: {
+  title: ReactNode;
+  intro?: ReactNode;
+  items: readonly { key: string; title?: string; text: string }[];
+  ordered?: boolean;
+  testId: string;
+}) {
+  const List = ordered ? "ol" : "ul";
+  return (
+    <section className="space-y-2" data-testid={testId}>
+      <SectionHeading className="px-1">{title}</SectionHeading>
+      {intro ? <p className="px-1 text-body-sm text-muted-foreground">{intro}</p> : null}
+      <List className="divide-y divide-border/60 rounded-xl border border-border/70">
+        {items.map((item, index) => (
+          <li key={item.key} className="flex items-start gap-3 px-4 py-3 text-body">
+            {ordered ? (
+              <span aria-hidden className="w-5 shrink-0 text-body-sm text-muted-foreground">
+                {index + 1}.
+              </span>
+            ) : null}
+            <span className="min-w-0 flex-1">
+              {item.title ? <span className="block font-medium">{item.title}</span> : null}
+              <span className={item.title ? "block text-body-sm text-muted-foreground" : undefined}>
+                {item.text}
+              </span>
+            </span>
+          </li>
+        ))}
+      </List>
+    </section>
+  );
+}
+
+/**
+ * What a team needs and promises, from the reviewed template: the setup inputs its lead asks
+ * for first, the first week, the approvals it will ask for, and what it never does.
+ */
+function TeamBrief({ team }: { team: TeamTemplateListing }) {
+  return (
+    <>
+      <BriefList
+        testId="team-setup-inputs"
+        title={<Trans>What you fill in first</Trans>}
+        intro={<Trans>The lead asks for these, one at a time, in its first chat.</Trans>}
+        items={team.setupInputs.map((input) => ({
+          key: input.name,
+          title: input.name,
+          text: input.detail,
+        }))}
+      />
+      <BriefList
+        testId="team-week-one"
+        ordered
+        title={<Trans>Week one</Trans>}
+        items={team.weekOne.map((step) => ({ key: step, text: step }))}
+      />
+      <BriefList
+        testId="team-approvals"
+        title={<Trans>Approvals you'll be asked for</Trans>}
+        items={team.approvals.map((item) => ({ key: item, text: item }))}
+      />
+      <BriefList
+        testId="team-wont-do"
+        title={<Trans>What this team won't do</Trans>}
+        items={team.wontDo.map((item) => ({ key: item, text: item }))}
+      />
+    </>
   );
 }

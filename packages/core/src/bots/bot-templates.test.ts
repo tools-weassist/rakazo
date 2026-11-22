@@ -9,6 +9,7 @@ import { FINANCE_BOT_TEMPLATES } from "./finance-bot-templates.js";
 import { MARKETING_BOT_TEMPLATES } from "./marketing-bot-templates.js";
 import { OPS_BOT_TEMPLATES } from "./ops-bot-templates.js";
 import { VA_BOT_TEMPLATES } from "./va-bot-templates.js";
+import { VA_TEAM_ROLE_BOT_TEMPLATES } from "./va-team-role-bot-templates.js";
 
 describe("bot templates", () => {
   it("each validates strictly and has a unique id", () => {
@@ -36,6 +37,15 @@ describe("bot templates", () => {
       "night-shift-handoff",
       "va-onboarding-kit",
     ]);
+    expect(
+      BOT_TEMPLATES.slice(
+        VA_BOT_TEMPLATES.length,
+        VA_BOT_TEMPLATES.length + VA_TEAM_ROLE_BOT_TEMPLATES.length,
+      ).map((template) => template.id),
+    ).toEqual(["va-business-manager", "client-va-sync", "calendar-keeper", "agency-ops-manager"]);
+    for (const template of VA_TEAM_ROLE_BOT_TEMPLATES) {
+      expect(template.category, template.id).toBe("virtual-assistants");
+    }
   });
 
   it("each have a known category, and every category has templates", () => {

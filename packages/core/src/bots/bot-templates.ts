@@ -4,17 +4,20 @@ import { FINANCE_BOT_TEMPLATES } from "./finance-bot-templates.js";
 import { MARKETING_BOT_TEMPLATES } from "./marketing-bot-templates.js";
 import { OPS_BOT_TEMPLATES } from "./ops-bot-templates.js";
 import { VA_BOT_TEMPLATES } from "./va-bot-templates.js";
+import { VA_TEAM_ROLE_BOT_TEMPLATES } from "./va-team-role-bot-templates.js";
 
 /**
  * Reviewed, ready-made bots. Bump a template's `version` whenever any of its content changes:
  * a create from an older preview is refused, so what was shown is what gets made. Names,
  * summaries and samples are shown in the apps' languages; the rest is written for the bot.
- * Wea's templates for virtual assistants and their clients come first, then accounting and
+ * Wea's templates for virtual assistants and their clients come first (then the VA roles
+ * the ready-made teams needed), then accounting and
  * finance, marketing and operations, then the general ones; the page groups them by `category`
  * in the order of `BOT_TEMPLATE_CATEGORIES`.
  */
 export const BOT_TEMPLATES: readonly BotTemplate[] = [
   ...VA_BOT_TEMPLATES,
+  ...VA_TEAM_ROLE_BOT_TEMPLATES,
   ...FINANCE_BOT_TEMPLATES,
   ...MARKETING_BOT_TEMPLATES,
   ...OPS_BOT_TEMPLATES,

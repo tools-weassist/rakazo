@@ -1,6 +1,6 @@
 import type { Bot, BotTemplateListing, Group } from "@rakazo/contracts";
 import { AgentImportCreateInput, BOT_INSTRUCTIONS_MAX_LENGTH } from "@rakazo/contracts";
-import { BOT_TEMPLATES, findTeamTemplate } from "@rakazo/core";
+import { BOT_TEMPLATES, findTeamTemplate, TEAM_TEMPLATES } from "@rakazo/core";
 import { describe, expect, it } from "vitest";
 import type { TeamServices } from "./team-templates.js";
 import { createTeamFromTemplate, listTeamTemplates, teamImportKey } from "./team-templates.js";
@@ -90,21 +90,28 @@ describe("createTeamFromTemplate", () => {
     ).toEqual([
       ["month-end-close", true, true],
       ["receipt-categorizer", false, true],
+      ["expense-report-prep", false, true],
       ["ar-follow-up", false, true],
       ["cash-flow-snapshot", false, true],
     ]);
     expect(result.group.members.map((member) => member.name)).toEqual([
       "Month-end close",
       "Receipt sorter",
+      "Expense report prep",
       "Invoice follow-up",
       "Cash-flow snapshot",
     ]);
     const lead = space.bots.get("bot-month-end-close")!.instructions;
     expect(lead).toContain("## Your team: Finance team");
     expect(lead).toContain("You're the lead.");
+    expect(lead).toContain("Team setup (do this first)");
+    expect(lead).toContain(`1. ${finance.setupInputs[0]!.name}: ${finance.setupInputs[0]!.detail}`);
+    expect(lead).toContain(`Team success metric: ${finance.successMetric.name}.`);
     const member = space.bots.get("bot-ar-follow-up")!.instructions;
     expect(member).toContain("- Invoice follow-up (you):");
     expect(member).toContain("Month-end close is the lead and coordinates.");
+    expect(member).toContain(`The team is judged by ${finance.successMetric.name}.`);
+    expect(member).not.toContain("Team setup (do this first)");
   });
 
   it("returns the same team on a repeat, with no new bots, notes or groups", async () => {
@@ -116,7 +123,7 @@ describe("createTeamFromTemplate", () => {
     expect(again.created).toBe(false);
     expect(again.group.id).toBe(first.group.id);
     expect(again.members.every((member) => !member.created)).toBe(true);
-    expect(space.calls).toMatchObject({ created: 4, groupCreates: 1 });
+    expect(space.calls).toMatchObject({ created: finance.members.length, groupCreates: 1 });
     expect([...space.bots.values()].map((row) => row.instructions)).toEqual(before);
   });
 
@@ -132,7 +139,7 @@ describe("createTeamFromTemplate", () => {
       created: false,
       bot: { id: "bot-receipt-categorizer" },
     });
-    expect(space.calls.created).toBe(3);
+    expect(space.calls.created).toBe(finance.members.length - 1);
     const reused = space.bots.get("bot-receipt-categorizer")!.instructions;
     expect(reused.startsWith("Mine.\n\n<!-- team:finance-team -->")).toBe(true);
     // Teammates see the name the user gave it.
@@ -143,14 +150,24 @@ describe("createTeamFromTemplate", () => {
     const space = fakeSpace({ failOn: "ar-follow-up" });
     const input = { teamId: finance.id, version: finance.version };
     await expect(createTeamFromTemplate(space.services, input)).rejects.toMatchObject({
-      data: { reason: "team_partial", made: 2 },
+      data: { reason: "team_partial", made: 3 },
     });
-    expect([...space.bots.keys()]).toEqual(["bot-month-end-close", "bot-receipt-categorizer"]);
+    expect([...space.bots.keys()]).toEqual([
+      "bot-month-end-close",
+      "bot-receipt-categorizer",
+      "bot-expense-report-prep",
+    ]);
     expect(space.calls.groupCreates).toBe(0);
     space.calls.failOn = undefined;
     const result = await createTeamFromTemplate(space.services, input);
-    expect(result.members.map((member) => member.created)).toEqual([false, false, true, true]);
-    expect(space.calls).toMatchObject({ created: 4, groupCreates: 1 });
+    expect(result.members.map((member) => member.created)).toEqual([
+      false,
+      false,
+      false,
+      true,
+      true,
+    ]);
+    expect(space.calls).toMatchObject({ created: 5, groupCreates: 1 });
   });
 
   it("makes a missing member again and adds it back, or opens a new group if it was archived", async () => {
@@ -204,12 +221,18 @@ describe("listTeamTemplates", () => {
       findGroup: async (teamId) =>
         teamId === "finance-team" ? ({ id: "group-1" } as Group) : null,
     });
-    expect(listed.map((team) => [team.id, team.groupId])).toEqual([
-      ["finance-team", "group-1"],
-      ["marketing-team", null],
-      ["va-back-office", null],
-    ]);
-    expect(listed[0]!.members[1]).toEqual({
+    expect(listed.map((team) => [team.id, team.groupId])).toEqual(
+      TEAM_TEMPLATES.map((team) => [team.id, team.id === "finance-team" ? "group-1" : null]),
+    );
+    const listedFinance = listed.find((team) => team.id === "finance-team")!;
+    expect(listedFinance).toMatchObject({
+      successMetric: finance.successMetric,
+      weekOne: finance.weekOne,
+      wontDo: finance.wontDo,
+      approvals: finance.approvals,
+      setupInputs: finance.setupInputs,
+    });
+    expect(listedFinance.members[1]).toEqual({
       templateId: "receipt-categorizer",
       role: finance.members[1]!.role,
       name: "Receipt sorter",
