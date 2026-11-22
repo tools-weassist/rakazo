@@ -38,6 +38,8 @@ anonymous telemetry notice during `pnpm dev`; run `pnpm exec turbo telemetry dis
 - Push notifications are off until a Wea Firebase project and EAS project exist; the app
   skips push registration without them.
 - `apps/mobile/scripts/wea-build-apk.sh` builds a release-signed APK on a local machine.
+  `WEA_OUTPUT=aab` builds the Google Play app bundle instead (`bundleRelease`), with
+  `EXPO_PUBLIC_WEA_STORE=play` so the Play build shows no plans, prices or checkout.
   The keystore is never committed. Keep it: every update must be signed with the same key.
 
 ## Not yet rebranded
