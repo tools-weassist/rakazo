@@ -3,7 +3,7 @@
     "name": "Wea",
     "slug": "wea",
     "scheme": "rakazo",
-    "version": "1.1.0",
+    "version": "1.2.0",
     "orientation": "default",
     "userInterfaceStyle": "automatic",
     "icon": "./assets/icon.png",
@@ -139,7 +139,7 @@
     },
     "android": {
       "package": "io.weassist.wea",
-      "versionCode": 2,
+      "versionCode": 3,
       "softwareKeyboardLayoutMode": "resize",
       "icon": "./assets/icon.png",
       "adaptiveIcon": {
