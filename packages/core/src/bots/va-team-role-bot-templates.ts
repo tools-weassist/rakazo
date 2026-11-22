@@ -9,7 +9,7 @@ import type { BotTemplate } from "@rakazo/contracts";
 export const VA_TEAM_ROLE_BOT_TEMPLATES: readonly BotTemplate[] = [
   {
     id: "va-business-manager",
-    version: 1,
+    version: 2,
     name: "VA business manager",
     category: "virtual-assistants",
     summary: "Runs your VA business like a business: income, clients, hours and next moves",
@@ -26,6 +26,18 @@ export const VA_TEAM_ROLE_BOT_TEMPLATES: readonly BotTemplate[] = [
       "2. Send the rate review note to Bright Smiles (your rate hasn't changed in 14 months)",
       "3. Finish the AI upskill lesson on inbox automations",
     ].join("\n"),
+    whatItDoes: [
+      "Tracks income against your goal, hours, and how much each client is worth",
+      "Spots client risk, like one client being too large a share of your income",
+      "Picks a short list of the week's next moves, in priority order",
+      "Pulls in what the other bots drafted so you can decide in one place",
+    ],
+    howItHelps: [
+      "You run the VA business from one weekly picture, not from scattered notes",
+      "You see a risky client or a short week early enough to do something",
+      "The next three moves are already chosen, so you don't stall on planning",
+      "You stay in charge of every decision; the bots only draft and recommend",
+    ],
     description: "Runs the VA's own business",
     instructions: [
       "You help a virtual assistant (VA), usually a freelancer in the Philippines working for clients abroad, run their work as a small business: income against goal, how much depends on one client, hours and rest, the pipeline of new clients, rates, and what to do next. You are their business manager, not their boss, and you never act for them outside this chat.",
@@ -92,7 +104,7 @@ export const VA_TEAM_ROLE_BOT_TEMPLATES: readonly BotTemplate[] = [
   },
   {
     id: "client-va-sync",
-    version: 1,
+    version: 2,
     name: "Client and VA sync",
     category: "virtual-assistants",
     summary: "Keeps a client and their VA on one priority list, across time zones",
@@ -111,6 +123,18 @@ export const VA_TEAM_ROLE_BOT_TEMPLATES: readonly BotTemplate[] = [
       "- 2 decisions for Jen",
       "- Feedback both ways: what to keep, what to change",
     ].join("\n"),
+    whatItDoes: [
+      "Keeps one shared priority list for a client and their VA, across time zones",
+      "Turns new asks into clear tasks with an owner and a due time in both zones",
+      "Flags when the client and the VA have drifted onto different priorities",
+      "Drafts a short weekly sync so both sides see the same plan",
+    ],
+    howItHelps: [
+      "You and your VA stop working from two different lists",
+      "Time zones stop turning a same-day ask into a missed day",
+      "The weekly sync is already drafted, so the meeting can be short or skipped",
+      "Priorities only change when you confirm them",
+    ],
     description: "Client and VA shared priorities",
     instructions: [
       "You keep a client (usually a small business owner, often in the US) and their virtual assistant (VA, often in the Philippines) working from one shared priority list, so neither side guesses what matters this week. You run the weekly sync, track what changed, capture decisions for the shared brain, and make feedback a normal two-way habit.",
@@ -173,7 +197,7 @@ export const VA_TEAM_ROLE_BOT_TEMPLATES: readonly BotTemplate[] = [
   },
   {
     id: "calendar-keeper",
-    version: 1,
+    version: 2,
     name: "Calendar keeper",
     category: "virtual-assistants",
     summary: "Plans the day, protects focus time and drafts every scheduling reply",
@@ -190,6 +214,18 @@ export const VA_TEAM_ROLE_BOT_TEMPLATES: readonly BotTemplate[] = [
       "- Mark asked for 30 min this week: offered Wed 1:00 PM or Thu 10:00 AM",
       "- Webinar invite for Thursday: suggested no, it clashes with month-end",
     ].join("\n"),
+    whatItDoes: [
+      "Plans tomorrow from what's already on the calendar and what's still open",
+      "Protects focus time and flags clashes before they happen",
+      "Drafts every scheduling reply, with times in both time zones when needed",
+      "Moves nothing on its own; it only proposes a change",
+    ],
+    howItHelps: [
+      "Your day is planned before you sit down, not rebuilt in the morning rush",
+      "Focus time stays protected instead of being nibbled away",
+      "Scheduling back-and-forth starts from a draft, not a blank reply",
+      "No meeting is moved or booked until you approve it",
+    ],
     description: "Calendar and scheduling",
     instructions: [
       "You keep one person's calendar in order: you plan each day, flag conflicts and overload, protect focus time, prepare agendas, and draft every scheduling reply (proposing times, confirming, rescheduling and politely declining). You usually work for a business owner, with or for their virtual assistant (VA), often across time zones.",
@@ -251,7 +287,7 @@ export const VA_TEAM_ROLE_BOT_TEMPLATES: readonly BotTemplate[] = [
   },
   {
     id: "agency-ops-manager",
-    version: 1,
+    version: 2,
     name: "VA agency ops",
     category: "virtual-assistants",
     summary: "For agency owners: clients, VAs, coverage and retainer hours in one view",
@@ -270,6 +306,18 @@ export const VA_TEAM_ROLE_BOT_TEMPLATES: readonly BotTemplate[] = [
       "",
       "**Needs you**: 3 decisions above, plus the new client intake for Rivera Law.",
     ].join("\n"),
+    whatItDoes: [
+      "Gives you one view of clients, VAs, coverage, and retainer hours",
+      "Flags a client day with no backup when a VA is off",
+      "Tracks hours against retainers so a client isn't quietly over or under",
+      "Drafts the weekly ops picture so you can reassign work in time",
+    ],
+    howItHelps: [
+      "You see a coverage gap before the client does",
+      "Retainer hours stay on track instead of surprising you at month-end",
+      "Reassigning work starts from a clear picture, not from memory",
+      "No schedule or client message changes until you approve it",
+    ],
     description: "VA agency operations",
     instructions: [
       "You help the owner of a virtual assistant (VA) agency run several VAs across several clients: who works for whom, coverage when someone is off, retainer hours used against what each client bought, client health, VA workload and wellbeing, and new client intake. You are the owner's operations lead, and you only draft.",

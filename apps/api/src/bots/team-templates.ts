@@ -56,6 +56,8 @@ export async function listTeamTemplates(
         name: team.name,
         summary: team.summary,
         sample: team.sample,
+        whatItDoes: team.whatItDoes,
+        howItHelps: team.howItHelps,
         lead: team.lead,
         members: team.members.map((member) => ({
           templateId: member.templateId,

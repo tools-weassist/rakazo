@@ -8,6 +8,7 @@ import type { ScrollViewInstance } from "react-native";
 import { ActivityIndicator, Platform, ScrollView, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { BotTemplateIcon } from "../../components/bots/bot-template-icon";
+import { TemplateKindBadge } from "../../components/bots/template-kind-badge";
 import { FilterChips } from "../../components/native/filter-chips";
 import { NativeActionButton } from "../../components/native/native-action-button";
 import { SettingsGroup, SettingsRow } from "../../components/settings/settings-group";
@@ -100,6 +101,7 @@ export default function BotTemplatesScreen() {
                   accessibilityRole="button"
                   title={name}
                   detail={summary}
+                  badge={<TemplateKindBadge />}
                   leading={<BotTemplateIcon id={template.id} />}
                   chevron="right"
                   onPress={() => open(template.id)}

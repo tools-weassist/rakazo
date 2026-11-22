@@ -105,6 +105,8 @@ type SettingsRowProps = Omit<PressableProps, "children" | "style"> & {
   dimmed?: boolean;
   leading?: ReactNode;
   trailing?: ReactNode;
+  /** A small label under the title, such as "Single bot" or "Team · 5 bots". */
+  badge?: ReactNode;
 };
 
 export function SettingsRow({
@@ -118,6 +120,7 @@ export function SettingsRow({
   dimmed,
   leading,
   trailing,
+  badge,
   ...props
 }: SettingsRowProps) {
   const styles = useThemedStyles(createSettingsStyles);
@@ -149,6 +152,7 @@ export function SettingsRow({
         >
           {title}
         </Text>
+        {badge}
         {detail ? <Text style={styles.detail}>{detail}</Text> : null}
         {stacked ? end : null}
       </View>

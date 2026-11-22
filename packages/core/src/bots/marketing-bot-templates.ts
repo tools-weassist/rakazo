@@ -9,7 +9,7 @@ import { DATE_RULE } from "./template-rules.js";
 export const MARKETING_BOT_TEMPLATES: readonly BotTemplate[] = [
   {
     id: "content-calendar-planner",
-    version: 2,
+    version: 3,
     name: "Content calendar",
     category: "marketing",
     summary: "Plans a month of posts and keeps the week on track",
@@ -27,6 +27,18 @@ export const MARKETING_BOT_TEMPLATES: readonly BotTemplate[] = [
       "",
       "**Needs you:** 3 photos from the Lopez job, and OK the 10% offer",
     ].join("\n"),
+    whatItDoes: [
+      "Plans a month of posts, newsletters, or videos from your topics and dates",
+      "Turns the month into a week-by-week list so you know what's next",
+      "Flags a thin week, a clash, or a promised piece that isn't drafted yet",
+      "Adjusts the plan when a date or campaign changes, and shows you the draft",
+    ],
+    howItHelps: [
+      "You stop starting the week unsure what to publish",
+      "The month has a shape before it's already half over",
+      "Gaps and clashes show up while there's still time to fix them",
+      "Nothing is scheduled or posted until you approve the plan",
+    ],
     description: "Content planning",
     instructions: [
       "You plan a small business's content calendar a month at a time and keep each week on track, so posting stays steady without last-minute scrambles. You work for the owner or their marketing virtual assistant (VA).",
@@ -87,7 +99,7 @@ export const MARKETING_BOT_TEMPLATES: readonly BotTemplate[] = [
   },
   {
     id: "social-post-repurposer",
-    version: 1,
+    version: 2,
     name: "Social post repurposer",
     category: "marketing",
     summary: "Turns one blog, video or newsletter into a week of posts",
@@ -105,6 +117,18 @@ export const MARKETING_BOT_TEMPLATES: readonly BotTemplate[] = [
       "",
       "**Short video script (30 sec)** ready below.",
     ].join("\n"),
+    whatItDoes: [
+      "Turns one blog, video, or newsletter into a week of short posts",
+      "Drafts each post in the voice and length that fits the channel",
+      "Keeps the key point of the original, instead of inventing a new angle",
+      "Groups the drafts so you can approve a week's worth at once",
+    ],
+    howItHelps: [
+      "One piece of work fills the week, instead of five blank posts",
+      "Your voice stays consistent across channels",
+      "You review a set of drafts, not a staring contest with an empty composer",
+      "Nothing is posted until you say yes",
+    ],
     description: "Content repurposing",
     instructions: [
       "You turn a small business's long content (blog posts, videos, podcasts, newsletters, webinars) into ready-to-post drafts for each social channel, in their voice. You work for the owner or their marketing virtual assistant (VA).",
@@ -147,7 +171,7 @@ export const MARKETING_BOT_TEMPLATES: readonly BotTemplate[] = [
   },
   {
     id: "newsletter-drafter",
-    version: 2,
+    version: 3,
     name: "Newsletter drafter",
     category: "marketing",
     summary: "Drafts your monthly email newsletter from what happened",
@@ -166,6 +190,18 @@ export const MARKETING_BOT_TEMPLATES: readonly BotTemplate[] = [
       "",
       "Draft ready for your edits. Paste into Mailchimp when you're happy.",
     ].join("\n"),
+    whatItDoes: [
+      "Drafts your newsletter from what actually happened this period",
+      "Suggests subject lines and a clear structure, then writes the body",
+      "Pulls in the links, wins, and updates you already have",
+      "Revises from your notes so the next draft is closer to your voice",
+    ],
+    howItHelps: [
+      "The newsletter starts from a draft, not from a blank page on send day",
+      "You don't have to remember everything that happened this month",
+      "Subject lines and structure are already options you can pick from",
+      "Nothing is sent to your list until you approve it",
+    ],
     description: "Newsletter drafting",
     instructions: [
       "You draft a small business's email newsletter from what actually happened that month, in their voice, ready to paste into their email tool. You work for the owner or their marketing virtual assistant (VA).",
@@ -209,7 +245,7 @@ export const MARKETING_BOT_TEMPLATES: readonly BotTemplate[] = [
   },
   {
     id: "lead-follow-up",
-    version: 2,
+    version: 3,
     name: "Lead follow-up",
     category: "marketing",
     summary: "Spots new inquiries fast and drafts the follow-ups",
@@ -226,6 +262,18 @@ export const MARKETING_BOT_TEMPLATES: readonly BotTemplate[] = [
       "",
       "Average first reply yesterday: 2 hrs 10 min.",
     ].join("\n"),
+    whatItDoes: [
+      "Spots new inquiries quickly and puts them in one list",
+      "Drafts a first reply and the next follow-up in your voice",
+      "Tracks who has been answered, who is waiting, and who has gone quiet",
+      "Flags a lead that's cooling off so you can decide whether to try again",
+    ],
+    howItHelps: [
+      "New leads get a draft reply while they're still warm",
+      "You don't lose an inquiry in a busy inbox",
+      "Follow-up is a review of drafts, not a hunt through old threads",
+      "No reply is sent until you approve it",
+    ],
     description: "Lead follow-up",
     instructions: [
       "You make sure a small business answers every new inquiry quickly and follows up until there's a clear yes or no. You work for the owner or the virtual assistant (VA) who handles their leads.",
@@ -285,7 +333,7 @@ export const MARKETING_BOT_TEMPLATES: readonly BotTemplate[] = [
   },
   {
     id: "campaign-recap",
-    version: 1,
+    version: 2,
     name: "Campaign recap",
     category: "marketing",
     summary: "A plain-English weekly recap of what your marketing did",
@@ -302,6 +350,18 @@ export const MARKETING_BOT_TEMPLATES: readonly BotTemplate[] = [
       "",
       "**Try next week:** move $100 from Google to Facebook, and resend the email to non-openers.",
     ].join("\n"),
+    whatItDoes: [
+      "Writes a plain-English weekly recap of what your marketing did",
+      "Pulls the numbers and the work into one short brief",
+      "Flags what worked, what didn't, and what to try next",
+      "Keeps the recap short enough to read before a meeting",
+    ],
+    howItHelps: [
+      "You can see the week's marketing without opening five dashboards",
+      "The meeting starts from a recap, not from a scramble for numbers",
+      "It's clear what to repeat and what to drop",
+      "The recap is for you to use; nothing is published until you say so",
+    ],
     description: "Campaign reporting",
     instructions: [
       "You turn a small business's marketing numbers into a short, plain-English weekly recap: what worked, what didn't, and what to try next. You work for the owner or their marketing virtual assistant (VA).",

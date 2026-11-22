@@ -10,7 +10,7 @@ import { VA_TEAM_ROLE_BOT_TEMPLATES } from "./va-team-role-bot-templates.js";
 /**
  * Reviewed, ready-made bots. Bump a template's `version` whenever any of its content changes:
  * a create from an older preview is refused, so what was shown is what gets made. Names,
- * summaries and samples are shown in the apps' languages; the rest is written for the bot.
+ * summaries, samples, what-it-does and how-it-helps copy are shown in the apps' languages; the rest is written for the bot.
  * Wea's templates for virtual assistants and their clients come first (then the VA roles
  * the ready-made teams needed), then accounting and
  * finance, marketing and operations, then the general ones; the page groups them by `category`
@@ -24,7 +24,7 @@ export const BOT_TEMPLATES: readonly BotTemplate[] = [
   ...OPS_BOT_TEMPLATES,
   {
     id: "morning-briefing",
-    version: 2,
+    version: 3,
     name: "Morning briefing",
     category: "productivity",
     summary: "Your day at a glance, every weekday morning",
@@ -43,6 +43,18 @@ export const BOT_TEMPLATES: readonly BotTemplate[] = [
       "- Light rain after 4pm",
       "- Two stories on the topics you follow",
     ].join("\n"),
+    whatItDoes: [
+      "Sends a short weekday briefing of your calendar, inbox, and what needs you",
+      "Flags meetings that moved, overlap, or were added since yesterday",
+      "Lists messages that ask for a decision or have a deadline, and skips the noise",
+      "Adds weather or news only when you asked for it and it actually matters",
+    ],
+    howItHelps: [
+      "You start the day knowing what needs you, without opening five apps first",
+      "A moved meeting or a noon deadline doesn't catch you mid-morning",
+      "The briefing stays short enough to read with coffee",
+      "It only points things out; it never sends email or changes your calendar",
+    ],
     description: "Daily briefing",
     instructions: [
       "You write the user's morning briefing: a short, skimmable summary of their day.",
@@ -83,7 +95,7 @@ export const BOT_TEMPLATES: readonly BotTemplate[] = [
   },
   {
     id: "inbox-triage",
-    version: 2,
+    version: 3,
     name: "Inbox triage",
     category: "productivity",
     summary: "Sorts new email and drafts the replies",
@@ -99,6 +111,18 @@ export const BOT_TEMPLATES: readonly BotTemplate[] = [
       "",
       "**Low priority**: 7 newsletters and notifications",
     ].join("\n"),
+    whatItDoes: [
+      "Sorts new email into reply needed, for your information, and low priority",
+      "Drafts a reply in your voice for every message that needs one",
+      "Applies your rules for senders and topics, and learns from corrections",
+      "Gives you a short report, not a copy of the whole inbox",
+    ],
+    howItHelps: [
+      "You only read what matters, and the replies are already drafted",
+      "Catching up twice a day takes minutes instead of the whole inbox",
+      "Newsletters and notifications get counted, not dumped on you",
+      "No email is sent, deleted, or archived unless you ask",
+    ],
     description: "Email triage",
     instructions: [
       "You triage the user's email so they only read what matters.",
@@ -145,7 +169,7 @@ export const BOT_TEMPLATES: readonly BotTemplate[] = [
   },
   {
     id: "pr-reviewer",
-    version: 2,
+    version: 3,
     name: "PR reviewer",
     category: "productivity",
     summary: "Reviews pull requests waiting on you",
@@ -161,6 +185,18 @@ export const BOT_TEMPLATES: readonly BotTemplate[] = [
       "**#479 Fix date parsing in reports**",
       "Looks good. Suggested review: approve.",
     ].join("\n"),
+    whatItDoes: [
+      "Finds the pull requests waiting on you and reads each one",
+      "Drafts a review that focuses on correctness, security, and missing tests",
+      "Quotes the file and line for every point, and suggests a verdict",
+      "Reviews a pasted link the same way, even if the code host isn't connected",
+    ],
+    howItHelps: [
+      "You start from a drafted review, not from a cold pull request first thing",
+      "The important issues are already called out, with a suggested verdict",
+      "Waiting reviews don't pile up unnoticed",
+      "Nothing is posted, approved, or merged until you say so",
+    ],
     description: "Code review",
     instructions: [
       "You review pull requests for the user and draft their reviews.",
@@ -205,7 +241,7 @@ export const BOT_TEMPLATES: readonly BotTemplate[] = [
   },
   {
     id: "topic-watch",
-    version: 2,
+    version: 3,
     name: "Topic watch",
     category: "productivity",
     summary: "A weekly digest of what changed on topics you follow",
@@ -221,6 +257,18 @@ export const BOT_TEMPLATES: readonly BotTemplate[] = [
       "",
       "Nothing new on battery recycling.",
     ].join("\n"),
+    whatItDoes: [
+      "Watches the topics and websites you name, and checks what changed",
+      "Sends a weekly digest of real changes, each with a source and how recent it is",
+      "Skips repeats and rumors, and says so when something is unconfirmed",
+      "Remembers what it already told you, so each digest is only what's new",
+    ],
+    howItHelps: [
+      "You stay current without checking the same sites every day",
+      "You only see what's new since last week, not a pile of old news",
+      "A pricing or policy change on a site you watch doesn't slip by",
+      "It's a digest only; it never contacts anyone or posts on your behalf",
+    ],
     description: "Watches the topics and sites you follow",
     instructions: [
       "You keep the user up to date on the topics and websites they follow.",

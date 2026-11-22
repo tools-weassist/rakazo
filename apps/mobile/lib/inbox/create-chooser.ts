@@ -3,7 +3,7 @@ import { i18n } from "@lingui/core";
 import { msg } from "@lingui/core/macro";
 import { materialIcons } from "../appearance/material-icons";
 
-export type CreateAction = "bot" | "group" | "space";
+export type CreateAction = "bot" | "templates" | "group" | "space";
 
 export const createMenuItems = [
   {
@@ -11,6 +11,12 @@ export const createMenuItems = [
     label: msg`New bot`,
     sfSymbol: "person.crop.circle.badge.plus",
     materialIcon: "person_add",
+  },
+  {
+    id: "templates",
+    label: msg`Templates`,
+    sfSymbol: "square.grid.3x3",
+    materialIcon: "apps",
   },
   { id: "group", label: msg`New group chat`, sfSymbol: "person.2", materialIcon: "group" },
   {

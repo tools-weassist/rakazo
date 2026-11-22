@@ -9,7 +9,7 @@ import { DATE_RULE } from "./template-rules.js";
 export const FINANCE_BOT_TEMPLATES: readonly BotTemplate[] = [
   {
     id: "receipt-categorizer",
-    version: 2,
+    version: 3,
     name: "Receipt sorter",
     category: "accounting-finance",
     summary: "Finds receipts, sorts expenses and flags what's missing",
@@ -28,6 +28,18 @@ export const FINANCE_BOT_TEMPLATES: readonly BotTemplate[] = [
       "",
       "Ready for you to enter in QuickBooks. Nothing was changed there.",
     ].join("\n"),
+    whatItDoes: [
+      "Finds new receipts and expense charges from the accounts you connect",
+      "Sorts them into your categories and matches them to a vendor or trip",
+      "Flags missing receipts, odd amounts, and things that don't look like expenses",
+      "Prepares a clean list you can review before anything is booked",
+    ],
+    howItHelps: [
+      "You stop hunting through inboxes and photo rolls for last month's receipts",
+      "Missing receipts show up while you can still find them",
+      "Categorizing takes a review, not a full afternoon of sorting",
+      "Nothing is filed in the books until you approve the list",
+    ],
     description: "Receipt and expense sorting",
     instructions: [
       "You keep a small business's receipts and expenses organized so bookkeeping takes minutes, not a weekend. You work for the owner or the virtual assistant (VA) who does their books.",
@@ -76,7 +88,7 @@ export const FINANCE_BOT_TEMPLATES: readonly BotTemplate[] = [
   },
   {
     id: "ar-follow-up",
-    version: 2,
+    version: 3,
     name: "Invoice follow-up",
     category: "accounting-finance",
     summary: "Tracks who owes you and drafts polite reminders",
@@ -94,6 +106,18 @@ export const FINANCE_BOT_TEMPLATES: readonly BotTemplate[] = [
       "",
       "Nothing sent. Say which drafts to send.",
     ].join("\n"),
+    whatItDoes: [
+      "Tracks open invoices and how long each one has been unpaid",
+      "Drafts a polite reminder in your voice, matched to how late it is",
+      "Flags invoices that are slipping past your usual terms",
+      "Keeps a simple list of who owes what, so you can see it at a glance",
+    ],
+    howItHelps: [
+      "Late invoices get a reminder before they go cold",
+      "You don't have to write the same chase email from scratch",
+      "You can see outstanding cash without opening the ledger every day",
+      "No reminder is sent until you have approved it",
+    ],
     description: "Accounts receivable follow-up",
     instructions: [
       "You help a small business get paid by its customers: you keep the list of unpaid invoices, age them, and draft reminders that are polite and firm. You work for the owner or their virtual assistant (VA).",
@@ -155,7 +179,7 @@ export const FINANCE_BOT_TEMPLATES: readonly BotTemplate[] = [
   },
   {
     id: "month-end-close",
-    version: 2,
+    version: 3,
     name: "Month-end close",
     category: "accounting-finance",
     summary: "Runs your month-end checklist and chases what's missing",
@@ -175,6 +199,18 @@ export const FINANCE_BOT_TEMPLATES: readonly BotTemplate[] = [
       "",
       "Target: close by Dec 7. On track.",
     ].join("\n"),
+    whatItDoes: [
+      "Runs your month-end checklist and shows what's done, missing, or blocked",
+      "Chases the missing receipts, numbers, or reviews that are holding the close",
+      "Drafts the close packet or summary in the format you already use",
+      "Keeps a count of days to close so you can see if you're slipping",
+    ],
+    howItHelps: [
+      "Month-end stops being a scramble through a half-remembered list",
+      "You find out what's missing early, not on the last day",
+      "The close packet starts from a draft, not a blank folder",
+      "Nothing is marked final, and nothing is sent, until you say so",
+    ],
     description: "Month-end close checklist",
     instructions: [
       "You run a small business's month-end close checklist so the books are ready on time: you track each step, chase missing items, and keep a list of questions for the accountant. You work for the owner, their bookkeeper or their virtual assistant (VA).",
@@ -225,7 +261,7 @@ export const FINANCE_BOT_TEMPLATES: readonly BotTemplate[] = [
   },
   {
     id: "expense-report-prep",
-    version: 1,
+    version: 2,
     name: "Expense report prep",
     category: "accounting-finance",
     summary: "Turns receipts into a ready-to-approve expense report",
@@ -244,6 +280,18 @@ export const FINANCE_BOT_TEMPLATES: readonly BotTemplate[] = [
       "- Dinner is over the $50 per person limit",
       "- No receipt for the Nov 12 taxi ($38)",
     ].join("\n"),
+    whatItDoes: [
+      "Gathers the receipts for a trip or a period into one report",
+      "Checks dates, amounts, and missing items before you review it",
+      "Formats the report the way your approver or client expects",
+      "Flags anything that looks out of policy so you can decide",
+    ],
+    howItHelps: [
+      "The report is ready to review instead of being built the night before it's due",
+      "Missing receipts are caught before you submit",
+      "You spend minutes checking, not an hour assembling",
+      "Nothing is submitted until you approve the report",
+    ],
     description: "Expense reports",
     instructions: [
       "You prepare expense reports for a small business's team from their receipts, check them against the company's expense policy, and hand them over ready to approve. You work for the owner, the employee or a virtual assistant (VA).",
@@ -288,7 +336,7 @@ export const FINANCE_BOT_TEMPLATES: readonly BotTemplate[] = [
   },
   {
     id: "cash-flow-snapshot",
-    version: 2,
+    version: 3,
     name: "Cash-flow snapshot",
     category: "accounting-finance",
     summary: "A weekly look at cash in, cash out and what's coming",
@@ -305,6 +353,18 @@ export const FINANCE_BOT_TEMPLATES: readonly BotTemplate[] = [
       "- $4,200 of what's coming in is from one late payer",
       "- Software costs are up 18% from 3 months ago",
     ].join("\n"),
+    whatItDoes: [
+      "Builds a weekly picture of cash in, cash out, and what's coming due",
+      "Pulls from invoices, bills, and balances in the tools you connect",
+      "Flags a tight week early, including large bills or late payments",
+      "Keeps the snapshot short enough to read in a minute",
+    ],
+    howItHelps: [
+      "You see a cash crunch coming while you can still do something about it",
+      "You don't have to rebuild the same picture from three tools every Monday",
+      "The week starts with a clear number, not a guess",
+      "It's a briefing only; it never moves money or pays a bill",
+    ],
     description: "Cash-flow snapshot",
     instructions: [
       "You give a small business owner a simple weekly picture of cash: what they have, what's coming in, what's going out, and the lowest point in the next few weeks. You work for the owner or their virtual assistant (VA).",

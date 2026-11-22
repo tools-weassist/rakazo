@@ -195,6 +195,7 @@ export function ShellSidebar({
           navigate={navigate}
           setNewSpaceOpen={setNewSpaceOpen}
           setCreateBotOpen={setCreateBotOpen}
+          openTemplates={openTemplates}
         />
         {mini ||
         !(

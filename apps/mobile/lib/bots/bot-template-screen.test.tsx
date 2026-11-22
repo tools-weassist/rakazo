@@ -23,6 +23,7 @@ vi.mock("../native/native", () => ({
   useResolvedAppearance: () => "light",
   useThemedStyles: (create: () => unknown) => create(),
 }));
+vi.mock("../appearance/appearance", () => ({ mobileTokens: () => ({}) }));
 vi.mock("../i18n/i18n", () => ({ useUiLocale: () => "en" }));
 vi.mock("../routines/cron", () => ({ cronLabels: () => ({}) }));
 vi.mock("../api/api", () => ({
@@ -94,6 +95,16 @@ const template = {
   name: "Standup",
   summary: "Collects updates",
   sample: "Yesterday, today, blockers",
+  whatItDoes: [
+    "Collects yesterday, today, and blockers.",
+    "Writes a short standup note.",
+    "Lists who has not replied yet.",
+  ],
+  howItHelps: [
+    "The standup is written for you.",
+    "You see who is blocked without chasing.",
+    "The note stays a draft until you share it.",
+  ],
   instructions: "Ask each person.",
   skills: [],
   routines: [],
@@ -164,6 +175,10 @@ function expectNothingOpened() {
 it("creates the template's bot as previewed, busy meanwhile, then opens its chat", async () => {
   const create = hold("bots/createFromTemplate");
   await render();
+  expect(container.textContent).toContain("Single bot");
+  expect(container.textContent).toContain("Collects yesterday, today, and blockers.");
+  expect(container.textContent).toContain("The standup is written for you.");
+  expect(container.textContent).not.toContain("Yesterday, today, blockers");
   expect(action().textContent).toBe("Create bot");
   await act(async () => action().click());
   expect(action().getAttribute("aria-busy")).toBe("true");

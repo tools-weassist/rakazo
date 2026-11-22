@@ -11,6 +11,7 @@ import type {
 import { BOT_TEMPLATE_CATEGORIES, isBotTemplateChanged } from "@rakazo/contracts";
 import { botTemplateApps, formatCron } from "@rakazo/core";
 import {
+  Badge,
   Button,
   Dialog,
   DialogClose,
@@ -115,25 +116,63 @@ const ICONS: Record<string, LucideIcon> = {
   "topic-watch": Telescope,
 };
 
-function TemplateIcon({ id, large = false }: { id: string; large?: boolean }) {
+function TemplateIcon({
+  id,
+  large = false,
+  compact = false,
+}: {
+  id: string;
+  large?: boolean;
+  compact?: boolean;
+}) {
   const Icon = ICONS[id] ?? LayoutTemplate;
   return (
     <span
       aria-hidden
       className={`grid shrink-0 place-items-center border border-border/60 bg-muted text-foreground ${
-        large ? "h-14 w-14 rounded-2xl" : "h-10 w-10 rounded-xl"
+        large ? "h-14 w-14 rounded-2xl" : compact ? "size-7 rounded-lg" : "h-10 w-10 rounded-xl"
       }`}
     >
-      <Icon size={large ? 24 : 18} />
+      <Icon size={large ? 24 : compact ? 14 : 18} />
     </span>
   );
 }
 
-function Sample({ text }: { text: string }) {
+/** Up to three member icons, so a team card reads as a fleet before the name. */
+function MemberStack({ ids }: { ids: string[] }) {
+  const shown = ids.slice(0, 3);
   return (
-    <div className="rounded-xl border border-border/60 bg-background px-4 py-3 text-body">
-      <ChatMarkdown>{text}</ChatMarkdown>
-    </div>
+    <span aria-hidden className="flex shrink-0 items-center">
+      {shown.map((id, index) => (
+        <span
+          key={`${id}-${index}`}
+          className={`relative rounded-lg bg-card ${index === 0 ? "" : "-ms-2"}`}
+          style={{ zIndex: shown.length - index }}
+        >
+          <TemplateIcon id={id} compact />
+        </span>
+      ))}
+    </span>
+  );
+}
+
+/** Sits on its own row so a long title never wraps the badge at 390px. */
+function TemplateKindBadge({ members }: { members?: number }) {
+  const team = members != null;
+  return (
+    <Badge
+      variant={team ? "outline" : "secondary"}
+      data-testid="template-kind-badge"
+      data-kind={team ? "team" : "single"}
+      className={
+        team
+          ? "mt-1 border-primary/20 bg-primary/10 font-medium text-primary"
+          : "mt-1 font-normal text-muted-foreground"
+      }
+    >
+      {team ? <Users /> : <BotIcon />}
+      {team ? <Trans>Team · {members} bots</Trans> : <Trans>Single bot</Trans>}
+    </Badge>
   );
 }
 
@@ -254,7 +293,7 @@ export function BotTemplatesDialog({
       );
     return (
       <div className="flex flex-col gap-4">
-        {selected === "teams" ? (
+        {selected === "teams" || (selected === null && hasTeams) ? (
           <div className="grid grid-cols-1 gap-3" data-testid="team-template-list">
             {teams.data?.map((team) => (
               <TeamCard
@@ -291,6 +330,7 @@ export function BotTemplatesDialog({
                     >
                       {name}
                     </span>
+                    <TemplateKindBadge />
                     <span
                       id={summaryId}
                       className="line-clamp-2 text-body-sm text-muted-foreground"
@@ -322,7 +362,7 @@ export function BotTemplatesDialog({
         showCloseButton={false}
         data-testid="bot-templates-dialog"
         size="lg"
-        className="bg-card"
+        className="flex flex-col bg-card"
       >
         <DialogHeader className="flex-row items-start justify-between px-8 pt-7">
           <DialogTitle className="text-heading2 text-foreground">
@@ -360,7 +400,7 @@ export function BotTemplatesDialog({
         <div
           ref={list}
           data-testid="bot-template-scroll"
-          className={`min-h-0 flex-1 overflow-y-auto px-8 pb-8 ${showChips ? "pt-4" : "pt-5"}`}
+          className={`min-h-0 flex-1 overflow-y-auto px-8 pb-16 ${showChips ? "pt-4" : "pt-5"}`}
         >
           {content()}
         </div>
@@ -382,7 +422,7 @@ function TemplateDetail({
 }) {
   const { t, i18n } = useLingui();
   const queries = useSpaceQueries();
-  const { name, summary, sample } = useBotTemplateCopy()(template);
+  const { name, summary, whatItDoes, howItHelps } = useBotTemplateCopy()(template);
   const [expanded, setExpanded] = useState<string | null>(null);
   const open = useSave({
     save: async (input: { create: true } | { botId: string }, rpc) =>
@@ -466,6 +506,7 @@ function TemplateDetail({
           <h2 className="text-heading2 font-semibold text-pretty break-words text-foreground">
             {name}
           </h2>
+          <TemplateKindBadge />
           <p className="text-body text-pretty break-words text-muted-foreground">{summary}</p>
         </div>
         <div className="shrink-0 pt-2 max-sm:w-full max-sm:pt-0 max-sm:ps-10 max-sm:[&>button]:w-full">
@@ -492,7 +533,16 @@ function TemplateDetail({
 
       {error ? <ErrorNotice error={error} /> : null}
 
-      <Sample text={sample} />
+      <BriefList
+        testId="template-what-it-does"
+        title={<Trans>What it does</Trans>}
+        items={whatItDoes.map((text) => ({ key: text, text }))}
+      />
+      <BriefList
+        testId="template-how-it-helps"
+        title={<Trans>How it helps you</Trans>}
+        items={howItHelps.map((text) => ({ key: text, text }))}
+      />
 
       <section className="space-y-2">
         <SectionHeading className="px-1">
@@ -592,15 +642,22 @@ function TeamCard({
       className={`flex min-w-0 flex-col gap-3 rounded-2xl border border-border/70 p-4 text-start focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-ring/50 ${ROW_HOVER}`}
     >
       <span className="flex min-w-0 items-center gap-3">
-        <span
-          aria-hidden
-          className="grid size-10 shrink-0 place-items-center rounded-xl border border-border/60 bg-muted"
-        >
-          <Users size={18} />
-        </span>
+        {team.members.length ? (
+          <MemberStack ids={team.members.map((member) => member.templateId)} />
+        ) : (
+          <span
+            aria-hidden
+            className="grid size-10 shrink-0 place-items-center rounded-xl border border-border/60 bg-muted"
+          >
+            <Users size={18} />
+          </span>
+        )}
         <span className="min-w-0 flex-1">
-          <span className="block text-body-lg font-medium text-foreground">{copy.name}</span>
-          <span className="block text-body-sm text-muted-foreground">{copy.summary}</span>
+          <span className="block truncate text-body-lg font-medium text-foreground">
+            {copy.name}
+          </span>
+          <TemplateKindBadge members={team.members.length} />
+          <span className="line-clamp-2 text-body-sm text-muted-foreground">{copy.summary}</span>
         </span>
       </span>
       <span className="flex flex-wrap gap-1.5">
@@ -665,6 +722,7 @@ function TeamDetail({
         </Button>
         <div className="min-w-0 flex-1">
           <h2 className="text-heading2 font-semibold text-foreground">{copy.name}</h2>
+          <TemplateKindBadge members={team.members.length} />
           <p className="text-body text-muted-foreground">{copy.summary}</p>
         </div>
       </div>
@@ -680,7 +738,16 @@ function TeamDetail({
         />
       ) : null}
 
-      <Sample text={copy.sample} />
+      <BriefList
+        testId="template-what-it-does"
+        title={<Trans>What it does</Trans>}
+        items={copy.whatItDoes.map((text) => ({ key: text, text }))}
+      />
+      <BriefList
+        testId="template-how-it-helps"
+        title={<Trans>How it helps you</Trans>}
+        items={copy.howItHelps.map((text) => ({ key: text, text }))}
+      />
 
       <section className="space-y-2" data-testid="team-success-metric">
         <SectionHeading className="px-1">

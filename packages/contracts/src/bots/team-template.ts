@@ -43,8 +43,12 @@ export const TeamTemplateSchema = z
     name: z.string().min(1).max(80),
     /** One line. */
     summary: z.string().min(1).max(120),
-    /** Markdown: how the team works together, shown before anything is created. */
+    /** Markdown example of how the team works together; kept but not shown on the page. */
     sample: z.string().min(1).max(2000),
+    /** Concrete actions, shown on the team's page. */
+    whatItDoes: z.array(line(200)).min(3).max(5),
+    /** Benefits for the user, shown under what it does. */
+    howItHelps: z.array(line(200)).min(3).max(4),
     /** The lead's bot template; it is listed first and coordinates the rest. */
     lead: slug,
     members: z
@@ -73,6 +77,8 @@ export const TeamTemplateListingSchema = z.object({
   name: z.string(),
   summary: z.string(),
   sample: z.string(),
+  whatItDoes: z.array(z.string()),
+  howItHelps: z.array(z.string()),
   lead: slug,
   members: z.array(
     z.object({

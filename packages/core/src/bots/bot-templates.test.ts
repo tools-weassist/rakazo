@@ -85,6 +85,8 @@ describe("bot templates", () => {
     for (const template of BOT_TEMPLATES) {
       const texts = [
         template.sample,
+        ...template.whatItDoes,
+        ...template.howItHelps,
         template.instructions,
         ...template.skills.flatMap((skill) => [skill.description, skill.body]),
         ...template.routines.map((routine) => routine.prompt),
