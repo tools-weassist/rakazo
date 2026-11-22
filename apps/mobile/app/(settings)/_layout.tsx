@@ -162,6 +162,13 @@ export default function SettingsLayout() {
           contentStyle: { backgroundColor: native.groupedPage },
         }}
       />
+      <Stack.Screen
+        name="team-template"
+        options={{
+          ...glassHeaderOptions(""),
+          contentStyle: { backgroundColor: native.groupedPage },
+        }}
+      />
       {/* Titled by the screen once the skill loads. */}
       <Stack.Screen name="skill" options={glassHeaderOptions("")} />
       <Stack.Screen
