@@ -1059,6 +1059,19 @@ export default function Integrations() {
         ) : (
           <>
             {!detailItem ? <AddCustomMenu options={addOptions} onSelect={startAdding} /> : null}
+            {/* Above search and the category picker, so filtering apps never moves or hides it. */}
+            {!detailItem ? (
+              <Pressable
+                testID="open-bot-templates"
+                accessibilityRole="button"
+                onPress={() => router.push("/bot-templates")}
+                style={({ pressed }) => [styles.row, pressed && styles.pressed]}
+              >
+                <BotTemplateIcon size={LOGO_SIZE} />
+                <Text style={[styles.title, styles.grow]}>{t`Templates`}</Text>
+                <Chevron />
+              </Pressable>
+            ) : null}
             {!detailItem ? (
               <TextInput
                 value={query}
@@ -1097,18 +1110,6 @@ export default function Integrations() {
             ) : null}
 
             {!detailItem && !filtering ? renderConnected() : null}
-            {!detailItem && !filtering ? (
-              <Pressable
-                testID="open-bot-templates"
-                accessibilityRole="button"
-                onPress={() => router.push("/bot-templates")}
-                style={({ pressed }) => [styles.row, pressed && styles.pressed]}
-              >
-                <BotTemplateIcon size={LOGO_SIZE} />
-                <Text style={[styles.title, styles.grow]}>{t`Templates`}</Text>
-                <Chevron />
-              </Pressable>
-            ) : null}
             {!detailItem && savedServerMatches.length ? (
               <View testID="connected-apps" style={styles.catalogStack}>
                 {savedServerMatches.map(renderSavedServer)}
