@@ -34,6 +34,7 @@ async function render(
   onIntegrations = vi.fn(),
   onBoard?: () => void,
   logos?: Array<{ name: string; logo?: string }>,
+  onTemplates?: () => void,
 ) {
   const email = "account@rakazo.test";
   await act(async () =>
@@ -54,6 +55,7 @@ async function render(
           onOpenChange={() => {}}
           onIntegrations={onIntegrations}
           onSkills={vi.fn()}
+          onTemplates={onTemplates}
           onBoard={onBoard}
           onArtifacts={() => {}}
           onSettings={() => {}}
@@ -152,6 +154,17 @@ it("opens integrations and keeps the existing account actions and links", async 
   expect(host.querySelector('[data-testid="user-menu-trigger"]')?.getAttribute("aria-label")).toBe(
     "Account menu for Demo User",
   );
+});
+it("lists Templates after Skills and opens them", async () => {
+  const onTemplates = vi.fn();
+  await render("Demo User", undefined, vi.fn(), undefined, undefined, onTemplates);
+  const menu = document.querySelector('[data-slot="popover-content"]')!;
+  const rows = [...menu.querySelectorAll("button, a")].map((row) => row.textContent);
+  expect(rows.indexOf("Templates")).toBe(rows.indexOf("Skills") + 1);
+  await act(async () =>
+    document.querySelector<HTMLButtonElement>('[data-testid="account-menu-templates"]')?.click(),
+  );
+  expect(onTemplates).toHaveBeenCalledOnce();
 });
 it("omits Board when unavailable", async () => {
   await render();

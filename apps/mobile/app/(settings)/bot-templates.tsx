@@ -1,14 +1,18 @@
 import { useLingui } from "@lingui/react/macro";
+import type { BotTemplateCategory } from "@rakazo/contracts";
+import { BOT_TEMPLATE_CATEGORIES } from "@rakazo/contracts";
 import { useQuery } from "@tanstack/react-query";
 import { useFocusEffect, useRouter } from "expo-router";
-import { useCallback } from "react";
-import { ActivityIndicator, ScrollView, StyleSheet, Text, View } from "react-native";
+import { useCallback, useRef, useState } from "react";
+import type { ScrollViewInstance } from "react-native";
+import { ActivityIndicator, Platform, ScrollView, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { BotTemplateIcon } from "../../components/bots/bot-template-icon";
+import { FilterChips } from "../../components/native/filter-chips";
 import { NativeActionButton } from "../../components/native/native-action-button";
 import { SettingsGroup, SettingsRow } from "../../components/settings/settings-group";
 import { errorText } from "../../lib/api/user-error";
-import { botTemplateCopy } from "../../lib/bots/bot-template-copy";
+import { botTemplateCategoryLabel, botTemplateCopy } from "../../lib/bots/bot-template-copy";
 import { useSideInsets } from "../../lib/layout/side-insets";
 import { native, useThemedStyles } from "../../lib/native/native";
 import { queryClient, rpcQuery } from "../../lib/query/query";
@@ -20,7 +24,21 @@ export default function BotTemplatesScreen() {
   const styles = useThemedStyles(createStyles);
   const { t } = useLingui();
   const templates = useQuery(rpcQuery("bots/templates"), queryClient);
+  const [category, setCategory] = useState<BotTemplateCategory | null>(null);
+  const categories = BOT_TEMPLATE_CATEGORIES.filter((name) =>
+    templates.data?.some((template) => template.category === name),
+  );
+  const selected = category && categories.includes(category) ? category : null;
+  const shown = selected
+    ? templates.data?.filter((template) => template.category === selected)
+    : templates.data;
   const { refetch } = templates;
+  const list = useRef<ScrollViewInstance>(null);
+  const pick = (next: BotTemplateCategory | null) => {
+    setCategory(next);
+    // A shorter list starts at its top under the chips, not wherever the longer one was.
+    if (Platform.OS === "android") list.current?.scrollTo({ y: 0, animated: false });
+  };
   const open = (id: string) => router.push({ pathname: "/bot-template", params: { id } });
 
   // A bot made from a template, or deleted since, changes what each one opens.
@@ -33,10 +51,28 @@ export default function BotTemplatesScreen() {
   return (
     <SafeAreaView edges={["bottom"]} style={styles.screen}>
       <ScrollView
+        ref={list}
         style={sideInsets}
+        stickyHeaderIndices={Platform.OS === "android" ? [0] : undefined}
         contentContainerStyle={styles.content}
         contentInsetAdjustmentBehavior="automatic"
       >
+        {/* Always the first child, so Android can pin it: filtering never moves the chips. */}
+        <View style={categories.length >= 2 ? styles.chipBar : styles.noChips}>
+          {categories.length >= 2 ? (
+            <FilterChips
+              options={[
+                { key: null, label: t`All` },
+                ...categories.map((name) => ({ key: name, label: botTemplateCategoryLabel(name) })),
+              ]}
+              value={selected}
+              onChange={pick}
+              accessibilityLabel={t`Filter templates by category`}
+              testID="bot-template-categories"
+              inset={16}
+            />
+          ) : null}
+        </View>
         {templates.error && !templates.data ? (
           <View style={styles.list}>
             <Text style={styles.error}>
@@ -53,9 +89,9 @@ export default function BotTemplatesScreen() {
         {templates.isPending ? (
           <ActivityIndicator color={native.secondaryLabel} accessibilityLabel={t`Loading…`} />
         ) : null}
-        {templates.data?.length ? (
+        {shown?.length ? (
           <SettingsGroup>
-            {templates.data.map((template) => {
+            {shown.map((template) => {
               const { name, summary } = botTemplateCopy(template);
               return (
                 <SettingsRow
@@ -81,6 +117,9 @@ function createStyles() {
   return StyleSheet.create({
     screen: { flex: 1, backgroundColor: native.page },
     content: { padding: 16, gap: 14 },
+    // Opaque so the list scrolls under the pinned chips; the padding stands in for the gap.
+    chipBar: { backgroundColor: native.page, marginVertical: -7, paddingVertical: 7 },
+    noChips: { marginBottom: -14 },
     list: { gap: 8 },
     error: { color: native.secondaryLabel, fontSize: 14 },
   });

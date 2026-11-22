@@ -1,5 +1,10 @@
 import { describe, expect, it } from "vitest";
-import { botIntroPrompt, HANG_UP_PROMPT, mcpConnectedPrompt } from "./hidden-turns.prompt.js";
+import {
+  botIntroPrompt,
+  HANG_UP_PROMPT,
+  mcpConnectedPrompt,
+  templateIntroPrompt,
+} from "./hidden-turns.prompt.js";
 
 describe("hidden turn prompts", () => {
   it("renders the creation intro with every tool and with none", () => {
@@ -41,5 +46,23 @@ describe("hidden turn prompts", () => {
     expect(mcpConnectedPrompt('Docs "beta"')).toMatchInlineSnapshot(
       `"The user just connected the MCP server "Docs \\"beta\\"" from its approval card, so its tools are available now. Carry on with what they asked for. If nothing is left to do, confirm in one short sentence."`,
     );
+  });
+});
+
+describe("templateIntroPrompt", () => {
+  it("opens with the first setup question and leaves the profile alone", () => {
+    const prompt = templateIntroPrompt({ userName: "Ada", disabledBuiltinTools: [] });
+    expect(prompt).toContain("Ada made you.");
+    expect(prompt).toContain("Call ask_user right away");
+    expect(prompt).toContain("first setup question");
+    expect(prompt).toContain("don't change your name, description or instructions");
+    expect(prompt).not.toContain("update_bot");
+  });
+
+  it("asks in plain text when ask_user is off, and leaves out an empty name", () => {
+    const prompt = templateIntroPrompt({ userName: "", disabledBuiltinTools: ["ask_user"] });
+    expect(prompt).not.toContain("ask_user");
+    expect(prompt).not.toContain("made you");
+    expect(prompt).toContain("Greet them in a few words");
   });
 });

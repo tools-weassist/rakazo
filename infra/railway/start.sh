@@ -20,8 +20,8 @@ export RAILWAY_ENVIRONMENT_ID
 RAILWAY_ENVIRONMENT_ID=$(node infra/railway/sandbox-environment.mjs)
 pnpm --filter @rakazo/api exec node dist/cli/bootstrap-owner.js
 unset OWNER_PASSWORD
-# Personal template: registration is operator configuration, never an app-account permission.
-export SIGNUPS_ENABLED=false
+# Registration is operator configuration (Railway variable SIGNUPS_ENABLED), never an app-account permission. Defaults to closed.
+export SIGNUPS_ENABLED="${SIGNUPS_ENABLED:-false}"
 
 # All processes share one volume; a failed process restarts the whole service.
 trap 'kill $(jobs -pr) 2>/dev/null || true; wait || true' EXIT

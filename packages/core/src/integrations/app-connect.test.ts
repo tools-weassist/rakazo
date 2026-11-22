@@ -40,6 +40,9 @@ describe("inline app cards", () => {
     for (const block of [other, text, connected])
       expect(connectedAppBlock(block, "catalog", "gcal", "first")).toBe(block);
     expect(card.description).toBe("Search events and schedule meetings.");
+    // Every app a template asks for explains itself on its card.
+    for (const slug of ["googledrive", "googlesheets", "github", "gmail", "slack", "notion"])
+      expect(appConnectCard({ ...entry, slug }).description, slug).not.toBe("");
     expect(appConnectedInput("bot", "group-thread", card)).toEqual({
       botId: "bot",
       threadId: "group-thread",
