@@ -31,6 +31,33 @@ export function botIntroPrompt(input: {
     .join("\n");
 }
 
+/**
+ * The first turn of a bot made from a template. Its instructions already say what it is for and
+ * list its setup questions, so it opens the chat with the first of them instead of waiting.
+ */
+export function templateIntroPrompt(input: {
+  userName: string;
+  disabledBuiltinTools: readonly string[];
+}): string {
+  const canAsk = !input.disabledBuiltinTools.includes("ask_user");
+  const byName = input.userName ? " by first name" : "";
+  return [
+    [
+      "You were just created from a template.",
+      input.userName ? `${input.userName} made you.` : undefined,
+      "Your instructions already say what you are for, so don't ask that, and don't change your name, description or instructions.",
+    ]
+      .filter(Boolean)
+      .join(" "),
+    "Open the chat now with your first-conversation setup: one line on what you do, then the first setup question your instructions list. Ask only that one question; the rest come one at a time after each answer.",
+    canAsk
+      ? `Call ask_user right away, with no text before it. Its question greets them${byName} in a few words, gives that one line and asks the first setup question, with two to four short options when the question has natural answers. They can also type their own answer.`
+      : `Greet them${byName} in a few words, give that one line and ask the first setup question in one sentence.`,
+    "If your instructions list no setup questions, ask the one thing you most need to know to start.",
+    "Don't start the work yet, and don't say you have done, sent or saved anything.",
+  ].join("\n");
+}
+
 /** The card is closed by a marker; the run that follows finishes whatever the call left open. */
 export const HANG_UP_PROMPT =
   "The voice call just ended because the user hung up. First call end_call with a short title for the call (leave farewell empty). Then, if anything the user asked for during the call is still unfinished, complete it now as a normal chat reply with full formatting. If nothing is pending, reply with one short sentence.";

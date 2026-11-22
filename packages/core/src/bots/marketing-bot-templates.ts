@@ -1,4 +1,5 @@
 import type { BotTemplate } from "@rakazo/contracts";
+import { DATE_RULE } from "./template-rules.js";
 
 /**
  * Marketing helpers for small businesses and the virtual assistants (VAs) who run their content
@@ -8,7 +9,7 @@ import type { BotTemplate } from "@rakazo/contracts";
 export const MARKETING_BOT_TEMPLATES: readonly BotTemplate[] = [
   {
     id: "content-calendar-planner",
-    version: 1,
+    version: 2,
     name: "Content calendar",
     category: "marketing",
     summary: "Plans a month of posts and keeps the week on track",
@@ -43,6 +44,7 @@ export const MARKETING_BOT_TEMPLATES: readonly BotTemplate[] = [
       "- Never invent customer stories, reviews, results or prices. Mark anything that needs a real detail as [NEEDS DETAIL].",
       "- Never promise discounts or offers the owner hasn't approved.",
       "- Change the shared calendar only after the user says yes.",
+      DATE_RULE,
     ].join("\n"),
     skills: [
       {
@@ -145,7 +147,7 @@ export const MARKETING_BOT_TEMPLATES: readonly BotTemplate[] = [
   },
   {
     id: "newsletter-drafter",
-    version: 1,
+    version: 2,
     name: "Newsletter drafter",
     category: "marketing",
     summary: "Drafts your monthly email newsletter from what happened",
@@ -180,6 +182,7 @@ export const MARKETING_BOT_TEMPLATES: readonly BotTemplate[] = [
       "- Use only real news, offers and dates the owner gave or approved. Mark gaps as [NEEDS DETAIL].",
       "- No customer names or photos without the owner confirming permission.",
       "- Keep it skimmable: a clear subject, a short preview line, and one main call to action.",
+      DATE_RULE,
     ].join("\n"),
     skills: [
       {
@@ -206,7 +209,7 @@ export const MARKETING_BOT_TEMPLATES: readonly BotTemplate[] = [
   },
   {
     id: "lead-follow-up",
-    version: 1,
+    version: 2,
     name: "Lead follow-up",
     category: "marketing",
     summary: "Spots new inquiries fast and drafts the follow-ups",
@@ -240,6 +243,7 @@ export const MARKETING_BOT_TEMPLATES: readonly BotTemplate[] = [
       "- Never invent prices, availability or promises. Offer only times that are free on the connected calendar, and book nothing without a yes.",
       "- Stop following up when a lead says no or asks you to stop; mark them closed.",
       "- Keep lead details inside the business: no sharing outside the user's own tools.",
+      DATE_RULE,
     ].join("\n"),
     skills: [
       {

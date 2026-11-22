@@ -3,6 +3,7 @@ import { matchConnectedAppCatalog } from "../integrations/app-connect.js";
 import { FINANCE_BOT_TEMPLATES } from "./finance-bot-templates.js";
 import { MARKETING_BOT_TEMPLATES } from "./marketing-bot-templates.js";
 import { OPS_BOT_TEMPLATES } from "./ops-bot-templates.js";
+import { DATE_RULE } from "./template-rules.js";
 import { VA_BOT_TEMPLATES } from "./va-bot-templates.js";
 
 /**
@@ -20,7 +21,7 @@ export const BOT_TEMPLATES: readonly BotTemplate[] = [
   ...OPS_BOT_TEMPLATES,
   {
     id: "morning-briefing",
-    version: 1,
+    version: 2,
     name: "Morning briefing",
     category: "productivity",
     summary: "Your day at a glance, every weekday morning",
@@ -49,6 +50,7 @@ export const BOT_TEMPLATES: readonly BotTemplate[] = [
       "  news about, and save the answers to memory. Ask again only if they change their mind.",
       "- Never send email, accept invites or change anything on the user's behalf. Point things",
       "  out; the user decides.",
+      DATE_RULE,
     ].join("\n"),
     skills: [
       {
@@ -78,7 +80,7 @@ export const BOT_TEMPLATES: readonly BotTemplate[] = [
   },
   {
     id: "inbox-triage",
-    version: 1,
+    version: 2,
     name: "Inbox triage",
     category: "productivity",
     summary: "Sorts new email and drafts the replies",
@@ -97,6 +99,13 @@ export const BOT_TEMPLATES: readonly BotTemplate[] = [
     description: "Email triage",
     instructions: [
       "You triage the user's email so they only read what matters.",
+      "",
+      'In your first conversation, say in one line what you do ("I sort your new email and draft the replies, so you only read what matters."), then ask these one at a time and save the answers to memory:',
+      "1. What should I call you, and which email account should I triage?",
+      "2. Senders or topics that always matter, and ones that never do.",
+      "3. How should drafts sound: short and direct, or warmer? Paste a sent email you like if you have one.",
+      "4. What times suit a triage, and in what time zone?",
+      "Then tell them the routine is paused until they turn it on, and offer to connect email and triage now.",
       "",
       "- Sort new mail into: reply needed, for your information, and low priority.",
       "- For anything that needs a reply, write a draft in the user's voice and save it as a draft.",
@@ -133,7 +142,7 @@ export const BOT_TEMPLATES: readonly BotTemplate[] = [
   },
   {
     id: "pr-reviewer",
-    version: 1,
+    version: 2,
     name: "PR reviewer",
     category: "productivity",
     summary: "Reviews pull requests waiting on you",
@@ -152,6 +161,13 @@ export const BOT_TEMPLATES: readonly BotTemplate[] = [
     description: "Code review",
     instructions: [
       "You review pull requests for the user and draft their reviews.",
+      "",
+      'In your first conversation, say in one line what you do ("I review the pull requests waiting on you and draft each review for you to post."), then ask these one at a time and save the answers to memory:',
+      "1. What should I call you, and where is your code: GitHub or another host, and which repositories?",
+      "2. Whose pull requests should I check: ones that request your review, or everything open on a team?",
+      "3. What matters most in your reviews, and is there a style guide or contributing doc I should follow?",
+      "4. When should the daily check run, and in what time zone?",
+      "Then tell them the routine is paused until they turn it on, offer to connect the code host, and say they can paste any pull request link for a review right away.",
       "",
       "- Focus on correctness, security, missing tests and unclear naming, in that order. Skip style nits a formatter would fix.",
       "- Quote the file and line for every point. Say how sure you are when you're not certain.",
@@ -186,7 +202,7 @@ export const BOT_TEMPLATES: readonly BotTemplate[] = [
   },
   {
     id: "topic-watch",
-    version: 1,
+    version: 2,
     name: "Topic watch",
     category: "productivity",
     summary: "A weekly digest of what changed on topics you follow",
@@ -202,11 +218,17 @@ export const BOT_TEMPLATES: readonly BotTemplate[] = [
       "",
       "Nothing new on battery recycling.",
     ].join("\n"),
-    description: "Weekly digest",
+    description: "Watches the topics and sites you follow",
     instructions: [
       "You keep the user up to date on the topics and websites they follow.",
       "",
-      "- In your first conversation, ask which topics and sites to watch and save them to memory.",
+      'In your first conversation, say in one line what you do ("I watch the topics and websites you care about and tell you once a week what changed."), then ask these one at a time and save the answers to memory:',
+      "1. What should I call you, and what's your work or business about?",
+      "2. Which topics should I follow? Two to five is a good start.",
+      "3. Any websites to watch for changes, such as a competitor's pricing page or a supplier's news page?",
+      "4. Which day and time suits the digest, and in what time zone?",
+      "Then tell them the weekly routine is paused until they turn it on, and offer a first digest now.",
+      "",
       "- Report only what's new since the last digest. Keep a short note in memory of what you reported.",
       "- Every item gets a source link and how long ago it happened.",
       "- Prefer primary sources over reposts. Say so when something is a rumor.",

@@ -496,7 +496,18 @@ function TemplateDetail({
         </ul>
       </section>
 
-      {apps.length ? <AppsSection apps={apps} /> : null}
+      {apps.length ? (
+        <AppsSection apps={apps} />
+      ) : (
+        <section className="space-y-2">
+          <SectionHeading className="px-1">
+            <Trans>Works with</Trans>
+          </SectionHeading>
+          <p className="rounded-xl border border-border/70 px-4 py-3 text-body-sm text-muted-foreground">
+            <Trans>No apps to connect. It works in chat and can search the web.</Trans>
+          </p>
+        </section>
+      )}
     </div>
   );
 }

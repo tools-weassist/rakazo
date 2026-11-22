@@ -10,6 +10,9 @@ const APP_DESCRIPTIONS: Record<string, string> = {
   googlecalendar: "Search events and schedule meetings.",
   notion: "Search and edit pages and databases.",
   googledocs: "Draft and edit documents.",
+  googledrive: "Find, read, and organize files and folders.",
+  googlesheets: "Read and update spreadsheets.",
+  github: "Read repositories, issues, and pull requests.",
   hackernews: "Search stories and discussions.",
 };
 
