@@ -243,7 +243,7 @@ function TemplateDetail({
 function createStyles() {
   return StyleSheet.create({
     screen: { flex: 1, backgroundColor: native.groupedPage },
-    content: { padding: 20, gap: 20 },
+    content: { padding: 20, paddingBottom: 40, gap: 20 },
     failure: { gap: 10 },
     header: { flexDirection: "row", alignItems: "center", gap: 14 },
     grow: { flex: 1, gap: 2, minWidth: 0 },

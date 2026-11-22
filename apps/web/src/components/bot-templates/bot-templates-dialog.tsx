@@ -362,7 +362,7 @@ export function BotTemplatesDialog({
         showCloseButton={false}
         data-testid="bot-templates-dialog"
         size="lg"
-        className="bg-card"
+        className="flex flex-col bg-card"
       >
         <DialogHeader className="flex-row items-start justify-between px-8 pt-7">
           <DialogTitle className="text-heading2 text-foreground">
@@ -400,7 +400,7 @@ export function BotTemplatesDialog({
         <div
           ref={list}
           data-testid="bot-template-scroll"
-          className={`min-h-0 flex-1 overflow-y-auto px-8 pb-8 ${showChips ? "pt-4" : "pt-5"}`}
+          className={`min-h-0 flex-1 overflow-y-auto px-8 pb-16 ${showChips ? "pt-4" : "pt-5"}`}
         >
           {content()}
         </div>
