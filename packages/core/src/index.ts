@@ -37,6 +37,7 @@ export * from "./bots/identity-display.js";
 export { identitySource } from "./bots/identity-source.js";
 export * from "./bots/instruction-diff.js";
 export * from "./bots/room-settings.js";
+export * from "./bots/team-templates.js";
 export * from "./calls/barge-in.js";
 export * from "./calls/call-nonce.js";
 export * from "./calls/call-reply-speech.js";

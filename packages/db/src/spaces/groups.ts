@@ -402,9 +402,13 @@ export function createGroupRepos(prisma: PrismaClient) {
       return { ...group, members: presentMembers(group.members) };
     },
 
-    async createGroup(actor: Actor, input: { name: string; botIds: string[] }): Promise<Group> {
+    async createGroup(
+      actor: Actor,
+      input: { name: string; botIds: string[] },
+      transaction?: Prisma.TransactionClient,
+    ): Promise<Group> {
       const members = await assertSpaceBots(prisma, actor, input.botIds);
-      const created = await prisma.$transaction(async (tx) => {
+      const write = async (tx: Prisma.TransactionClient) => {
         await lockSpaceForContentCreation(tx, {
           spaceId: actor.spaceId,
           userId: actor.userId,
@@ -434,7 +438,8 @@ export function createGroupRepos(prisma: PrismaClient) {
           include: groupInclude(actor.userId),
         });
         return attachNewestGroupMessage(tx, loaded);
-      });
+      };
+      const created = transaction ? await write(transaction) : await prisma.$transaction(write);
       return mapGroup(created as GroupRecord);
     },
 

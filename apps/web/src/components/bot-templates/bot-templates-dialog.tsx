@@ -5,6 +5,8 @@ import type {
   BotTemplateCategory,
   BotTemplateListing,
   ConnectionCatalogItem,
+  Group,
+  TeamTemplateListing,
 } from "@rakazo/contracts";
 import { BOT_TEMPLATE_CATEGORIES, isBotTemplateChanged } from "@rakazo/contracts";
 import { botTemplateApps, formatCron } from "@rakazo/core";
@@ -57,6 +59,7 @@ import {
   Telescope,
   Truck,
   UserPlus,
+  Users,
   Wallet,
   X,
 } from "lucide-react";
@@ -67,6 +70,7 @@ import { cronLabels } from "../../lib/routines/cron";
 import { ErrorNotice } from "../ErrorNotice";
 import { PluginLogo, ROW_HOVER } from "../integrations/plugin-marketplace";
 import { useBotTemplateCategoryLabel, useBotTemplateCopy } from "./bot-template-copy";
+import { useTeamTemplateCopy } from "./team-template-copy";
 
 const ICONS: Record<string, LucideIcon> = {
   "ai-brain-keeper": Brain,
@@ -124,12 +128,18 @@ function Sample({ text }: { text: string }) {
 }
 
 /** Ready-made bots. Creating one opens it; its routines stay paused until the user turns them on. */
+/** The filter: All, one template category, or the ready-made teams. */
+type Filter = BotTemplateCategory | "teams" | null;
+
 export function BotTemplatesDialog({
   onClose,
   onOpenBot,
+  onOpenGroup,
 }: {
   onClose: () => void;
   onOpenBot: (bot: Bot) => void;
+  /** Opens a team's group chat; without it the Teams filter is hidden. */
+  onOpenGroup?: (group: Group) => void;
 }) {
   const { t } = useLingui();
   const queries = useSpaceQueries();
@@ -138,9 +148,21 @@ export function BotTemplatesDialog({
   const cardId = useId();
   // Read afresh each time it opens: a template's bot may have been made or deleted since.
   const templates = useQuery({ ...queries.bots.templates.queryOptions(), staleTime: 0 });
+  const teams = useQuery({
+    ...queries.bots.teamTemplates.queryOptions(),
+    staleTime: 0,
+    enabled: Boolean(onOpenGroup),
+  });
+  const teamCopy = useTeamTemplateCopy();
   const [openId, setOpenId] = useState<string | null>(null);
-  const [category, setCategory] = useState<BotTemplateCategory | null>(null);
+  const [openTeamId, setOpenTeamId] = useState<string | null>(null);
+  const [category, setCategory] = useState<Filter>(null);
   const open = templates.data?.find((template) => template.id === openId);
+  const openTeam = teams.data?.find((team) => team.id === openTeamId);
+  const memberName = (templateId: string, fallback: string) => {
+    const template = templates.data?.find((item) => item.id === templateId);
+    return template ? copy(template).name : fallback;
+  };
 
   function content() {
     if (templates.error)
@@ -157,6 +179,19 @@ export function BotTemplatesDialog({
           <Spinner className="size-5 text-muted-foreground" aria-label={t`Loading…`} />
         </div>
       );
+    if (openTeam && onOpenGroup)
+      return (
+        <TeamDetail
+          team={openTeam}
+          memberName={memberName}
+          onBack={() => setOpenTeamId(null)}
+          onOpenGroup={onOpenGroup}
+          onChanged={() => {
+            void teams.refetch();
+            void templates.refetch();
+          }}
+        />
+      );
     if (open)
       return (
         <TemplateDetail
@@ -170,19 +205,31 @@ export function BotTemplatesDialog({
     const categories = BOT_TEMPLATE_CATEGORIES.filter((name) =>
       templates.data.some((template) => template.category === name),
     );
-    const selected = category && categories.includes(category) ? category : null;
-    const shown = selected
-      ? templates.data.filter((template) => template.category === selected)
-      : templates.data;
+    const hasTeams = Boolean(onOpenGroup && teams.data?.length);
+    const selected: Filter =
+      category === "teams"
+        ? hasTeams
+          ? "teams"
+          : null
+        : category && categories.includes(category)
+          ? category
+          : null;
+    const shown =
+      selected === "teams"
+        ? []
+        : selected
+          ? templates.data.filter((template) => template.category === selected)
+          : templates.data;
+    const chips: Filter[] = [null, ...(hasTeams ? (["teams"] as const) : []), ...categories];
     return (
       <div className="flex flex-col gap-4">
-        {categories.length >= 2 ? (
+        {chips.length >= 3 ? (
           <fieldset
             aria-label={t`Filter templates by category`}
             className="m-0 flex min-w-0 flex-wrap gap-2 border-0 p-0"
             data-testid="bot-template-categories"
           >
-            {[null, ...categories].map((name) => (
+            {chips.map((name) => (
               <Button
                 key={name ?? "all"}
                 type="button"
@@ -191,10 +238,29 @@ export function BotTemplatesDialog({
                 className="rounded-full px-3.5 text-body-sm"
                 onClick={() => setCategory(name)}
               >
-                {name ? categoryLabel(name) : <Trans>All</Trans>}
+                {name === "teams" ? (
+                  <Trans>Teams</Trans>
+                ) : name ? (
+                  categoryLabel(name)
+                ) : (
+                  <Trans>All</Trans>
+                )}
               </Button>
             ))}
           </fieldset>
+        ) : null}
+        {selected === "teams" ? (
+          <div className="grid grid-cols-1 gap-3" data-testid="team-template-list">
+            {teams.data?.map((team) => (
+              <TeamCard
+                key={team.id}
+                team={team}
+                copy={teamCopy(team)}
+                memberName={memberName}
+                onOpen={() => setOpenTeamId(team.id)}
+              />
+            ))}
+          </div>
         ) : null}
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
           {shown.map((template, index) => {
@@ -454,5 +520,170 @@ function AppsSection({ apps }: { apps: ConnectionCatalogItem[] }) {
         ))}
       </ul>
     </section>
+  );
+}
+
+function TeamCard({
+  team,
+  copy,
+  memberName,
+  onOpen,
+}: {
+  team: TeamTemplateListing;
+  copy: ReturnType<ReturnType<typeof useTeamTemplateCopy>>;
+  memberName: (templateId: string, fallback: string) => string;
+  onOpen: () => void;
+}) {
+  return (
+    <button
+      type="button"
+      data-testid="team-template-card"
+      onClick={onOpen}
+      className={`flex min-w-0 flex-col gap-3 rounded-2xl border border-border/70 p-4 text-start focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-ring/50 ${ROW_HOVER}`}
+    >
+      <span className="flex min-w-0 items-center gap-3">
+        <span
+          aria-hidden
+          className="grid size-10 shrink-0 place-items-center rounded-xl border border-border/60 bg-muted"
+        >
+          <Users size={18} />
+        </span>
+        <span className="min-w-0 flex-1">
+          <span className="block text-body-lg font-medium text-foreground">{copy.name}</span>
+          <span className="block text-body-sm text-muted-foreground">{copy.summary}</span>
+        </span>
+      </span>
+      <span className="flex flex-wrap gap-1.5">
+        {team.members.map((member) => (
+          <span key={member.templateId} className="rounded-lg bg-muted px-2 py-1 text-body-sm">
+            {memberName(member.templateId, member.name)}
+            {member.templateId === team.lead ? (
+              <span className="text-muted-foreground">
+                {" "}
+                · <Trans>Lead</Trans>
+              </span>
+            ) : null}
+          </span>
+        ))}
+      </span>
+    </button>
+  );
+}
+
+function TeamDetail({
+  team,
+  memberName,
+  onBack,
+  onOpenGroup,
+  onChanged,
+}: {
+  team: TeamTemplateListing;
+  memberName: (templateId: string, fallback: string) => string;
+  onBack: () => void;
+  onOpenGroup: (group: Group) => void;
+  onChanged: () => void;
+}) {
+  const { t } = useLingui();
+  const queries = useSpaceQueries();
+  const copy = useTeamTemplateCopy()(team);
+  // Always apply, even when there's a group: it repairs a missing member and refreshes the notes.
+  const apply = useSave({
+    save: async (input: { teamId: string; version: number }, rpc) =>
+      rpc.bots.createTeamFromTemplate(input),
+    stale: [
+      queries.bots.list.key(),
+      queries.bots.templates.key(),
+      queries.bots.teamTemplates.key(),
+    ],
+    closesScreen: true,
+    onSaved: (result) => onOpenGroup(result.group),
+    onFailed: () => onChanged(),
+  });
+  return (
+    <div data-testid="team-template-detail" className="space-y-6">
+      <div className="flex items-start gap-3">
+        <Button
+          type="button"
+          variant="ghost"
+          size="icon-sm"
+          className="-ms-2"
+          aria-label={t`Back`}
+          disabled={apply.pending}
+          onClick={onBack}
+        >
+          <ChevronLeft />
+        </Button>
+        <div className="min-w-0 flex-1">
+          <h2 className="text-heading2 font-semibold text-foreground">{copy.name}</h2>
+          <p className="text-body text-muted-foreground">{copy.summary}</p>
+        </div>
+      </div>
+
+      {apply.error ? (
+        <ErrorNotice
+          error={errorDetails(
+            isBotTemplateChanged(apply.error)
+              ? t`This template was just updated. Check it again.`
+              : apply.error,
+            t`Could not finish the team. Try again; the bots already made are kept.`,
+          )}
+        />
+      ) : null}
+
+      <Sample text={copy.sample} />
+
+      <section className="space-y-2">
+        <SectionHeading className="px-1">
+          <Trans>Team members</Trans>
+        </SectionHeading>
+        <ul className="divide-y divide-border/60 rounded-xl border border-border/70">
+          {team.members.map((member) => (
+            <li key={member.templateId} className="flex items-start gap-3 px-4 py-3">
+              <TemplateIcon id={member.templateId} />
+              <div className="min-w-0 flex-1">
+                <div className="text-body-lg font-medium">
+                  {memberName(member.templateId, member.name)}
+                  {member.templateId === team.lead ? (
+                    <span className="text-body-sm text-muted-foreground">
+                      {" "}
+                      · <Trans>Lead</Trans>
+                    </span>
+                  ) : null}
+                </div>
+                <p className="text-body-sm text-muted-foreground">
+                  {copy.roles[member.templateId] ?? member.role}
+                </p>
+                {member.botId ? (
+                  <p className="mt-1 text-body-sm text-muted-foreground">
+                    <Trans>Your existing bot joins the team</Trans>
+                  </p>
+                ) : null}
+              </div>
+            </li>
+          ))}
+        </ul>
+      </section>
+
+      <p className="text-body-sm text-muted-foreground">
+        <Trans>
+          Creates the missing bots and a group chat. Bots you already made from these templates are
+          reused, and each member gets a note naming the team. Routines stay paused. Nothing runs or
+          is sent until you ask.
+        </Trans>
+      </p>
+      <Button
+        size="lg"
+        disabled={apply.pending}
+        onClick={() => apply.run({ teamId: team.id, version: team.version })}
+      >
+        {apply.pending ? (
+          <Trans>Creating…</Trans>
+        ) : team.groupId ? (
+          <Trans>Open team</Trans>
+        ) : (
+          <Trans>Create team</Trans>
+        )}
+      </Button>
+    </div>
   );
 }

@@ -76,6 +76,11 @@ import { loadBotForRemoval } from "../bots/bot-removal.js";
 import { createBotFromTemplate, listBotTemplates } from "../bots/bot-templates.js";
 import { botIntroPrompt } from "../bots/hidden-turns.prompt.js";
 import {
+  createTeamFromTemplate,
+  listTeamTemplates,
+  prismaTeamServices,
+} from "../bots/team-templates.js";
+import {
   botEmailAddress,
   botEmailAddresses,
   claimBotEmailAddress,
@@ -337,6 +342,21 @@ export async function enqueueBotIntroRun(deps: RouterDeps, actor: Actor, bot: Bo
 export function botsRoutes(ctx: RouterContext) {
   const { deps, repos, botModelValidation, removeBot, agentImportServices, groupRepos, authed } =
     ctx;
+  const teamServices = (actor: Actor, signal?: AbortSignal) =>
+    prismaTeamServices({
+      prisma: deps.prisma,
+      groupRepos,
+      actor,
+      notify: (threadId, seq) => deps.events.notify(threadId, seq),
+      createMember: (templateId, version) =>
+        createBotFromTemplate(
+          agentImportServices,
+          () => managedAppCatalog(deps.connectors, actor, "bots.createTeamFromTemplate"),
+          actor,
+          { templateId, version },
+          signal,
+        ),
+    });
   return {
     bots: {
       list: authed.bots.list.handler(async ({ context }) => repos.listBots(context.actor)),
@@ -379,6 +399,17 @@ export function botsRoutes(ctx: RouterContext) {
           input,
           context.signal,
         ),
+      ),
+      teamTemplates: authed.bots.teamTemplates.handler(async ({ context }) =>
+        listTeamTemplates(
+          await listBotTemplates(agentImportServices, context.actor),
+          teamServices(context.actor, context.signal),
+        ),
+      ),
+      // Each member starts inert like a template's bot; the team's group chat opens empty.
+      createTeamFromTemplate: authed.bots.createTeamFromTemplate.handler(
+        async ({ context, input }) =>
+          createTeamFromTemplate(teamServices(context.actor, context.signal), input),
       ),
       duplicate: authed.bots.duplicate.handler(async ({ context, input }) => {
         const source = await repos.getBot(context.actor, input.botId);

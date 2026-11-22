@@ -1,6 +1,7 @@
 import type {
   Bot,
   BotAvatarSet,
+  Group,
   LabFeature,
   Me,
   Space,
@@ -63,6 +64,7 @@ export function AppOverlays({
   messagingEnabled,
   onConnectedAppsChange,
   onOpenBot,
+  onOpenGroup,
 }: {
   overlay: ShellOverlay;
   setOverlay: (next: ShellOverlay) => void;
@@ -72,6 +74,7 @@ export function AppOverlays({
   messagingEnabled: boolean;
   onConnectedAppsChange: (apps: ReturnType<typeof connectedAppMarks>) => void;
   onOpenBot: (bot: Bot) => void;
+  onOpenGroup: (group: Group) => void;
 }) {
   const openTemplates = () => setOverlay({ kind: "templates" });
   return (
@@ -99,6 +102,10 @@ export function AppOverlays({
           onOpenBot={(bot) => {
             setOverlay(null);
             onOpenBot(bot);
+          }}
+          onOpenGroup={(group) => {
+            setOverlay(null);
+            onOpenGroup(group);
           }}
         />
       ) : null}
