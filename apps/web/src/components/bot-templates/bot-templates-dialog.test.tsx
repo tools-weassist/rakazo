@@ -214,7 +214,12 @@ it("filters the templates by category, with All showing every one", async () => 
     ["Productivity", "false"],
   ]);
 
+  // The chips sit outside the scrolling list, and a new filter starts the list at its top.
+  const scroll = container.querySelector<HTMLElement>('[data-testid="bot-template-scroll"]')!;
+  expect(scroll.querySelector('[data-testid="bot-template-categories"]')).toBeNull();
+  scroll.scrollTop = 400;
   await act(async () => button("Accounting & finance")?.click());
+  expect(scroll.scrollTop).toBe(0);
   expect(cards()).toHaveLength(2);
   expect(cards().every((text) => text?.includes("Weekly digest") === false)).toBe(true);
   expect(chips()[1]).toEqual(["Accounting & finance", "true"]);

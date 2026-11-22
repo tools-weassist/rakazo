@@ -60,11 +60,12 @@ import {
   Wallet,
   X,
 } from "lucide-react";
-import { useId, useState } from "react";
+import { useId, useLayoutEffect, useRef, useState } from "react";
 import { useSave, useSpaceQueries } from "../../lib/query/query";
 import { errorDetails } from "../../lib/query/user-error";
 import { cronLabels } from "../../lib/routines/cron";
 import { ErrorNotice } from "../ErrorNotice";
+import { FilterChips } from "../filter-chips/filter-chips";
 import { PluginLogo, ROW_HOVER } from "../integrations/plugin-marketplace";
 import { useBotTemplateCategoryLabel, useBotTemplateCopy } from "./bot-template-copy";
 
@@ -141,6 +142,31 @@ export function BotTemplatesDialog({
   const [openId, setOpenId] = useState<string | null>(null);
   const [category, setCategory] = useState<BotTemplateCategory | null>(null);
   const open = templates.data?.find((template) => template.id === openId);
+  const list = useRef<HTMLDivElement>(null);
+  // Only categories with templates get a chip; a stale choice falls back to All.
+  const categories = BOT_TEMPLATE_CATEGORIES.filter((name) =>
+    templates.data?.some((template) => template.category === name),
+  );
+  const selected = category && categories.includes(category) ? category : null;
+  const shown = selected
+    ? (templates.data ?? []).filter((template) => template.category === selected)
+    : (templates.data ?? []);
+  const showChips = Boolean(templates.data && !open && categories.length >= 2);
+  // A template's page starts at its top; going back returns to where the list was.
+  const listScroll = useRef(0);
+  useLayoutEffect(() => {
+    if (list.current) list.current.scrollTop = openId ? 0 : listScroll.current;
+  }, [openId]);
+  const openTemplate = (id: string | null) => {
+    if (id && list.current) listScroll.current = list.current.scrollTop;
+    setOpenId(id);
+  };
+  const pick = (next: BotTemplateCategory | null) => {
+    setCategory(next);
+    // A shorter list starts at its top rather than wherever the longer one was scrolled to.
+    listScroll.current = 0;
+    if (list.current) list.current.scrollTop = 0;
+  };
 
   function content() {
     if (templates.error)
@@ -161,41 +187,13 @@ export function BotTemplatesDialog({
       return (
         <TemplateDetail
           template={open}
-          onBack={() => setOpenId(null)}
+          onBack={() => openTemplate(null)}
           onOpenBot={onOpenBot}
           onChanged={() => void templates.refetch()}
         />
       );
-    // Only categories with templates get a chip; a stale choice falls back to All.
-    const categories = BOT_TEMPLATE_CATEGORIES.filter((name) =>
-      templates.data.some((template) => template.category === name),
-    );
-    const selected = category && categories.includes(category) ? category : null;
-    const shown = selected
-      ? templates.data.filter((template) => template.category === selected)
-      : templates.data;
     return (
       <div className="flex flex-col gap-4">
-        {categories.length >= 2 ? (
-          <fieldset
-            aria-label={t`Filter templates by category`}
-            className="m-0 flex min-w-0 flex-wrap gap-2 border-0 p-0"
-            data-testid="bot-template-categories"
-          >
-            {[null, ...categories].map((name) => (
-              <Button
-                key={name ?? "all"}
-                type="button"
-                variant={selected === name ? "default" : "secondary"}
-                aria-pressed={selected === name}
-                className="rounded-full px-3.5 text-body-sm"
-                onClick={() => setCategory(name)}
-              >
-                {name ? categoryLabel(name) : <Trans>All</Trans>}
-              </Button>
-            ))}
-          </fieldset>
-        ) : null}
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
           {shown.map((template, index) => {
             const { name, summary, sample } = copy(template);
@@ -208,7 +206,7 @@ export function BotTemplatesDialog({
                 data-testid="bot-template-card"
                 aria-labelledby={titleId}
                 aria-describedby={summaryId}
-                onClick={() => setOpenId(template.id)}
+                onClick={() => openTemplate(template.id)}
                 className={`flex min-w-0 flex-col gap-3 rounded-2xl border border-border/70 p-4 text-start focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-ring/50 ${ROW_HOVER}`}
               >
                 <span className="flex min-w-0 items-center gap-3">
@@ -222,7 +220,7 @@ export function BotTemplatesDialog({
                     </span>
                     <span
                       id={summaryId}
-                      className="block truncate text-body-sm text-muted-foreground"
+                      className="line-clamp-2 text-body-sm text-muted-foreground"
                     >
                       {summary}
                     </span>
@@ -263,7 +261,29 @@ export function BotTemplatesDialog({
             <X />
           </DialogClose>
         </DialogHeader>
-        <div className="min-h-0 flex-1 overflow-y-auto px-8 pt-5 pb-8">{content()}</div>
+        {/* The chips sit outside the scrolling list, so filtering never moves them. */}
+        {showChips ? (
+          <div className="px-8 pt-5">
+            <FilterChips
+              options={[
+                { key: null, label: <Trans>All</Trans> },
+                ...categories.map((name) => ({ key: name, label: categoryLabel(name) })),
+              ]}
+              value={selected}
+              onChange={pick}
+              label={t`Filter templates by category`}
+              testId="bot-template-categories"
+              className="-mx-8 px-8 sm:mx-0 sm:px-0"
+            />
+          </div>
+        ) : null}
+        <div
+          ref={list}
+          data-testid="bot-template-scroll"
+          className={`min-h-0 flex-1 overflow-y-auto px-8 pb-8 ${showChips ? "pt-4" : "pt-5"}`}
+        >
+          {content()}
+        </div>
       </DialogContent>
     </Dialog>
   );
@@ -346,7 +366,8 @@ function TemplateDetail({
 
   return (
     <div data-testid="bot-template-detail" className="space-y-7">
-      <div className="flex items-start gap-4">
+      {/* On a phone the title and summary wrap, and the button moves to its own row. */}
+      <div className="flex flex-wrap items-start gap-x-4 gap-y-3">
         <Button
           type="button"
           variant="ghost"
@@ -358,12 +379,16 @@ function TemplateDetail({
         >
           <ChevronLeft />
         </Button>
-        <TemplateIcon id={template.id} large />
+        <span className="hidden sm:contents">
+          <TemplateIcon id={template.id} large />
+        </span>
         <div className="min-w-0 flex-1 pt-1">
-          <h2 className="truncate text-heading2 font-semibold text-foreground">{name}</h2>
-          <p className="truncate text-body text-muted-foreground">{summary}</p>
+          <h2 className="text-heading2 font-semibold text-pretty break-words text-foreground">
+            {name}
+          </h2>
+          <p className="text-body text-pretty break-words text-muted-foreground">{summary}</p>
         </div>
-        <div className="shrink-0 pt-2">
+        <div className="shrink-0 pt-2 max-sm:w-full max-sm:pt-0 max-sm:ps-10 max-sm:[&>button]:w-full">
           {template.botId ? (
             <Button
               variant="secondary"
@@ -407,8 +432,8 @@ function TemplateDetail({
                 >
                   <Icon size={16} className="shrink-0 text-muted-foreground" />
                   <span className="min-w-0 flex-1">
-                    <span className="block truncate text-body-lg font-medium">{row.title}</span>
-                    <span className="block truncate text-body-sm text-muted-foreground">
+                    <span className="block text-body-lg font-medium break-words">{row.title}</span>
+                    <span className="block text-body-sm break-words text-muted-foreground">
                       {row.detail}
                     </span>
                   </span>

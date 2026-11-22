@@ -3,10 +3,12 @@ import type { BotTemplateCategory } from "@rakazo/contracts";
 import { BOT_TEMPLATE_CATEGORIES } from "@rakazo/contracts";
 import { useQuery } from "@tanstack/react-query";
 import { useFocusEffect, useRouter } from "expo-router";
-import { useCallback, useState } from "react";
-import { ActivityIndicator, ScrollView, StyleSheet, Text, View } from "react-native";
+import { useCallback, useRef, useState } from "react";
+import type { ScrollViewInstance } from "react-native";
+import { ActivityIndicator, Platform, ScrollView, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { BotTemplateIcon } from "../../components/bots/bot-template-icon";
+import { FilterChips } from "../../components/native/filter-chips";
 import { NativeActionButton } from "../../components/native/native-action-button";
 import { SettingsGroup, SettingsRow } from "../../components/settings/settings-group";
 import { errorText } from "../../lib/api/user-error";
@@ -31,6 +33,12 @@ export default function BotTemplatesScreen() {
     ? templates.data?.filter((template) => template.category === selected)
     : templates.data;
   const { refetch } = templates;
+  const list = useRef<ScrollViewInstance>(null);
+  const pick = (next: BotTemplateCategory | null) => {
+    setCategory(next);
+    // A shorter list starts at its top under the chips, not wherever the longer one was.
+    if (Platform.OS === "android") list.current?.scrollTo({ y: 0, animated: false });
+  };
   const open = (id: string) => router.push({ pathname: "/bot-template", params: { id } });
 
   // A bot made from a template, or deleted since, changes what each one opens.
@@ -43,10 +51,28 @@ export default function BotTemplatesScreen() {
   return (
     <SafeAreaView edges={["bottom"]} style={styles.screen}>
       <ScrollView
+        ref={list}
         style={sideInsets}
+        stickyHeaderIndices={Platform.OS === "android" ? [0] : undefined}
         contentContainerStyle={styles.content}
         contentInsetAdjustmentBehavior="automatic"
       >
+        {/* Always the first child, so Android can pin it: filtering never moves the chips. */}
+        <View style={categories.length >= 2 ? styles.chipBar : styles.noChips}>
+          {categories.length >= 2 ? (
+            <FilterChips
+              options={[
+                { key: null, label: t`All` },
+                ...categories.map((name) => ({ key: name, label: botTemplateCategoryLabel(name) })),
+              ]}
+              value={selected}
+              onChange={pick}
+              accessibilityLabel={t`Filter templates by category`}
+              testID="bot-template-categories"
+              inset={16}
+            />
+          ) : null}
+        </View>
         {templates.error && !templates.data ? (
           <View style={styles.list}>
             <Text style={styles.error}>
@@ -62,25 +88,6 @@ export default function BotTemplatesScreen() {
         ) : null}
         {templates.isPending ? (
           <ActivityIndicator color={native.secondaryLabel} accessibilityLabel={t`Loading…`} />
-        ) : null}
-        {categories.length >= 2 ? (
-          <View
-            style={styles.categories}
-            accessibilityLabel={t`Filter templates by category`}
-            testID="bot-template-categories"
-          >
-            {[null, ...categories].map((name) => (
-              <NativeActionButton
-                key={name ?? "all"}
-                label={name ? botTemplateCategoryLabel(name) : t`All`}
-                selected={selected === name}
-                prominence="secondary"
-                fill={false}
-                style={styles.category}
-                onPress={() => setCategory(name)}
-              />
-            ))}
-          </View>
         ) : null}
         {shown?.length ? (
           <SettingsGroup>
@@ -110,8 +117,9 @@ function createStyles() {
   return StyleSheet.create({
     screen: { flex: 1, backgroundColor: native.page },
     content: { padding: 16, gap: 14 },
-    categories: { flexDirection: "row", flexWrap: "wrap", gap: 8 },
-    category: { borderRadius: 24 },
+    // Opaque so the list scrolls under the pinned chips; the padding stands in for the gap.
+    chipBar: { backgroundColor: native.page, marginVertical: -7, paddingVertical: 7 },
+    noChips: { marginBottom: -14 },
     list: { gap: 8 },
     error: { color: native.secondaryLabel, fontSize: 14 },
   });
