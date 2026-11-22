@@ -27,8 +27,10 @@ export const appHandler = (deps: RouterDeps) =>
   });
 export const enqueueBotIntroRun = (
   deps: RouterDeps,
-  ...rest: [Actor, Bot] | [Actor, Bot, { fromTemplate?: boolean }]
-) => enqueueBotIntroRunWith(withRoleDeps(deps), ...rest);
+  actor: Actor,
+  bot: Bot,
+  options?: { fromTemplate?: boolean },
+) => enqueueBotIntroRunWith(withRoleDeps(deps), actor, bot, options);
 
 export type RouterHandler = RPCHandler<InferRouterInitialContext<ReturnType<typeof createRouter>>>;
 
