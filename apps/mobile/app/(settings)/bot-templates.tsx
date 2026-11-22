@@ -14,40 +14,66 @@ import { NativeActionButton } from "../../components/native/native-action-button
 import { SettingsGroup, SettingsRow } from "../../components/settings/settings-group";
 import { errorText } from "../../lib/api/user-error";
 import { botTemplateCategoryLabel, botTemplateCopy } from "../../lib/bots/bot-template-copy";
+import { teamTemplateCopy } from "../../lib/bots/team-template-copy";
 import { useSideInsets } from "../../lib/layout/side-insets";
 import { native, useThemedStyles } from "../../lib/native/native";
 import { queryClient, rpcQuery } from "../../lib/query/query";
 
-/** Ready-made bots; each one's page shows an example of what it sends. */
+/** The filter: All, one template category, or the ready-made teams. */
+type Filter = BotTemplateCategory | "teams";
+
+/** Ready-made bots and teams; each one's page says what it does and how it helps. */
 export default function BotTemplatesScreen() {
   const router = useRouter();
   const sideInsets = useSideInsets();
   const styles = useThemedStyles(createStyles);
   const { t } = useLingui();
   const templates = useQuery(rpcQuery("bots/templates"), queryClient);
-  const [category, setCategory] = useState<BotTemplateCategory | null>(null);
+  const teams = useQuery(rpcQuery("bots/teamTemplates"), queryClient);
+  const [category, setCategory] = useState<Filter | null>(null);
   const categories = BOT_TEMPLATE_CATEGORIES.filter((name) =>
     templates.data?.some((template) => template.category === name),
   );
-  const selected = category && categories.includes(category) ? category : null;
-  const shown = selected
-    ? templates.data?.filter((template) => template.category === selected)
-    : templates.data;
-  const { refetch } = templates;
+  const hasTeams = Boolean(teams.data?.length);
+  const selected: Filter | null =
+    category === "teams"
+      ? hasTeams
+        ? "teams"
+        : null
+      : category && categories.includes(category)
+        ? category
+        : null;
+  const shownSingles =
+    selected === "teams"
+      ? []
+      : selected
+        ? templates.data?.filter((template) => template.category === selected)
+        : templates.data;
+  const shownTeams = selected === "teams" || selected === null ? (hasTeams ? teams.data : []) : [];
+  const { refetch: refetchTemplates } = templates;
+  const { refetch: refetchTeams } = teams;
   const list = useRef<ScrollViewInstance>(null);
-  const pick = (next: BotTemplateCategory | null) => {
+  const pick = (next: Filter | null) => {
     setCategory(next);
     // A shorter list starts at its top under the chips, not wherever the longer one was.
     if (Platform.OS === "android") list.current?.scrollTo({ y: 0, animated: false });
   };
-  const open = (id: string) => router.push({ pathname: "/bot-template", params: { id } });
+  const chips: Array<{ key: Filter | null; label: string }> = [
+    { key: null, label: t`All` },
+    ...(hasTeams ? [{ key: "teams" as const, label: t`Teams` }] : []),
+    ...categories.map((name) => ({ key: name, label: botTemplateCategoryLabel(name) })),
+  ];
+  const showChips = hasTeams || categories.length >= 2;
 
-  // A bot made from a template, or deleted since, changes what each one opens.
   useFocusEffect(
     useCallback(() => {
-      void refetch();
-    }, [refetch]),
+      void refetchTemplates();
+      void refetchTeams();
+    }, [refetchTemplates, refetchTeams]),
   );
+
+  const failed = (templates.error && !templates.data) || (teams.error && !teams.data);
+  const pending = !templates.data && !teams.data && (templates.isPending || teams.isPending);
 
   return (
     <SafeAreaView edges={["bottom"]} style={styles.screen}>
@@ -59,13 +85,10 @@ export default function BotTemplatesScreen() {
         contentInsetAdjustmentBehavior="automatic"
       >
         {/* Always the first child, so Android can pin it: filtering never moves the chips. */}
-        <View style={categories.length >= 2 ? styles.chipBar : styles.noChips}>
-          {categories.length >= 2 ? (
+        <View style={showChips ? styles.chipBar : styles.noChips}>
+          {showChips ? (
             <FilterChips
-              options={[
-                { key: null, label: t`All` },
-                ...categories.map((name) => ({ key: name, label: botTemplateCategoryLabel(name) })),
-              ]}
+              options={chips}
               value={selected}
               onChange={pick}
               accessibilityLabel={t`Filter templates by category`}
@@ -74,25 +97,50 @@ export default function BotTemplatesScreen() {
             />
           ) : null}
         </View>
-        {templates.error && !templates.data ? (
+        {failed ? (
           <View style={styles.list}>
             <Text style={styles.error}>
-              {errorText(templates.error, t`Could not load templates`)}
+              {errorText(templates.error ?? teams.error, t`Could not load templates`)}
             </Text>
             <NativeActionButton
               fill={false}
               label={t`Retry`}
-              onPress={() => void refetch()}
+              onPress={() => {
+                void refetchTemplates();
+                void refetchTeams();
+              }}
               prominence="secondary"
             />
           </View>
         ) : null}
-        {templates.isPending ? (
+        {pending ? (
           <ActivityIndicator color={native.secondaryLabel} accessibilityLabel={t`Loading…`} />
         ) : null}
-        {shown?.length ? (
+        {shownTeams?.length ? (
           <SettingsGroup>
-            {shown.map((template) => {
+            {shownTeams.map((team) => {
+              const { name, summary } = teamTemplateCopy(team);
+              return (
+                <SettingsRow
+                  key={team.id}
+                  testID="team-template-row"
+                  accessibilityRole="button"
+                  title={name}
+                  detail={summary}
+                  badge={<TemplateKindBadge members={team.members.length} />}
+                  leading={<BotTemplateIcon id={team.lead} />}
+                  chevron="right"
+                  onPress={() =>
+                    router.push({ pathname: "/team-template", params: { id: team.id } })
+                  }
+                />
+              );
+            })}
+          </SettingsGroup>
+        ) : null}
+        {shownSingles?.length ? (
+          <SettingsGroup>
+            {shownSingles.map((template) => {
               const { name, summary } = botTemplateCopy(template);
               return (
                 <SettingsRow
@@ -104,7 +152,9 @@ export default function BotTemplatesScreen() {
                   badge={<TemplateKindBadge />}
                   leading={<BotTemplateIcon id={template.id} />}
                   chevron="right"
-                  onPress={() => open(template.id)}
+                  onPress={() =>
+                    router.push({ pathname: "/bot-template", params: { id: template.id } })
+                  }
                 />
               );
             })}
