@@ -10,7 +10,7 @@ import { DATE_RULE } from "./template-rules.js";
 export const VA_BOT_TEMPLATES: readonly BotTemplate[] = [
   {
     id: "ai-brain-keeper",
-    version: 2,
+    version: 3,
     name: "AI brain keeper",
     category: "virtual-assistants",
     summary: "Builds and maintains the shared brain for a client and their VAs",
@@ -29,6 +29,19 @@ export const VA_BOT_TEMPLATES: readonly BotTemplate[] = [
       "**Access**",
       "- Ana (new VA) starts Monday. Start-here walkthrough drafted. Share the folder with her?",
     ].join("\n"),
+    whatItDoes: [
+      "Sets up a shared brain for you, your client, and their VAs, and keeps it current",
+      "Files new decisions, FAQs, and answers as they come up in the work",
+      "Runs a regular check and flags anything stale, missing, or unfiled",
+      "Answers team questions from the brain first, and notes what it could not find",
+      "Reminds you when a new person needs access to the brain",
+    ],
+    howItHelps: [
+      "The team stops asking the same questions, because the answers live in one place",
+      "New VAs can get up to speed from the brain instead of from you",
+      "You see what is missing or out of date before it turns into a mistake",
+      "Nothing is filed or shared until you say so",
+    ],
     description: "Shared AI brain and knowledge base",
     instructions: [
       "You set up and maintain the shared AI brain for a client business and its remote workers (virtual assistants, or VAs, and other team members): one organized place that holds how the business works, so anyone on the team, and any AI they use, can find the answer instead of asking the owner again.",
@@ -135,7 +148,7 @@ export const VA_BOT_TEMPLATES: readonly BotTemplate[] = [
   },
   {
     id: "sop-builder",
-    version: 1,
+    version: 2,
     name: "SOP builder",
     category: "virtual-assistants",
     summary: "Turns how you work into SOPs your VA can follow",
@@ -155,6 +168,18 @@ export const VA_BOT_TEMPLATES: readonly BotTemplate[] = [
       "",
       "2 questions left for you before this is final.",
     ].join("\n"),
+    whatItDoes: [
+      "Turns how you already work into a step-by-step SOP your VA can follow",
+      "Drafts the SOP from a call, a chat, or a rough note you already have",
+      "Asks the few questions needed to fill gaps, then revises from your edits",
+      "Keeps a library of current SOPs and flags ones that look out of date",
+    ],
+    howItHelps: [
+      "You explain a task once, instead of walking someone through it every week",
+      "A new VA can follow the same steps you would, without guessing",
+      "SOPs stay current when the work changes, instead of sitting forgotten",
+      "Every draft waits for your yes before anyone uses it",
+    ],
     description: "SOP writing",
     instructions: [
       "You help a business owner get processes out of their head and into step-by-step SOPs (standard operating procedures) that a virtual assistant (VA) can follow without asking, and you keep them current.",
@@ -225,7 +250,7 @@ export const VA_BOT_TEMPLATES: readonly BotTemplate[] = [
   },
   {
     id: "results-eod-report",
-    version: 2,
+    version: 3,
     name: "Results EOD report",
     category: "virtual-assistants",
     summary: "Your daily client report, built from real work",
@@ -244,6 +269,18 @@ export const VA_BOT_TEMPLATES: readonly BotTemplate[] = [
       "- Chase 3 unpaid invoices",
       "- Draft December's newsletter",
     ].join("\n"),
+    whatItDoes: [
+      "Writes the daily or weekly client report from work that was actually done",
+      "Pulls from the brain, tickets, messages, and notes, not from memory",
+      "Flags blockers, open questions, and anything that needs your decision",
+      "Drafts the report in the format your client already expects",
+    ],
+    howItHelps: [
+      "You stop writing the end-of-day report from scratch after a long shift",
+      "The client sees real progress, not a vague recap",
+      "Nothing important from the day is left out because you were tired",
+      "The report only goes out once you approve it",
+    ],
     description: "Client EOD report",
     instructions: [
       "You write a virtual assistant's (VA's) daily and weekly reports to their client from the work they actually did, so results speak for them instead of time trackers.",
@@ -326,7 +363,7 @@ export const VA_BOT_TEMPLATES: readonly BotTemplate[] = [
   },
   {
     id: "va-client-finder",
-    version: 1,
+    version: 2,
     name: "VA client finder",
     category: "virtual-assistants",
     summary: "Finds good-fit job posts and drafts your pitch",
@@ -343,6 +380,18 @@ export const VA_BOT_TEMPLATES: readonly BotTemplate[] = [
       "",
       "Watch out: post #4 asks you to pay for training. Likely a scam.",
     ].join("\n"),
+    whatItDoes: [
+      "Watches for job posts that fit the work and hours you actually want",
+      "Filters out poor-fit roles so you only review the good ones",
+      "Drafts a short, specific pitch for each post you might take",
+      "Tracks which posts you already answered so you don't double-apply",
+    ],
+    howItHelps: [
+      "You spend time on posts that are a real fit, not on scrolling",
+      "Each pitch starts from a draft, not a blank page",
+      "You can keep a pipeline going even on a busy client week",
+      "Nothing is sent to a prospect until you say so",
+    ],
     description: "Client finding",
     instructions: [
       "You help a virtual assistant (VA) find clients: you search public job posts, pick the ones that fit, and draft tailored proposals and outreach for the VA to send themselves.",
@@ -407,7 +456,7 @@ export const VA_BOT_TEMPLATES: readonly BotTemplate[] = [
   },
   {
     id: "delegation-coach",
-    version: 2,
+    version: 3,
     name: "Delegation coach",
     category: "virtual-assistants",
     summary: "Turns quick asks into clear briefs for your VA",
@@ -423,6 +472,18 @@ export const VA_BOT_TEMPLATES: readonly BotTemplate[] = [
       "",
       "Questions for you before I send: is the promo for retail clients only?",
     ].join("\n"),
+    whatItDoes: [
+      "Turns a quick ask into a clear brief your VA can start without guessing",
+      "Adds the outcome, deadline, examples, and what done looks like",
+      "Flags when a task is still too vague or is really several tasks",
+      "Saves the briefs you like, so the next one matches your style",
+    ],
+    howItHelps: [
+      "You stop rewriting the same instructions after the VA gets stuck",
+      "Work comes back closer to what you meant the first time",
+      "Delegating takes a few minutes instead of a long back-and-forth",
+      "The brief only goes to your VA after you approve it",
+    ],
     description: "Delegation briefs",
     instructions: [
       "You help a business owner delegate to their virtual assistant (VA) so it sticks: you turn quick, vague asks into clear briefs, and you follow up so nothing stalls.",
@@ -481,7 +542,7 @@ export const VA_BOT_TEMPLATES: readonly BotTemplate[] = [
   },
   {
     id: "ai-upskill-coach",
-    version: 1,
+    version: 2,
     name: "AI upskill coach",
     category: "virtual-assistants",
     summary: "Weekly AI lessons so you sell you plus your bots",
@@ -499,6 +560,18 @@ export const VA_BOT_TEMPLATES: readonly BotTemplate[] = [
       "",
       "Next week: turning an SOP into a bot skill.",
     ].join("\n"),
+    whatItDoes: [
+      "Gives you one short, practical AI lesson each week that fits VA work",
+      "Shows a real task you can try with a bot, then review yourself",
+      "Builds on last week's lesson so the skill actually sticks",
+      "Suggests how you can sell the new skill, not just use it yourself",
+    ],
+    howItHelps: [
+      "You get better at using AI without carving out a whole course",
+      "You can charge for the skill, not only for the hours",
+      "Each lesson is small enough to finish in a short break",
+      "You decide what to try; nothing runs on a client's work until you say so",
+    ],
     description: "AI skills coaching",
     instructions: [
       'You coach a virtual assistant (VA) to use AI and bots well, so they can offer clients "me plus my bots": faster, better work with a human checking it, instead of fearing replacement.',
@@ -548,7 +621,7 @@ export const VA_BOT_TEMPLATES: readonly BotTemplate[] = [
   },
   {
     id: "get-paid-back-office",
-    version: 2,
+    version: 3,
     name: "Get paid back office",
     category: "virtual-assistants",
     summary: "Invoices, payment reminders and hours per client",
@@ -564,6 +637,18 @@ export const VA_BOT_TEMPLATES: readonly BotTemplate[] = [
       "",
       "**Heads-up:** Peak Fitness paid late 3 months in a row. Consider asking for payment upfront.",
     ].join("\n"),
+    whatItDoes: [
+      "Tracks hours, invoices, and what each client still owes",
+      "Drafts invoices and polite payment reminders in your voice",
+      "Flags late payments and clients who are close to their hours cap",
+      "Gives you a simple picture of billed, paid, and outstanding",
+    ],
+    howItHelps: [
+      "You spend less time chasing invoices and more time on paid work",
+      "Late payments get a reminder before they get awkward",
+      "You can see which clients are behind without opening five tools",
+      "No invoice or reminder is sent until you approve it",
+    ],
     description: "Invoices and payments",
     instructions: [
       "You run a virtual assistant's (VA's) billing back office across several clients: hours, invoices, payment reminders and late-payer flags, so they get paid on time without awkward chasing.",
@@ -627,7 +712,7 @@ export const VA_BOT_TEMPLATES: readonly BotTemplate[] = [
   },
   {
     id: "scope-rate-guard",
-    version: 1,
+    version: 2,
     name: "Scope and rate guard",
     category: "virtual-assistants",
     summary: "Spots work beyond your deal and drafts a rate talk",
@@ -644,6 +729,18 @@ export const VA_BOT_TEMPLATES: readonly BotTemplate[] = [
       "",
       "Rate review message drafted: thanks them, lists the new tasks, offers $650/month or dropping the social posts.",
     ].join("\n"),
+    whatItDoes: [
+      "Compares the week's work to what you actually agreed to do",
+      "Flags tasks that look like scope creep or unpaid extras",
+      "Drafts a short, calm note to reset the scope or talk about the rate",
+      "Keeps a running picture of hours versus the deal for each client",
+    ],
+    howItHelps: [
+      "You catch extra work before it becomes an unpaid habit",
+      "The rate or scope conversation starts from a draft, not from frustration",
+      "You can see which clients are quietly taking more than they pay for",
+      "Nothing goes to the client until you have signed off",
+    ],
     description: "Scope tracking",
     instructions: [
       "You protect a virtual assistant's (VA's) scope and rate: you track new duties against what each client agreed to, and when the job grows, you draft a polite rate-review request.",
@@ -687,7 +784,7 @@ export const VA_BOT_TEMPLATES: readonly BotTemplate[] = [
   },
   {
     id: "inbox-admin-triage",
-    version: 1,
+    version: 2,
     name: "Inbox and admin triage",
     category: "virtual-assistants",
     summary: "Sorts email, drafts replies, tidies the calendar",
@@ -705,6 +802,18 @@ export const VA_BOT_TEMPLATES: readonly BotTemplate[] = [
       "",
       "**Low priority**: 29 newsletters and notifications",
     ].join("\n"),
+    whatItDoes: [
+      "Sorts new email into reply needed, for your information, and low priority",
+      "Drafts replies in your voice for anything that needs an answer",
+      "Tidies obvious calendar clashes and flags ones only you can decide",
+      "Learns from your corrections so the next sort is closer to how you work",
+    ],
+    howItHelps: [
+      "You only read what matters, instead of the whole inbox",
+      "Replies are drafted and waiting, so catching up takes minutes",
+      "Admin work gets handled in the background of a busy day",
+      "No email is sent, deleted, or archived unless you ask",
+    ],
     description: "Inbox and calendar",
     instructions: [
       "You help a business owner and their virtual assistant (VA) stay on top of email and the calendar: you sort new mail, draft replies, and spot calendar problems. The VA reviews every draft before anything goes out.",
@@ -770,7 +879,7 @@ export const VA_BOT_TEMPLATES: readonly BotTemplate[] = [
   },
   {
     id: "night-shift-handoff",
-    version: 2,
+    version: 3,
     name: "Night-shift handoff",
     category: "virtual-assistants",
     summary: "Bridges the US and PH time gap with daily handoffs",
@@ -787,6 +896,18 @@ export const VA_BOT_TEMPLATES: readonly BotTemplate[] = [
       "",
       "**Tonight I'll do**: invoices, the promo email draft",
     ].join("\n"),
+    whatItDoes: [
+      "Writes the end-of-shift handoff so the other side knows exactly where things stand",
+      "Queues questions that need a decision, with a default if no one answers in time",
+      "Briefs the next shift on what was done, what's blocked, and what's first",
+      "Keeps both time zones on the same page, including deadlines and meetings",
+    ],
+    howItHelps: [
+      "The US client and the PH VA stay in step even when one of them is asleep",
+      "Questions don't sit all night with no default and no owner",
+      "You stop writing the same handoff from scratch at the end of every shift",
+      "Nothing goes out, and no default is taken, until you have set the rules",
+    ],
     description: "Time zone handoffs",
     instructions: [
       "You bridge the time gap between a client (usually in the US) and their virtual assistant (VA, usually in the Philippines), so work keeps moving while one of them sleeps: handoff notes, start-of-shift briefings, and a queue of questions with sensible defaults.",
@@ -851,7 +972,7 @@ export const VA_BOT_TEMPLATES: readonly BotTemplate[] = [
   },
   {
     id: "va-onboarding-kit",
-    version: 1,
+    version: 2,
     name: "VA onboarding kit",
     category: "virtual-assistants",
     summary: "Runs a new VA's first two weeks, day by day",
@@ -868,6 +989,18 @@ export const VA_BOT_TEMPLATES: readonly BotTemplate[] = [
       "",
       "**Owner to-do**: 15-minute call by 4:00 PM EST (5:00 AM PHT)",
     ].join("\n"),
+    whatItDoes: [
+      "Runs a new VA's first two weeks as a day-by-day plan",
+      "Shares the right SOPs, access, and context on the day they're needed",
+      "Checks in on progress and flags anything the new VA is stuck on",
+      "Drafts the welcome, the day's tasks, and the end-of-week check-in",
+    ],
+    howItHelps: [
+      "A new VA ramps up without you inventing the first two weeks each time",
+      "You see on day three if something is already off, not on day ten",
+      "The client gets a consistent start instead of a scramble",
+      "Each day's plan is a draft you can adjust before it goes to the VA",
+    ],
     description: "VA onboarding",
     instructions: [
       "You run a new virtual assistant's (VA's) first two weeks with a client so the VA doesn't stall: an access checklist, the tools to learn, clear expectations, and short daily check-ins for both sides.",
