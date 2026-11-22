@@ -165,12 +165,20 @@ export function BotTemplatesDialog({
     templates.data?.some((template) => template.category === name),
   );
   const hasTeams = Boolean(onOpenGroup && teams.data?.length);
-  const selected: Filter = category === "teams"
-    ? (hasTeams ? "teams" : null)
-    : category && categories.includes(category) ? category : null;
-  const shown = selected === "teams" ? [] : selected
-    ? (templates.data ?? []).filter((template) => template.category === selected)
-    : (templates.data ?? []);
+  const selected: Filter =
+    category === "teams"
+      ? hasTeams
+        ? "teams"
+        : null
+      : category && categories.includes(category)
+        ? category
+        : null;
+  const shown =
+    selected === "teams"
+      ? []
+      : selected
+        ? (templates.data ?? []).filter((template) => template.category === selected)
+        : (templates.data ?? []);
   const chips: Filter[] = [null, ...(hasTeams ? (["teams"] as const) : []), ...categories];
   const showChips = Boolean(templates.data && !open && !openTeamId && chips.length >= 3);
   // A template's page starts at its top; going back returns to where the list was.
@@ -323,7 +331,14 @@ export function BotTemplatesDialog({
             <FilterChips
               options={chips.map((name) => ({
                 key: name,
-                label: name === "teams" ? <Trans>Teams</Trans> : name ? categoryLabel(name) : <Trans>All</Trans>,
+                label:
+                  name === "teams" ? (
+                    <Trans>Teams</Trans>
+                  ) : name ? (
+                    categoryLabel(name)
+                  ) : (
+                    <Trans>All</Trans>
+                  ),
               }))}
               value={selected}
               onChange={pick}
