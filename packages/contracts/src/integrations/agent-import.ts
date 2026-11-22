@@ -7,13 +7,13 @@ import { ComputerModeSchema } from "../computers/computer.js";
 import { AgentImportStatusSchema } from "./agent-import-setup.js";
 
 export const AGENT_IMPORT_MAX_FILES = 500;
-export const AGENT_IMPORT_MAX_FILE_LENGTH = 100_000;
-export const AGENT_IMPORT_MAX_TOTAL_LENGTH = 4_000_000;
+export const AGENT_IMPORT_MAX_FILE_LENGTH = 2_000_000;
+export const AGENT_IMPORT_MAX_TOTAL_LENGTH = 10_000_000;
 export const AGENT_IMPORT_MAX_PATH_LENGTH = 300;
 /** The one path a Grok Bot import sends: the chosen Bot's export, rewritten as JSON. */
 export const GROK_BOT_EXPORT_PATH = "grok-bot-export.json";
 /** A Bot with many full-text skills writes more than one Markdown file may hold. */
-export const GROK_BOT_EXPORT_MAX_LENGTH = 1_000_000;
+export const GROK_BOT_EXPORT_MAX_LENGTH = 10_000_000;
 
 /** The only non-Markdown files an import may send, optionally under the chosen folder's name. */
 const AGENT_IMPORT_CONFIG_PATH =

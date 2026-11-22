@@ -6,7 +6,7 @@ import type {
   AgentImportPlan,
   AgentImportSkill,
 } from "@rakazo/contracts";
-import { THREAD_MESSAGE_TEXT_MAX_LENGTH } from "@rakazo/contracts";
+import { AGENT_IMPORT_MAX_FILE_LENGTH, THREAD_MESSAGE_TEXT_MAX_LENGTH } from "@rakazo/contracts";
 import { parse as parseYaml } from "yaml";
 import { parseSkillMd } from "../skills/agent-skill.js";
 
@@ -19,7 +19,7 @@ export type AgentImportParse = Omit<
 > &
   Partial<Pick<AgentImportPlan, "leftovers">>;
 
-const SKILL_CONTENT_MAX_LENGTH = 100_000;
+const SKILL_CONTENT_MAX_LENGTH = AGENT_IMPORT_MAX_FILE_LENGTH;
 const SKILL_FILE = /^(?:\.agents\/)?skills\/(?:[^/]+\/){1,4}SKILL\.md$/;
 
 /** Folders that hold sessions, logs, schedules or credentials. Never read. */

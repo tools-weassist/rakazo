@@ -3,6 +3,8 @@ import {
   AGENT_IMPORT_MAX_FILE_LENGTH,
   AGENT_IMPORT_MAX_TOTAL_LENGTH,
   AgentImportPreviewInput,
+  GROK_BOT_EXPORT_MAX_LENGTH,
+  GROK_BOT_EXPORT_PATH,
 } from "./agent-import.js";
 
 const accepts = (files: { path: string; content: string }[]) =>
@@ -57,6 +59,19 @@ describe("agent import files", () => {
       accepts([
         { path: "a.md", content: "" },
         { path: "a.md", content: "" },
+      ]),
+    ).toBe(false);
+  });
+
+  it("allows a Grok Bot export larger than one Markdown file, up to the export cap", () => {
+    expect(
+      accepts([
+        { path: GROK_BOT_EXPORT_PATH, content: "x".repeat(AGENT_IMPORT_MAX_FILE_LENGTH + 1) },
+      ]),
+    ).toBe(true);
+    expect(
+      accepts([
+        { path: GROK_BOT_EXPORT_PATH, content: "x".repeat(GROK_BOT_EXPORT_MAX_LENGTH + 1) },
       ]),
     ).toBe(false);
   });

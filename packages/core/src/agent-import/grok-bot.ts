@@ -645,7 +645,7 @@ function bullets(lines: readonly string[]): string {
 }
 
 /** Far more entries than a Bot keeps; it bounds the work done before documents are built. */
-const MEMORY_ENTRY_LIMIT = AGENT_IMPORT_MAX_FILE_LENGTH / 4;
+const MEMORY_ENTRY_LIMIT = 25_000;
 
 /**
  * Bullets in documents no longer than an imported file: `MEMORY.md`, then `MEMORY-2.md`, ...
