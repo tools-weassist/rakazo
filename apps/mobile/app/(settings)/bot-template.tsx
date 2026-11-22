@@ -224,7 +224,11 @@ function TemplateDetail({
             />
           ))}
         </SettingsGroup>
-      ) : null}
+      ) : (
+        <SettingsGroup label={t`Works with`}>
+          <SettingsRow title={t`No apps to connect. It works in chat and can search the web.`} />
+        </SettingsGroup>
+      )}
     </>
   );
 }

@@ -74,7 +74,7 @@ import {
 import { deleteAgentSecret, listAgentSecrets, putAgentSecret } from "../bots/agent-secrets.js";
 import { loadBotForRemoval } from "../bots/bot-removal.js";
 import { createBotFromTemplate, listBotTemplates } from "../bots/bot-templates.js";
-import { botIntroPrompt } from "../bots/hidden-turns.prompt.js";
+import { botIntroPrompt, templateIntroPrompt } from "../bots/hidden-turns.prompt.js";
 import {
   createTeamFromTemplate,
   listTeamTemplates,
@@ -290,7 +290,12 @@ function botSecretMetadataDto(
  * asks what the bot is for. The executor limits the "created" trigger to that question and the
  * bot's own profile, and answering resumes the run as the user's turn.
  */
-export async function enqueueBotIntroRun(deps: RouterDeps, actor: Actor, bot: Bot): Promise<void> {
+export async function enqueueBotIntroRun(
+  deps: RouterDeps,
+  actor: Actor,
+  bot: Bot,
+  options: { fromTemplate?: boolean } = {},
+): Promise<void> {
   const threadId = bot.threadId;
   if (!threadId) return;
   // In the scripted test/eval runtime an automatic run would compete with the harness's next
@@ -304,11 +309,15 @@ export async function enqueueBotIntroRun(deps: RouterDeps, actor: Actor, bot: Bo
       select: { name: true, isDefault: true },
     }),
   ]);
-  const prompt = botIntroPrompt({
-    userName: displayName(user?.name, ""),
-    spaceName: space && !space.isDefault ? space.name.trim() || null : null,
-    disabledBuiltinTools: bot.disabledBuiltinTools ?? [],
-  });
+  const userName = displayName(user?.name, "");
+  const disabledBuiltinTools = bot.disabledBuiltinTools ?? [];
+  const prompt = options.fromTemplate
+    ? templateIntroPrompt({ userName, disabledBuiltinTools })
+    : botIntroPrompt({
+        userName,
+        spaceName: space && !space.isDefault ? space.name.trim() || null : null,
+        disabledBuiltinTools,
+      });
   const run = await deps.prisma.$transaction(async (tx) => {
     // An idempotent create (spawnKey) returns the bot it already made; it gets one intro.
     await tx.$queryRaw`SELECT id FROM threads WHERE id = ${threadId} FOR UPDATE`;
@@ -390,26 +399,50 @@ export function botsRoutes(ctx: RouterContext) {
       templates: authed.bots.templates.handler(async ({ context }) =>
         listBotTemplates(agentImportServices, context.actor),
       ),
-      // Like an import, the bot starts inert: no intro run, and its routines are paused.
-      createFromTemplate: authed.bots.createFromTemplate.handler(async ({ context, input }) =>
-        createBotFromTemplate(
+      // Like an import, the bot's routines start paused; unlike one, it opens with its setup questions.
+      createFromTemplate: authed.bots.createFromTemplate.handler(async ({ context, input }) => {
+        const result = await createBotFromTemplate(
           agentImportServices,
           () => managedAppCatalog(deps.connectors, context.actor, "bots.createFromTemplate"),
           context.actor,
           input,
           context.signal,
-        ),
-      ),
+        );
+        // Like Chief, a new template bot speaks first: it opens with its first setup question.
+        // A bot that already existed was greeted when it was made (the intro runs once per bot).
+        if (result.created) {
+          await enqueueBotIntroRun(deps, context.actor, result.bot, { fromTemplate: true }).catch(
+            (error) => {
+              getLogger().error("template bot intro run enqueue", error);
+            },
+          );
+        }
+        return result;
+      }),
       teamTemplates: authed.bots.teamTemplates.handler(async ({ context }) =>
         listTeamTemplates(
           await listBotTemplates(agentImportServices, context.actor),
           teamServices(context.actor, context.signal),
         ),
       ),
-      // Each member starts inert like a template's bot; the team's group chat opens empty.
+      // Members' routines start paused and the group chat opens empty. Once the team is made,
+      // each new member opens its own chat with its setup questions, like a template's bot.
       createTeamFromTemplate: authed.bots.createTeamFromTemplate.handler(
-        async ({ context, input }) =>
-          createTeamFromTemplate(teamServices(context.actor, context.signal), input),
+        async ({ context, input }) => {
+          const result = await createTeamFromTemplate(
+            teamServices(context.actor, context.signal),
+            input,
+          );
+          for (const member of result.members) {
+            if (!member.created) continue;
+            await enqueueBotIntroRun(deps, context.actor, member.bot, { fromTemplate: true }).catch(
+              (error) => {
+                getLogger().error("team member intro run enqueue", error);
+              },
+            );
+          }
+          return result;
+        },
       ),
       duplicate: authed.bots.duplicate.handler(async ({ context, input }) => {
         const source = await repos.getBot(context.actor, input.botId);

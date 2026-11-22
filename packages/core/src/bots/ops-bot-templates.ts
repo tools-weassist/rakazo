@@ -1,4 +1,5 @@
 import type { BotTemplate } from "@rakazo/contracts";
+import { DATE_RULE } from "./template-rules.js";
 
 /**
  * Operations helpers for small businesses and the virtual assistants (VAs) who keep them
@@ -8,7 +9,7 @@ import type { BotTemplate } from "@rakazo/contracts";
 export const OPS_BOT_TEMPLATES: readonly BotTemplate[] = [
   {
     id: "sop-process-tracker",
-    version: 1,
+    version: 2,
     name: "Process tracker",
     category: "operations",
     summary: "Keeps your SOP library complete, owned and up to date",
@@ -42,6 +43,7 @@ export const OPS_BOT_TEMPLATES: readonly BotTemplate[] = [
       "- Never move, rename, share or delete documents, or change who can see them, without a yes.",
       "- Draft reminders to owners; send only after the user's yes.",
       "- Never copy passwords or keys into the index. If an SOP contains one, flag it so a person moves it to a password manager.",
+      DATE_RULE,
     ].join("\n"),
     skills: [
       {
@@ -68,7 +70,7 @@ export const OPS_BOT_TEMPLATES: readonly BotTemplate[] = [
   },
   {
     id: "meeting-action-items",
-    version: 1,
+    version: 2,
     name: "Meeting notes and actions",
     category: "operations",
     summary: "Turns meetings into notes, owners and follow-ups",
@@ -101,10 +103,11 @@ export const OPS_BOT_TEMPLATES: readonly BotTemplate[] = [
       "Then tell them the routines are paused until they turn them on, and offer to write up the most recent meeting now.",
       "",
       "Rules:",
-      "- Write only what the notes or transcript show. Never invent decisions or owners; mark unclear ones as [WHO?] or [WHEN?] and ask.",
+      '- Write only what the notes or transcript show. Never invent decisions or owners; when an owner or due date isn\'t clear, write "owner not named" or "no date set" and list it under Open questions. Never leave bracketed placeholders in notes or drafts.',
       "- Draft every recap and reminder; send only after the user's yes.",
       "- Leave out private or HR-sensitive remarks, salaries and personal matters unless the user asks to include them.",
       "- Never accept, move or create calendar events without a yes.",
+      DATE_RULE,
     ].join("\n"),
     skills: [
       {
@@ -208,7 +211,7 @@ export const OPS_BOT_TEMPLATES: readonly BotTemplate[] = [
   },
   {
     id: "vendor-tracker",
-    version: 1,
+    version: 2,
     name: "Vendor tracker",
     category: "operations",
     summary: "Tracks vendors, contracts and renewals before they bite",
@@ -241,6 +244,7 @@ export const OPS_BOT_TEMPLATES: readonly BotTemplate[] = [
       "- Never invent prices or dates: cite the invoice, contract or email they came from.",
       "- Store contact names and roles, never logins or passwords. Note only where a login is kept (for example 'in the company password manager').",
       "- You don't give legal advice on contracts; flag terms worth a closer look.",
+      DATE_RULE,
     ].join("\n"),
     skills: [
       {
@@ -281,7 +285,7 @@ export const OPS_BOT_TEMPLATES: readonly BotTemplate[] = [
   },
   {
     id: "project-status-updates",
-    version: 1,
+    version: 2,
     name: "Project status updates",
     category: "operations",
     summary: "Weekly project updates and early warnings on blockers",
@@ -316,6 +320,7 @@ export const OPS_BOT_TEMPLATES: readonly BotTemplate[] = [
       "- Draft updates and nudges; post or send only after the user's yes.",
       "- Never change tasks, due dates or owners in the tracker without a yes.",
       "- Be honest about status: on track, at risk or late, with the reason.",
+      DATE_RULE,
     ].join("\n"),
     skills: [
       {

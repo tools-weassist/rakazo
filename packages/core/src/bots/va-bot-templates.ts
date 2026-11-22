@@ -1,4 +1,5 @@
 import type { BotTemplate } from "@rakazo/contracts";
+import { DATE_RULE } from "./template-rules.js";
 
 /**
  * Wea's templates for virtual assistants (VAs) and the small businesses that hire them, built
@@ -9,7 +10,7 @@ import type { BotTemplate } from "@rakazo/contracts";
 export const VA_BOT_TEMPLATES: readonly BotTemplate[] = [
   {
     id: "ai-brain-keeper",
-    version: 1,
+    version: 2,
     name: "AI brain keeper",
     category: "virtual-assistants",
     summary: "Builds and maintains the shared brain for a client and their VAs",
@@ -55,6 +56,7 @@ export const VA_BOT_TEMPLATES: readonly BotTemplate[] = [
       "- Write only what the business actually does: capture from the owner's words, real docs, chats and meeting notes, and mark guesses as [CHECK].",
       "- Keep personal, HR and health details out unless the owner asks, and keep client data inside the business's own tools.",
       "- Label dates and times with the business's time zone.",
+      DATE_RULE,
     ].join("\n"),
     skills: [
       {
@@ -223,7 +225,7 @@ export const VA_BOT_TEMPLATES: readonly BotTemplate[] = [
   },
   {
     id: "results-eod-report",
-    version: 1,
+    version: 2,
     name: "Results EOD report",
     category: "virtual-assistants",
     summary: "Your daily client report, built from real work",
@@ -260,6 +262,8 @@ export const VA_BOT_TEMPLATES: readonly BotTemplate[] = [
       "- Write all times in the client's time zone, labeled (for example 5:00 PM PST).",
       "- Show the VA every draft. Never send a report unless the VA says to send it.",
       "- No private message contents, passwords or card numbers in a report: subjects and outcomes only.",
+      DATE_RULE,
+      "- A report is a draft until the VA says it went out: label it Draft, with the time it covers, and never write that it was sent.",
     ].join("\n"),
     skills: [
       {
@@ -403,7 +407,7 @@ export const VA_BOT_TEMPLATES: readonly BotTemplate[] = [
   },
   {
     id: "delegation-coach",
-    version: 1,
+    version: 2,
     name: "Delegation coach",
     category: "virtual-assistants",
     summary: "Turns quick asks into clear briefs for your VA",
@@ -436,6 +440,7 @@ export const VA_BOT_TEMPLATES: readonly BotTemplate[] = [
       "- Write every time in both zones when they differ, labeled (for example 3:00 PM EST / 4:00 AM PHT).",
       "- No passwords in briefs; point to the password manager.",
       "- When the same kind of task comes up a third time, suggest turning it into an SOP.",
+      DATE_RULE,
     ].join("\n"),
     skills: [
       {
@@ -543,7 +548,7 @@ export const VA_BOT_TEMPLATES: readonly BotTemplate[] = [
   },
   {
     id: "get-paid-back-office",
-    version: 1,
+    version: 2,
     name: "Get paid back office",
     category: "virtual-assistants",
     summary: "Invoices, payment reminders and hours per client",
@@ -576,6 +581,7 @@ export const VA_BOT_TEMPLATES: readonly BotTemplate[] = [
       "- No bank account numbers, card numbers or passwords in chat or drafts. Use the payment method's name (for example Wise or PayPal) and let the VA add details in their own tool.",
       "- Keep reminders polite and firm. You don't give legal or tax advice; suggest a professional when asked.",
       "- Dates and due times in the client's time zone, labeled.",
+      DATE_RULE,
     ].join("\n"),
     skills: [
       {
@@ -764,7 +770,7 @@ export const VA_BOT_TEMPLATES: readonly BotTemplate[] = [
   },
   {
     id: "night-shift-handoff",
-    version: 1,
+    version: 2,
     name: "Night-shift handoff",
     category: "virtual-assistants",
     summary: "Bridges the US and PH time gap with daily handoffs",
@@ -797,6 +803,7 @@ export const VA_BOT_TEMPLATES: readonly BotTemplate[] = [
       "- Never invent work, answers or decisions. A queued question gets a suggested default only if the VA proposes it.",
       "- Never send a handoff or message without a yes from the person it comes from, unless they turned on sending in memory.",
       "- No passwords or card numbers in notes.",
+      DATE_RULE,
     ].join("\n"),
     skills: [
       {
