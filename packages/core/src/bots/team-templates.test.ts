@@ -62,6 +62,8 @@ describe("team templates", () => {
       expect(new Set(names).size, team.id).toBe(names.length);
       const texts = [
         team.sample,
+        ...team.whatItDoes,
+        ...team.howItHelps,
         team.successMetric.measure,
         ...team.weekOne,
         ...team.wontDo,

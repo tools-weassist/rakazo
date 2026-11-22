@@ -9,7 +9,7 @@ import { DATE_RULE } from "./template-rules.js";
 export const OPS_BOT_TEMPLATES: readonly BotTemplate[] = [
   {
     id: "sop-process-tracker",
-    version: 2,
+    version: 3,
     name: "Process tracker",
     category: "operations",
     summary: "Keeps your SOP library complete, owned and up to date",
@@ -27,6 +27,18 @@ export const OPS_BOT_TEMPLATES: readonly BotTemplate[] = [
       "",
       "Review reminders drafted for Maria and Joel.",
     ].join("\n"),
+    whatItDoes: [
+      "Keeps your SOP library complete, with an owner and a last-reviewed date",
+      "Flags missing, stale, or unowned processes before they cause a miss",
+      "Reminds the owner when a review is due",
+      "Drafts the update list so you can assign or refresh what needs work",
+    ],
+    howItHelps: [
+      "You know which processes are actually current, not just filed",
+      "A stale SOP gets flagged before someone follows the old steps",
+      "Reviews happen on a rhythm, not only after something goes wrong",
+      "No SOP is changed or published until you approve it",
+    ],
     description: "SOP and process tracking",
     instructions: [
       "You keep a small business's library of standard operating procedures (SOPs) healthy: every recurring task has an SOP, every SOP has an owner, and none goes stale. You work for the owner, an operations manager or a virtual assistant (VA).",
@@ -70,7 +82,7 @@ export const OPS_BOT_TEMPLATES: readonly BotTemplate[] = [
   },
   {
     id: "meeting-action-items",
-    version: 2,
+    version: 3,
     name: "Meeting notes and actions",
     category: "operations",
     summary: "Turns meetings into notes, owners and follow-ups",
@@ -91,6 +103,18 @@ export const OPS_BOT_TEMPLATES: readonly BotTemplate[] = [
       "",
       "Recap email drafted for the 5 attendees.",
     ].join("\n"),
+    whatItDoes: [
+      "Turns a meeting into notes, decisions, owners, and due dates",
+      "Drafts the follow-ups so each owner can see what they owe",
+      "Chases open actions before the next meeting, and flags what's still stuck",
+      "Files the notes where the team already looks",
+    ],
+    howItHelps: [
+      "Meetings end with a clear list, not with a fading memory of who said what",
+      "Follow-ups go out as drafts, so you aren't typing them late in the day",
+      "Open actions don't disappear until the next awkward recap",
+      "Notes and reminders only go out once you have approved them",
+    ],
     description: "Meeting notes and action items",
     instructions: [
       "You turn a small business's meetings into short notes, clear action items with owners and dates, and follow-ups that actually happen. You work for the owner, a manager or the virtual assistant (VA) who keeps their calendar.",
@@ -149,7 +173,7 @@ export const OPS_BOT_TEMPLATES: readonly BotTemplate[] = [
   },
   {
     id: "weekly-ops-report",
-    version: 1,
+    version: 2,
     name: "Weekly ops report",
     category: "operations",
     summary: "Your business's week in one page: numbers, wins, problems",
@@ -169,6 +193,18 @@ export const OPS_BOT_TEMPLATES: readonly BotTemplate[] = [
       "",
       "**Decisions for you:** extend support hours to Saturday?",
     ].join("\n"),
+    whatItDoes: [
+      "Builds a one-page picture of the week's numbers, wins, and problems",
+      "Pulls from the work that actually happened, not from a blank recap",
+      "Flags anything that needs a decision in the week ahead",
+      "Keeps the report short enough to read at the start of a meeting",
+    ],
+    howItHelps: [
+      "You get the week's ops story without assembling it by hand",
+      "Problems show up in time for the Monday meeting, not after it",
+      "The team can start from the same page",
+      "The report stays a draft until you approve it",
+    ],
     description: "Weekly operations report",
     instructions: [
       "You write a small business's weekly operations report: the key numbers, wins, problems and decisions needed, on one page. You work for the owner, an operations manager or a virtual assistant (VA).",
@@ -211,7 +247,7 @@ export const OPS_BOT_TEMPLATES: readonly BotTemplate[] = [
   },
   {
     id: "vendor-tracker",
-    version: 2,
+    version: 3,
     name: "Vendor tracker",
     category: "operations",
     summary: "Tracks vendors, contracts and renewals before they bite",
@@ -228,6 +264,18 @@ export const OPS_BOT_TEMPLATES: readonly BotTemplate[] = [
       "**Price changes**",
       "- Shipping supplies up 9% on the last invoice",
     ].join("\n"),
+    whatItDoes: [
+      "Tracks vendors, contracts, and renewal dates in one place",
+      "Warns you before a renewal, so you have time to review or cancel",
+      "Notes what's included, what's due, and who owns the relationship",
+      "Flags a missing contract, a price change, or a vendor that's gone quiet",
+    ],
+    howItHelps: [
+      "Renewals stop sneaking up on you",
+      "You can see what you're paying for without digging through old threads",
+      "A vendor problem shows up while you can still switch or renegotiate",
+      "Nothing is signed, cancelled, or sent until you approve it",
+    ],
     description: "Vendor and contract tracking",
     instructions: [
       "You keep track of a small business's vendors and suppliers: contacts, contracts, renewals, prices and problems, so nothing auto-renews or slips by surprise. You work for the owner, an operations manager or a virtual assistant (VA).",
@@ -285,7 +333,7 @@ export const OPS_BOT_TEMPLATES: readonly BotTemplate[] = [
   },
   {
     id: "project-status-updates",
-    version: 2,
+    version: 3,
     name: "Project status updates",
     category: "operations",
     summary: "Weekly project updates and early warnings on blockers",
@@ -304,6 +352,18 @@ export const OPS_BOT_TEMPLATES: readonly BotTemplate[] = [
       "",
       "Updates drafted for #projects. Nothing posted.",
     ].join("\n"),
+    whatItDoes: [
+      "Writes a weekly status update for each project you ask it to watch",
+      "Flags blockers and slipping dates early, with who owns the next step",
+      "Pulls from the notes, tasks, and messages already in your tools",
+      "Keeps the update short and in the format your stakeholders expect",
+    ],
+    howItHelps: [
+      "You stop writing the same weekly update from scratch",
+      "Blockers show up while there's still time to unblock them",
+      "Stakeholders get a consistent picture, not a last-minute scramble",
+      "The update only goes out once you have approved it",
+    ],
     description: "Project status updates",
     instructions: [
       "You keep a small business's projects visible: a weekly status update for each one, and a short daily check for blockers so problems surface early. You work for the owner, a project lead or a virtual assistant (VA).",

@@ -11,7 +11,7 @@ import type { TeamTemplate, TeamTemplateBrief } from "@rakazo/contracts";
 export const TEAM_TEMPLATES: readonly TeamTemplate[] = [
   {
     id: "va-back-office",
-    version: 2,
+    version: 3,
     name: "VA back office",
     summary: "A shared brain plus SOPs, client reports, meeting notes and project updates",
     sample: [
@@ -25,6 +25,19 @@ export const TEAM_TEMPLATES: readonly TeamTemplate[] = [
       "",
       "**Needs you:** approve the refund SOP. Ana starts Monday: share the brain folder with her?",
     ].join("\n"),
+    whatItDoes: [
+      "Runs a shared back office: a living brain, SOPs, meeting notes, project updates, and client reports",
+      "The lead files what the other bots learn, so the team keeps one source of truth",
+      "Turns calls and work into SOPs, actions, status updates, and the daily client report",
+      "Asks you only for the approvals and decisions the team cannot take itself",
+      "Follows a week-one plan so the team is useful in the first few days, not after a month",
+    ],
+    howItHelps: [
+      "Your VA team shares one brain instead of five private note piles",
+      "Client reports and project updates are drafted from real work, not from memory",
+      "You spend time on approvals, not on assembling the pack yourself",
+      "Nothing is sent or published until you say yes",
+    ],
     lead: "ai-brain-keeper",
     members: [
       {
@@ -101,7 +114,7 @@ export const TEAM_TEMPLATES: readonly TeamTemplate[] = [
   },
   {
     id: "night-shift-team",
-    version: 1,
+    version: 2,
     name: "Night-shift handoff team",
     summary: "Keeps a Philippines-based VA and a US client in step while one of them sleeps",
     sample: [
@@ -115,6 +128,18 @@ export const TEAM_TEMPLATES: readonly TeamTemplate[] = [
       "",
       "**Needs you (Jen):** ship the Hendricks order without the missing part? Default at 5:00 PM EST: hold it.",
     ].join("\n"),
+    whatItDoes: [
+      "Keeps a Philippines-based VA and a US client in step while one of them sleeps",
+      "Writes each handoff and shift briefing, with a question queue and defaults",
+      "Sorts the inbox, protects the calendar, and turns daytime calls into overnight tasks",
+      "Drafts the shift report the client reads in the morning",
+    ],
+    howItHelps: [
+      "Work keeps moving overnight without a long, hand-written handoff",
+      "The morning starts with a report and a clear list, not a pile of loose ends",
+      "Questions have a default if no one answers before the deadline",
+      "Nothing is sent, and no default is taken, outside the rules you set",
+    ],
     lead: "night-shift-handoff",
     members: [
       {
@@ -192,7 +217,7 @@ export const TEAM_TEMPLATES: readonly TeamTemplate[] = [
   },
   {
     id: "va-business-team",
-    version: 1,
+    version: 2,
     name: "VA business team",
     summary: "The VA's own back office: clients, rates and scope, getting paid, and AI skills",
     sample: [
@@ -206,6 +231,18 @@ export const TEAM_TEMPLATES: readonly TeamTemplate[] = [
       "",
       "**Needs you:** approve the reminder and pick which proposal goes first.",
     ].join("\n"),
+    whatItDoes: [
+      "Runs the VA's own back office: income, clients, rates, billing, and a weekly AI lesson",
+      "Tracks income against your goal and flags when one client is too large a share",
+      "Finds good-fit posts, drafts pitches, and spots work that's beyond the deal",
+      "Drafts invoices and reminders, and suggests the week's three next moves",
+    ],
+    howItHelps: [
+      "You can see the health of the VA business in one place each week",
+      "New work, late payments, and scope creep are already drafted for you to act on",
+      "You keep learning a useful AI skill without adding a second job",
+      "Pitches, reminders, and rate talks only go out when you approve them",
+    ],
     lead: "va-business-manager",
     members: [
       {
@@ -280,7 +317,7 @@ export const TEAM_TEMPLATES: readonly TeamTemplate[] = [
   },
   {
     id: "client-delegation-team",
-    version: 1,
+    version: 2,
     name: "Client delegation team",
     summary: "Helps a business owner hand work to a VA with clear briefs and real SOPs",
     sample: [
@@ -294,6 +331,18 @@ export const TEAM_TEMPLATES: readonly TeamTemplate[] = [
       "",
       "**Needs you:** answer the 2 refund questions, and pick next week's task to hand over.",
     ].join("\n"),
+    whatItDoes: [
+      "Helps a business owner hand work to a VA with clear briefs and real SOPs",
+      "Turns a quick ask into a brief the VA can start, and files how you work as an SOP",
+      "Keeps a shared priority list and a daily report of what was actually done",
+      "The lead makes sure the briefs, SOPs, and reports stay in sync",
+    ],
+    howItHelps: [
+      "Delegating stops depending on a long chat every time you have a new task",
+      "The VA follows a brief and an SOP, so less work comes back wrong",
+      "You still see a daily picture of progress without writing it yourself",
+      "Briefs, SOPs, and reports only go to the VA or client after you approve them",
+    ],
     lead: "delegation-coach",
     members: [
       {
@@ -369,7 +418,7 @@ export const TEAM_TEMPLATES: readonly TeamTemplate[] = [
   },
   {
     id: "client-va-pair",
-    version: 1,
+    version: 2,
     name: "Client and VA pair team",
     summary: "One shared brain, SOPs and priority list for a client and their VA",
     sample: [
@@ -383,6 +432,18 @@ export const TEAM_TEMPLATES: readonly TeamTemplate[] = [
       "",
       "**Needs you:** Jen, confirm this week's 5 priorities. Ana, add your feedback item for Monday's sync.",
     ].join("\n"),
+    whatItDoes: [
+      "Gives a client and their VA one shared brain, SOP library, and priority list",
+      "Files decisions and answers so both sides look in the same place",
+      "Keeps daily reports and meeting follow-ups flowing both ways, across time zones",
+      "Flags when the two sides have drifted onto different priorities",
+    ],
+    howItHelps: [
+      "You and your VA work from the same plan, even in different time zones",
+      "The same questions stop being asked twice",
+      "Daily reports and follow-ups are drafted, so the partnership stays visible",
+      "Priorities and notes only change when you confirm them",
+    ],
     lead: "client-va-sync",
     members: [
       {
@@ -457,7 +518,7 @@ export const TEAM_TEMPLATES: readonly TeamTemplate[] = [
   },
   {
     id: "finance-team",
-    version: 2,
+    version: 3,
     name: "Finance team",
     summary: "Five finance bots that keep receipts, invoices and cash in order and close the books",
     sample: [
@@ -471,6 +532,18 @@ export const TEAM_TEMPLATES: readonly TeamTemplate[] = [
       "",
       "**Needs you:** approve the 2 reminders and send Mark's receipts.",
     ].join("\n"),
+    whatItDoes: [
+      "Keeps receipts, invoices, cash, expense reports, and the month-end close in one rhythm",
+      "Sorts receipts, chases missing ones, and drafts invoice reminders",
+      "Builds the weekly cash snapshot and the expense reports you need to approve",
+      "Runs the close checklist and prepares the close packet for your review",
+    ],
+    howItHelps: [
+      "The books stay in motion during the month, not only in a last-week scramble",
+      "You review lists and drafts instead of building them from scratch",
+      "Cash surprises and missing receipts show up early",
+      "No reminder is sent, and nothing is marked final, until you approve it",
+    ],
     lead: "month-end-close",
     members: [
       {
@@ -545,7 +618,7 @@ export const TEAM_TEMPLATES: readonly TeamTemplate[] = [
   },
   {
     id: "marketing-team",
-    version: 2,
+    version: 3,
     name: "Marketing team",
     summary: "Plan, write, repurpose, follow up and report on marketing as a team",
     sample: [
@@ -559,6 +632,18 @@ export const TEAM_TEMPLATES: readonly TeamTemplate[] = [
       "",
       "**Needs you:** 3 photos from the Lopez job, and a yes on the 3 replies.",
     ].join("\n"),
+    whatItDoes: [
+      "Plans the month, drafts the newsletter, and turns one piece into a week of posts",
+      "Follows up new leads and writes the weekly recap of what the marketing did",
+      "Keeps the calendar, the drafts, and the recap in one team so nothing is orphaned",
+      "Asks you only to pick the plan, approve the copy, and send the follow-ups",
+    ],
+    howItHelps: [
+      "Marketing has a weekly rhythm instead of a pile of half-finished drafts",
+      "One piece of work fills the channels, and leads don't go cold",
+      "You can see what the week achieved without opening every tool",
+      "Nothing is posted or sent until you say yes",
+    ],
     lead: "content-calendar-planner",
     members: [
       {
@@ -633,7 +718,7 @@ export const TEAM_TEMPLATES: readonly TeamTemplate[] = [
   },
   {
     id: "operations-team",
-    version: 1,
+    version: 2,
     name: "Operations team",
     summary: "SOPs, meetings, projects and vendors in one weekly operations rhythm",
     sample: [
@@ -647,6 +732,18 @@ export const TEAM_TEMPLATES: readonly TeamTemplate[] = [
       "",
       "**Needs you:** pick an owner for the website copy, and say whether to shop the phone plan.",
     ].join("\n"),
+    whatItDoes: [
+      "Keeps SOPs, meeting notes, project updates, vendors, and the weekly ops report together",
+      "Flags stale processes, open actions, blockers, and upcoming renewals",
+      "Drafts the weekly ops picture so you can run the meeting from one page",
+      "The lead keeps the rhythm and asks you only for the decisions that need you",
+    ],
+    howItHelps: [
+      "Operations has a weekly beat, not a scatter of lists in different tools",
+      "Renewals, blockers, and stale SOPs show up before they bite",
+      "The Monday meeting starts from a draft, not from memory",
+      "Reports and reminders only go out after you approve them",
+    ],
     lead: "weekly-ops-report",
     members: [
       {
@@ -716,7 +813,7 @@ export const TEAM_TEMPLATES: readonly TeamTemplate[] = [
   },
   {
     id: "inbox-calendar-team",
-    version: 1,
+    version: 2,
     name: "Inbox and calendar team",
     summary: "A morning briefing, a sorted inbox, a protected calendar and no dropped follow-ups",
     sample: [
@@ -729,6 +826,18 @@ export const TEAM_TEMPLATES: readonly TeamTemplate[] = [
       "",
       "**Needs you:** a yes on the 6 replies and the meeting move.",
     ].join("\n"),
+    whatItDoes: [
+      "Gives you a morning briefing, a sorted inbox, a protected calendar, and drafted follow-ups",
+      "Sorts email and drafts replies, and flags meetings that clash or need a decision",
+      "Turns meetings into owners and due dates so follow-ups don't drop",
+      "The lead puts the day in order so you see what needs you first",
+    ],
+    howItHelps: [
+      "The morning starts with one picture of the day, not four overflowing apps",
+      "Replies and scheduling notes are drafted, so you only decide and send",
+      "Meeting actions don't vanish after the call",
+      "No email is sent and no meeting is moved until you approve it",
+    ],
     lead: "morning-briefing",
     members: [
       {
@@ -795,7 +904,7 @@ export const TEAM_TEMPLATES: readonly TeamTemplate[] = [
   },
   {
     id: "va-agency-team",
-    version: 1,
+    version: 2,
     name: "VA agency team",
     summary:
       "For agency owners running several VAs and clients: coverage, SOPs, reports and billing",
@@ -811,6 +920,18 @@ export const TEAM_TEMPLATES: readonly TeamTemplate[] = [
       "",
       "**Needs you:** assign Carla as backup, and approve the Lopez scope note.",
     ].join("\n"),
+    whatItDoes: [
+      "Helps an agency owner run several VAs and clients: coverage, SOPs, reports, and billing",
+      "Flags a client day with no backup, and tracks retainer hours against the work",
+      "Keeps onboarding, SOPs, and client reports consistent across the roster",
+      "Drafts invoices and the weekly ops picture so you can reassign work in time",
+    ],
+    howItHelps: [
+      "You see a coverage or hours problem before the client does",
+      "New VAs and client reports follow the same standard, not a one-off scramble",
+      "Billing and the weekly picture are drafted, so you spend time deciding, not assembling",
+      "No schedule, report, or invoice goes out until you approve it",
+    ],
     lead: "agency-ops-manager",
     members: [
       {

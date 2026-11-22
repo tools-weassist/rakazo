@@ -39,8 +39,12 @@ export const BotTemplateSchema = z.strictObject({
   category: BotTemplateCategorySchema,
   /** One line. */
   summary: z.string().min(1).max(120),
-  /** Markdown: an example of what the bot sends, shown before anything is created. */
+  /** Markdown example of what the bot sends; kept for the list-card glimpse. */
   sample: z.string().min(1).max(2000),
+  /** Concrete actions, shown on the template's page. */
+  whatItDoes: z.array(z.string().min(1).max(200)).min(3).max(5),
+  /** Benefits for the user, shown under what it does. */
+  howItHelps: z.array(z.string().min(1).max(200)).min(3).max(4),
   description: z.string().max(BOT_DESCRIPTION_MAX_LENGTH),
   instructions: z.string().min(1).max(BOT_INSTRUCTIONS_MAX_LENGTH),
   skills: z
