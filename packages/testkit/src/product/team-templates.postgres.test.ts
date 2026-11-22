@@ -64,6 +64,7 @@ describeIntegration("team templates", () => {
       [
         ["month-end-close", true, true],
         ["receipt-categorizer", false, false],
+        ["expense-report-prep", false, true],
         ["ar-follow-up", false, true],
         ["cash-flow-snapshot", false, true],
       ],
@@ -139,9 +140,9 @@ describeIntegration("team templates", () => {
       done[0] ?? (await rpc<TeamCreated>(app, cookie, "bots/createTeamFromTemplate", input));
     expect(await db.chatGroup.count({ where: { ...owner, archivedAt: null } })).toBe(1);
     expect(await db.bot.count({ where: { spaceId: owner.spaceId, archivedAt: null } })).toBe(
-      before + 4,
+      before + marketing.members.length,
     );
-    expect(final.group.members).toHaveLength(4);
+    expect(final.group.members).toHaveLength(marketing.members.length);
   });
 });
 

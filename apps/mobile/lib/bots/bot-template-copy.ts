@@ -192,6 +192,74 @@ Rate review message drafted: thanks them, lists the new tasks, offers $650/month
 
 **Owner to-do**: 15-minute call by 4:00 PM EST (5:00 AM PHT)`,
       };
+    case "va-business-manager":
+      return {
+        name: t`VA business manager`,
+        summary: t`Runs your VA business like a business: income, clients, hours and next moves`,
+        sample: t`**Your VA business, week of Nov 23**
+
+**Income**: $1,180 billed of your $1,400 goal this month. 1 invoice ($320) is 9 days late.
+**Clients**: 2 active. Bright Smiles is 70% of your income, so losing it would hurt. Aim for a third client.
+**Hours**: 46 this week, 12 of them after midnight. That's 2 weeks in a row over your 40-hour limit.
+**Pipeline**: 3 proposals out, 1 reply. A discovery call is pencilled in for Thu 9:00 AM EST (10:00 PM PHT).
+
+**This week's 3 moves**
+1. Approve the late-payment reminder drafted for Lopez Realty
+2. Send the rate review note to Bright Smiles (your rate hasn't changed in 14 months)
+3. Finish the AI upskill lesson on inbox automations`,
+      };
+    case "client-va-sync":
+      return {
+        name: t`Client and VA sync`,
+        summary: t`Keeps a client and their VA on one priority list, across time zones`,
+        sample: t`**Bright Smiles: Jen and Ana, week of Nov 23**
+
+**Priorities (agreed Mon)**
+1. Holiday promo emails: draft due Wed 5:00 PM EST (Thu 6:00 AM PHT)
+2. Insurance claims SOP: Ana updates it after the new form
+3. Patient reminders: keep at 100% confirmed
+
+**Changed since Monday**: Jen added a dentist hiring post. It bumps #2 to next week unless Jen says otherwise.
+
+**Monday sync agenda (15 min, 9:00 AM EST / 10:00 PM PHT)**
+- Wins: 31 appointments booked, 0 missed reminders
+- 2 decisions for Jen
+- Feedback both ways: what to keep, what to change`,
+      };
+    case "calendar-keeper":
+      return {
+        name: t`Calendar keeper`,
+        summary: t`Plans the day, protects focus time and drafts every scheduling reply`,
+        sample: t`**Tomorrow, Tue Nov 24** (times in EST, PHT in brackets)
+
+- 9:00 AM (10:00 PM) Team standup
+- 10:00 to 12:00 (11:00 PM to 1:00 AM) Focus block, protected
+- 2:00 PM (3:00 AM) Call with Lopez Realty. No agenda yet; I drafted one.
+
+**Conflict**: the dentist at 3:30 PM overlaps the supplier call. Move the supplier to Wed 11:00 AM?
+
+**Scheduling replies drafted (2)**
+- Mark asked for 30 min this week: offered Wed 1:00 PM or Thu 10:00 AM
+- Webinar invite for Thursday: suggested no, it clashes with month-end`,
+      };
+    case "agency-ops-manager":
+      return {
+        name: t`VA agency ops`,
+        summary: t`For agency owners: clients, VAs, coverage and retainer hours in one view`,
+        sample: t`**Agency week, Mon Nov 23**: 9 clients, 7 VAs
+
+**Coverage**
+- Ana is off Thu and Fri. Bright Smiles has no backup; Carla knows their SOPs. Assign her?
+
+**Retainer hours**
+- Lopez Realty used 38 of 40 hours with 8 days left. Draft a top-up note?
+- Peak Fitness used 12 of 30. Worth a check-in.
+
+**Client health**: 7 good, 1 watch (2 late payments), 1 at risk (no reply in 10 days)
+**VA load**: Marco is at 52 hours, mostly night shift. Move one client?
+
+**Needs you**: 3 decisions above, plus the new client intake for Rivera Law.`,
+      };
     case "receipt-categorizer":
       return {
         name: t`Receipt sorter`,

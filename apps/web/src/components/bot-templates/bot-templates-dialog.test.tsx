@@ -244,6 +244,15 @@ it("lists teams under Teams, and creating one opens its group chat", async () =>
       { templateId: "cash-check", role: "Watches cash.", name: "Cash check", botId: "bot-cash" },
     ],
     groupId: null,
+    successMetric: { name: "Days to close", measure: "Business days until the books close." },
+    weekOne: ["Day 1: ask for the checklist", "Day 2: sort receipts", "Day 3: practice close"],
+    wontDo: ["Move money", "Send without a yes", "Store card numbers"],
+    approvals: ["Each reminder", "The close packet"],
+    setupInputs: [
+      { name: "Close checklist", detail: "Your month-end steps." },
+      { name: "Accounting tool", detail: "The tool you use." },
+      { name: "Reviewer", detail: "Who reviews the close." },
+    ],
   };
   const group = { id: "group-1", name: "Finance team" };
   bots.templates.mockResolvedValue([
@@ -276,6 +285,14 @@ it("lists teams under Teams, and creating one opens its group chat", async () =>
   const detail = container.querySelector('[data-testid="team-template-detail"]')!;
   expect(detail.textContent).toContain("Watches cash.");
   expect(detail.textContent).toContain("Your existing bot joins the team");
+  const section = (id: string) => detail.querySelector(`[data-testid="${id}"]`)?.textContent ?? "";
+  expect(section("team-success-metric")).toContain("Days to close");
+  expect(section("team-success-metric")).toContain("Business days until the books close.");
+  expect(section("team-setup-inputs")).toContain("Close checklistYour month-end steps.");
+  expect(section("team-setup-inputs")).toContain("in its first chat");
+  expect(section("team-week-one")).toContain("3.Day 3: practice close");
+  expect(section("team-approvals")).toContain("The close packet");
+  expect(section("team-wont-do")).toContain("Move money");
   await act(async () => button("Create team")?.click());
   expect(bots.createTeamFromTemplate).toHaveBeenCalledWith({ teamId: "finance-team", version: 2 });
   await vi.waitFor(() => expect(onOpenGroup).toHaveBeenCalledWith(group));

@@ -7,6 +7,29 @@ const slug = z
   .regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/)
   .max(64);
 
+const line = (max: number) => z.string().min(1).max(max);
+
+/**
+ * What a team promises and needs, shown on its detail page before anything is created. The
+ * lead gets the setup inputs and the metric in its team note and asks for the inputs first.
+ */
+export const TeamTemplateBriefSchema = z.strictObject({
+  /** The one number the team is judged by, and how the lead measures it. */
+  successMetric: z.strictObject({ name: line(80), measure: line(300) }),
+  /** The first week, one step per entry, in order. */
+  weekOne: z.array(line(240)).min(3).max(7),
+  /** What the team never does, so the owner knows the limits up front. */
+  wontDo: z.array(line(200)).min(3).max(8),
+  /** Every kind of yes the team will ask the owner for. */
+  approvals: z.array(line(200)).min(2).max(8),
+  /** What the owner fills in first; the lead asks for each one in its first chat. */
+  setupInputs: z
+    .array(z.strictObject({ name: line(60), detail: line(240) }))
+    .min(3)
+    .max(8),
+});
+export type TeamTemplateBrief = z.infer<typeof TeamTemplateBriefSchema>;
+
 /**
  * A reviewed team of bot templates that work together: creating it makes each member's bot (or
  * reuses the one a template already made), tells every member who does what, and opens a group
@@ -34,6 +57,7 @@ export const TeamTemplateSchema = z
       )
       .min(2)
       .max(10),
+    ...TeamTemplateBriefSchema.shape,
   })
   .refine((team) => team.members[0]?.templateId === team.lead, {
     error: "The lead comes first",
@@ -62,6 +86,7 @@ export const TeamTemplateListingSchema = z.object({
   ),
   /** The team's group chat from an earlier create, while it can be opened. */
   groupId: z.string().nullable(),
+  ...TeamTemplateBriefSchema.shape,
 });
 export type TeamTemplateListing = z.infer<typeof TeamTemplateListingSchema>;
 

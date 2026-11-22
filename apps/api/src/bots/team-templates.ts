@@ -64,6 +64,11 @@ export async function listTeamTemplates(
           botId: made.get(member.templateId) ?? null,
         })),
         groupId: group?.id ?? null,
+        successMetric: team.successMetric,
+        weekOne: team.weekOne,
+        wontDo: team.wontDo,
+        approvals: team.approvals,
+        setupInputs: team.setupInputs,
       };
     }),
   );

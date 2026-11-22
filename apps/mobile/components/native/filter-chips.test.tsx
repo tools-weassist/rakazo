@@ -81,7 +81,7 @@ it("keeps one sideways row whose chips don't change size when one is picked", as
     );
   const box = () =>
     [...host.querySelectorAll("button")].map((button) => {
-      const style = JSON.parse(button.dataset.style ?? "{}") as CSSProperties;
+      const style = JSON.parse(button.dataset.style ?? "{}") as Record<string, unknown>;
       return [style.height, style.borderWidth, style.paddingHorizontal];
     });
   await render(null);
