@@ -49,6 +49,11 @@ import {
   ScratchpadItemSchema,
   ScratchpadItemStatusSchema,
 } from "./scratchpad.js";
+import {
+  CreateTeamFromTemplateInput,
+  CreateTeamFromTemplateOutput,
+  TeamTemplateListingSchema,
+} from "./team-template.js";
 
 export const botsRpc = {
   bots: {
@@ -61,6 +66,10 @@ export const botsRpc = {
     importSetupState: oc.input(AgentImportSetupStateInput).output(AgentImportSetupStateSchema),
     templates: oc.output(z.array(BotTemplateListingSchema)),
     createFromTemplate: oc.input(CreateBotFromTemplateInput).output(CreateBotFromTemplateOutput),
+    teamTemplates: oc.output(z.array(TeamTemplateListingSchema)),
+    createTeamFromTemplate: oc
+      .input(CreateTeamFromTemplateInput)
+      .output(CreateTeamFromTemplateOutput),
     duplicate: oc.input(botId).output(BotSchema),
     reorder: oc.input(ReorderBotsInput).output(z.object({ ok: z.literal(true) })),
     update: oc.input(UpdateBotInput).output(BotSchema),

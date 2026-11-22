@@ -14,6 +14,7 @@ const settingsScreens = new Set([
   "archived-bots",
   "bot-template",
   "bot-templates",
+  "team-template",
   "change-password",
   "computers",
   "general",

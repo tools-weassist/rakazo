@@ -86,6 +86,7 @@ export function ShellSidebar({
   openSettings,
   openIntegrations,
   openSkills,
+  openTemplates,
   openSpaceChat,
 }: {
   isMobile: boolean;
@@ -116,6 +117,7 @@ export function ShellSidebar({
   openSettings: (section: SettingsSection) => void;
   openIntegrations: () => void;
   openSkills: () => void;
+  openTemplates: () => void;
   openSpaceChat: (spaceId: string, path: string) => void;
 }) {
   const { t } = useLingui();
@@ -193,6 +195,7 @@ export function ShellSidebar({
           navigate={navigate}
           setNewSpaceOpen={setNewSpaceOpen}
           setCreateBotOpen={setCreateBotOpen}
+          openTemplates={openTemplates}
         />
         {mini ||
         !(
@@ -319,6 +322,7 @@ export function ShellSidebar({
           openSettings={openSettings}
           openIntegrations={openIntegrations}
           openSkills={openSkills}
+          openTemplates={openTemplates}
           openSpaceChat={openSpaceChat}
         />
       </Sidebar>
@@ -337,6 +341,7 @@ function ShellSidebarFooter({
   openSettings,
   openIntegrations,
   openSkills,
+  openTemplates,
   openSpaceChat,
 }: {
   mini: boolean;
@@ -349,6 +354,7 @@ function ShellSidebarFooter({
   openSettings: (section: SettingsSection) => void;
   openIntegrations: () => void;
   openSkills: () => void;
+  openTemplates: () => void;
   openSpaceChat: (spaceId: string, path: string) => void;
 }) {
   const { t, i18n } = useLingui();
@@ -407,6 +413,11 @@ function ShellSidebarFooter({
         onSkills={() => {
           setMenuOpen(false);
           openSkills();
+        }}
+        onTemplates={() => {
+          setMenuOpen(false);
+          closeMobileSidebar();
+          openTemplates();
         }}
         onBoard={
           boardEnabled

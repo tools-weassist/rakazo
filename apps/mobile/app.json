@@ -1,10 +1,9 @@
 {
   "expo": {
-    "name": "Rakazo",
-    "slug": "rakazo",
-    "owner": "inbox-zero",
+    "name": "Wea",
+    "slug": "wea",
     "scheme": "rakazo",
-    "version": "1.0.17",
+    "version": "1.3.0",
     "orientation": "default",
     "userInterfaceStyle": "automatic",
     "icon": "./assets/icon.png",
@@ -26,22 +25,22 @@
         "expo-audio",
         {
           "enableBackgroundPlayback": false,
-          "microphonePermission": "Rakazo uses the microphone for voice calls with your bots."
+          "microphonePermission": "Wea uses the microphone for voice calls with your bots."
         }
       ],
       [
         "expo-speech-recognition",
         {
-          "speechRecognitionPermission": "Rakazo turns your speech into messages during voice calls.",
-          "microphonePermission": "Rakazo uses the microphone for voice calls with your bots."
+          "speechRecognitionPermission": "Wea turns your speech into messages during voice calls.",
+          "microphonePermission": "Wea uses the microphone for voice calls with your bots."
         }
       ],
       "expo-localization",
       [
         "expo-calendar",
         {
-          "calendarPermission": "Allow Rakazo to read and add events in calendars you choose for your bots.",
-          "remindersPermission": "Allow Rakazo to create and complete reminders in lists you choose for your bots."
+          "calendarPermission": "Allow Wea to read and add events in calendars you choose for your bots.",
+          "remindersPermission": "Allow Wea to create and complete reminders in lists you choose for your bots."
         }
       ],
       "@react-native-vector-icons/ionicons",
@@ -55,9 +54,9 @@
       [
         "expo-image-picker",
         {
-          "photosPermission": "Rakazo uses your photo library so you can attach images to a bot message.",
-          "cameraPermission": "Rakazo uses the camera so you can attach photos to a bot message.",
-          "microphonePermission": "Rakazo uses the microphone for voice calls with your bots."
+          "photosPermission": "Wea uses your photo library so you can attach images to a bot message.",
+          "cameraPermission": "Wea uses the camera so you can attach photos to a bot message.",
+          "microphonePermission": "Wea uses the microphone for voice calls with your bots."
         }
       ],
       "./plugins/with-share-extension",
@@ -66,7 +65,7 @@
         {
           "ios": {
             "enabled": true,
-            "appGroupId": "group.com.rakazo.app",
+            "appGroupId": "group.io.weassist.wea",
             "activationRule": {
               "supportsText": true,
               "supportsWebUrlWithMaxCount": 1,
@@ -110,22 +109,28 @@
       "th": "./locales/th.json"
     },
     "ios": {
-      "bundleIdentifier": "com.rakazo.app",
+      "bundleIdentifier": "io.weassist.wea",
       "buildNumber": "1",
       "supportsTablet": true,
-      "icon": "../../packages/ui-tokens/assets/Rakazo.icon",
+      "icon": "./assets/icon.png",
       "config": {
         "usesNonExemptEncryption": false
       },
       "infoPlist": {
-        "NSCameraUsageDescription": "Rakazo uses the camera so you can attach photos to a bot message.",
-        "NSPhotoLibraryUsageDescription": "Rakazo uses your photo library so you can attach images to a bot message.",
-        "NSLocalNetworkUsageDescription": "Rakazo connects to a self-hosted Rakazo server on your local network.",
+        "NSCameraUsageDescription": "Wea uses the camera so you can attach photos to a bot message.",
+        "NSPhotoLibraryUsageDescription": "Wea uses your photo library so you can attach images to a bot message.",
+        "NSLocalNetworkUsageDescription": "Wea connects to a Wea server on your local network.",
         "NSAppTransportSecurity": {
           "NSAllowsLocalNetworking": true
         },
-        "UIBackgroundModes": ["voip", "audio", "remote-notification"],
-        "NSUserActivityTypes": ["INSendMessageIntent"]
+        "UIBackgroundModes": [
+          "voip",
+          "audio",
+          "remote-notification"
+        ],
+        "NSUserActivityTypes": [
+          "INSendMessageIntent"
+        ]
       },
       "entitlements": {
         "com.apple.developer.usernotifications.time-sensitive": true,
@@ -133,8 +138,8 @@
       }
     },
     "android": {
-      "package": "com.rakazo.app",
-      "versionCode": 10,
+      "package": "io.weassist.wea",
+      "versionCode": 4,
       "softwareKeyboardLayoutMode": "resize",
       "icon": "./assets/icon.png",
       "adaptiveIcon": {
@@ -150,29 +155,30 @@
       "router": {},
       "supportsRTL": true,
       "eas": {
-        "projectId": "07f7eb04-45e3-47fe-9374-99a2f991131e",
         "build": {
           "experimental": {
             "ios": {
               "appExtensions": [
                 {
                   "targetName": "RakazoWatch",
-                  "bundleIdentifier": "com.rakazo.app.watchkitapp"
+                  "bundleIdentifier": "io.weassist.wea.watchkitapp"
                 },
                 {
                   "targetName": "RakazoWidgets",
-                  "bundleIdentifier": "com.rakazo.app.widgets"
+                  "bundleIdentifier": "io.weassist.wea.widgets"
                 },
                 {
                   "targetName": "expo-sharing-extension",
-                  "bundleIdentifier": "com.rakazo.app.expo-sharing-extension",
+                  "bundleIdentifier": "io.weassist.wea.expo-sharing-extension",
                   "entitlements": {
-                    "com.apple.security.application-groups": ["group.com.rakazo.app"]
+                    "com.apple.security.application-groups": [
+                      "group.io.weassist.wea"
+                    ]
                   }
                 },
                 {
                   "targetName": "AgentNotifications",
-                  "bundleIdentifier": "com.rakazo.app.notifications",
+                  "bundleIdentifier": "io.weassist.wea.notifications",
                   "entitlements": {
                     "com.apple.developer.usernotifications.communication": true
                   }
@@ -187,7 +193,7 @@
       "policy": "appVersion"
     },
     "updates": {
-      "url": "https://u.expo.dev/07f7eb04-45e3-47fe-9374-99a2f991131e"
+      "enabled": false
     }
   }
 }

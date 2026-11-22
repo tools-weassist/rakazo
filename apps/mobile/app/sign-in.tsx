@@ -349,15 +349,15 @@ export default function SignIn() {
                   {resetSent || codeStep
                     ? t`Check your email`
                     : chooser
-                      ? t`Welcome to Rakazo`
+                      ? t`Welcome to Wea`
                       : presented && mode === "in"
                         ? t`Welcome back`
                         : presented && mode === "up"
                           ? t`Create your account`
                           : mode === "in"
-                            ? t`Sign in to Rakazo`
+                            ? t`Sign in to Wea`
                             : mode === "up"
-                              ? t`Sign up for Rakazo`
+                              ? t`Sign up for Wea`
                               : t`Reset your password`}
                 </Text>
                 {chooser ? (

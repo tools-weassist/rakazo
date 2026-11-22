@@ -1,10 +1,16 @@
-import { BotTemplateSchema } from "@rakazo/contracts";
+import { BOT_TEMPLATE_CATEGORIES, BotTemplateSchema } from "@rakazo/contracts";
 import { describe, expect, it } from "vitest";
 import { looksLikeCredential } from "../agent-import/index.js";
 import { matchFeaturedConnectorId } from "../integrations/featured-connectors.js";
 import { presetFromCron } from "../routines/schedule.js";
 import { extractRoutineSkillMentions } from "../skills/agent-skill.js";
 import { BOT_TEMPLATES, findBotTemplate } from "./bot-templates.js";
+import { FINANCE_BOT_TEMPLATES } from "./finance-bot-templates.js";
+import { MARKETING_BOT_TEMPLATES } from "./marketing-bot-templates.js";
+import { OPS_BOT_TEMPLATES } from "./ops-bot-templates.js";
+import { DATE_RULE } from "./template-rules.js";
+import { VA_BOT_TEMPLATES } from "./va-bot-templates.js";
+import { VA_TEAM_ROLE_BOT_TEMPLATES } from "./va-team-role-bot-templates.js";
 
 describe("bot templates", () => {
   it("each validates strictly and has a unique id", () => {
@@ -17,10 +23,70 @@ describe("bot templates", () => {
     expect(findBotTemplate("missing")).toBeUndefined();
   });
 
+  it("list the templates for virtual assistants first", () => {
+    expect(BOT_TEMPLATES.slice(0, VA_BOT_TEMPLATES.length)).toEqual(VA_BOT_TEMPLATES);
+    expect(VA_BOT_TEMPLATES.map((template) => template.id)).toEqual([
+      "ai-brain-keeper",
+      "sop-builder",
+      "results-eod-report",
+      "va-client-finder",
+      "delegation-coach",
+      "ai-upskill-coach",
+      "get-paid-back-office",
+      "scope-rate-guard",
+      "inbox-admin-triage",
+      "night-shift-handoff",
+      "va-onboarding-kit",
+    ]);
+    expect(
+      BOT_TEMPLATES.slice(
+        VA_BOT_TEMPLATES.length,
+        VA_BOT_TEMPLATES.length + VA_TEAM_ROLE_BOT_TEMPLATES.length,
+      ).map((template) => template.id),
+    ).toEqual(["va-business-manager", "client-va-sync", "calendar-keeper", "agency-ops-manager"]);
+    for (const template of VA_TEAM_ROLE_BOT_TEMPLATES) {
+      expect(template.category, template.id).toBe("virtual-assistants");
+    }
+  });
+
+  it("each have a known category, and every category has templates", () => {
+    for (const template of BOT_TEMPLATES) {
+      expect(BOT_TEMPLATE_CATEGORIES, template.id).toContain(template.category);
+    }
+    for (const category of BOT_TEMPLATE_CATEGORIES) {
+      expect(
+        BOT_TEMPLATES.some((template) => template.category === category),
+        category,
+      ).toBe(true);
+    }
+  });
+
+  it("are listed in category order, so each category's templates stay together", () => {
+    const order = BOT_TEMPLATES.map((template) =>
+      BOT_TEMPLATE_CATEGORIES.indexOf(template.category),
+    );
+    expect(order).toEqual([...order].sort((a, b) => a - b));
+  });
+
+  it("file each group's templates under its own category", () => {
+    const groups = [
+      [VA_BOT_TEMPLATES, "virtual-assistants"],
+      [FINANCE_BOT_TEMPLATES, "accounting-finance"],
+      [MARKETING_BOT_TEMPLATES, "marketing"],
+      [OPS_BOT_TEMPLATES, "operations"],
+    ] as const;
+    for (const [templates, category] of groups) {
+      expect(templates.length).toBeGreaterThanOrEqual(5);
+      for (const template of templates) expect(template.category, template.id).toBe(category);
+    }
+  });
+
   it("carry nothing shaped like a credential", () => {
     for (const template of BOT_TEMPLATES) {
       const texts = [
         template.sample,
+        ...template.whatItDoes,
+        ...template.howItHelps,
         template.instructions,
         ...template.skills.flatMap((skill) => [skill.description, skill.body]),
         ...template.routines.map((routine) => routine.prompt),
@@ -51,6 +117,23 @@ describe("bot templates", () => {
     // Featured apps match by alias; the code host is matched by its own slug.
     for (const app of BOT_TEMPLATES.flatMap((template) => template.apps)) {
       expect(app === "github" || matchFeaturedConnectorId(app) !== null).toBe(true);
+    }
+  });
+});
+
+describe("template setup and dates", () => {
+  it("gives every template first-conversation setup questions, so it can open the chat", () => {
+    for (const template of BOT_TEMPLATES) {
+      expect(template.instructions, template.id).toMatch(/first conversation/i);
+    }
+  });
+
+  it("tells templates that handle dates not to guess weekdays, and leaves no [WHO?] placeholders", () => {
+    for (const id of ["meeting-action-items", "month-end-close", "results-eod-report"]) {
+      expect(findBotTemplate(id)?.instructions).toContain(DATE_RULE);
+    }
+    for (const template of BOT_TEMPLATES) {
+      expect(template.instructions, template.id).not.toMatch(/\[WHO|\[WHEN/);
     }
   });
 });

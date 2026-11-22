@@ -2,6 +2,7 @@ import * as z from "zod";
 import { BOT_DESCRIPTION_MAX_LENGTH, BOT_NAME_MAX_LENGTH } from "../bots/bot.js";
 import { BotAvatarSetSchema, BotAvatarValueSchema } from "../bots/bot-avatar.js";
 import { BOT_TEMPLATE_IMPORT_KEY_PREFIX } from "../bots/bot-template.js";
+import { TEAM_TEMPLATE_IMPORT_KEY_PREFIX } from "../bots/team-template.js";
 import { ComputerModeSchema } from "../computers/computer.js";
 import { AgentImportStatusSchema } from "./agent-import-setup.js";
 
@@ -268,7 +269,9 @@ export const AgentImportCreateInput = z.strictObject({
     .min(8)
     .max(100)
     .refine(
-      (key) => !key.startsWith(BOT_TEMPLATE_IMPORT_KEY_PREFIX),
+      (key) =>
+        !key.startsWith(BOT_TEMPLATE_IMPORT_KEY_PREFIX) &&
+        !key.startsWith(TEAM_TEMPLATE_IMPORT_KEY_PREFIX),
       "That import key is reserved.",
     )
     .optional(),

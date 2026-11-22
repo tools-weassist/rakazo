@@ -1,16 +1,32 @@
 import type { BotTemplate, ConnectionCatalogItem } from "@rakazo/contracts";
 import { matchConnectedAppCatalog } from "../integrations/app-connect.js";
+import { FINANCE_BOT_TEMPLATES } from "./finance-bot-templates.js";
+import { MARKETING_BOT_TEMPLATES } from "./marketing-bot-templates.js";
+import { OPS_BOT_TEMPLATES } from "./ops-bot-templates.js";
+import { DATE_RULE } from "./template-rules.js";
+import { VA_BOT_TEMPLATES } from "./va-bot-templates.js";
+import { VA_TEAM_ROLE_BOT_TEMPLATES } from "./va-team-role-bot-templates.js";
 
 /**
  * Reviewed, ready-made bots. Bump a template's `version` whenever any of its content changes:
  * a create from an older preview is refused, so what was shown is what gets made. Names,
- * summaries and samples are shown in the apps' languages; the rest is written for the bot.
+ * summaries, samples, what-it-does and how-it-helps copy are shown in the apps' languages; the rest is written for the bot.
+ * Wea's templates for virtual assistants and their clients come first (then the VA roles
+ * the ready-made teams needed), then accounting and
+ * finance, marketing and operations, then the general ones; the page groups them by `category`
+ * in the order of `BOT_TEMPLATE_CATEGORIES`.
  */
 export const BOT_TEMPLATES: readonly BotTemplate[] = [
+  ...VA_BOT_TEMPLATES,
+  ...VA_TEAM_ROLE_BOT_TEMPLATES,
+  ...FINANCE_BOT_TEMPLATES,
+  ...MARKETING_BOT_TEMPLATES,
+  ...OPS_BOT_TEMPLATES,
   {
     id: "morning-briefing",
-    version: 1,
+    version: 3,
     name: "Morning briefing",
+    category: "productivity",
     summary: "Your day at a glance, every weekday morning",
     sample: [
       "**Thursday**",
@@ -27,6 +43,18 @@ export const BOT_TEMPLATES: readonly BotTemplate[] = [
       "- Light rain after 4pm",
       "- Two stories on the topics you follow",
     ].join("\n"),
+    whatItDoes: [
+      "Sends a short weekday briefing of your calendar, inbox, and what needs you",
+      "Flags meetings that moved, overlap, or were added since yesterday",
+      "Lists messages that ask for a decision or have a deadline, and skips the noise",
+      "Adds weather or news only when you asked for it and it actually matters",
+    ],
+    howItHelps: [
+      "You start the day knowing what needs you, without opening five apps first",
+      "A moved meeting or a noon deadline doesn't catch you mid-morning",
+      "The briefing stays short enough to read with coffee",
+      "It only points things out; it never sends email or changes your calendar",
+    ],
     description: "Daily briefing",
     instructions: [
       "You write the user's morning briefing: a short, skimmable summary of their day.",
@@ -37,6 +65,7 @@ export const BOT_TEMPLATES: readonly BotTemplate[] = [
       "  news about, and save the answers to memory. Ask again only if they change their mind.",
       "- Never send email, accept invites or change anything on the user's behalf. Point things",
       "  out; the user decides.",
+      DATE_RULE,
     ].join("\n"),
     skills: [
       {
@@ -66,8 +95,9 @@ export const BOT_TEMPLATES: readonly BotTemplate[] = [
   },
   {
     id: "inbox-triage",
-    version: 1,
+    version: 3,
     name: "Inbox triage",
+    category: "productivity",
     summary: "Sorts new email and drafts the replies",
     sample: [
       "**12 new since 8:00**",
@@ -81,9 +111,28 @@ export const BOT_TEMPLATES: readonly BotTemplate[] = [
       "",
       "**Low priority**: 7 newsletters and notifications",
     ].join("\n"),
+    whatItDoes: [
+      "Sorts new email into reply needed, for your information, and low priority",
+      "Drafts a reply in your voice for every message that needs one",
+      "Applies your rules for senders and topics, and learns from corrections",
+      "Gives you a short report, not a copy of the whole inbox",
+    ],
+    howItHelps: [
+      "You only read what matters, and the replies are already drafted",
+      "Catching up twice a day takes minutes instead of the whole inbox",
+      "Newsletters and notifications get counted, not dumped on you",
+      "No email is sent, deleted, or archived unless you ask",
+    ],
     description: "Email triage",
     instructions: [
       "You triage the user's email so they only read what matters.",
+      "",
+      'In your first conversation, say in one line what you do ("I sort your new email and draft the replies, so you only read what matters."), then ask these one at a time and save the answers to memory:',
+      "1. What should I call you, and which email account should I triage?",
+      "2. Senders or topics that always matter, and ones that never do.",
+      "3. How should drafts sound: short and direct, or warmer? Paste a sent email you like if you have one.",
+      "4. What times suit a triage, and in what time zone?",
+      "Then tell them the routine is paused until they turn it on, and offer to connect email and triage now.",
       "",
       "- Sort new mail into: reply needed, for your information, and low priority.",
       "- For anything that needs a reply, write a draft in the user's voice and save it as a draft.",
@@ -120,8 +169,9 @@ export const BOT_TEMPLATES: readonly BotTemplate[] = [
   },
   {
     id: "pr-reviewer",
-    version: 1,
+    version: 3,
     name: "PR reviewer",
+    category: "productivity",
     summary: "Reviews pull requests waiting on you",
     sample: [
       "**2 pull requests are waiting on you**",
@@ -135,9 +185,28 @@ export const BOT_TEMPLATES: readonly BotTemplate[] = [
       "**#479 Fix date parsing in reports**",
       "Looks good. Suggested review: approve.",
     ].join("\n"),
+    whatItDoes: [
+      "Finds the pull requests waiting on you and reads each one",
+      "Drafts a review that focuses on correctness, security, and missing tests",
+      "Quotes the file and line for every point, and suggests a verdict",
+      "Reviews a pasted link the same way, even if the code host isn't connected",
+    ],
+    howItHelps: [
+      "You start from a drafted review, not from a cold pull request first thing",
+      "The important issues are already called out, with a suggested verdict",
+      "Waiting reviews don't pile up unnoticed",
+      "Nothing is posted, approved, or merged until you say so",
+    ],
     description: "Code review",
     instructions: [
       "You review pull requests for the user and draft their reviews.",
+      "",
+      'In your first conversation, say in one line what you do ("I review the pull requests waiting on you and draft each review for you to post."), then ask these one at a time and save the answers to memory:',
+      "1. What should I call you, and where is your code: GitHub or another host, and which repositories?",
+      "2. Whose pull requests should I check: ones that request your review, or everything open on a team?",
+      "3. What matters most in your reviews, and is there a style guide or contributing doc I should follow?",
+      "4. When should the daily check run, and in what time zone?",
+      "Then tell them the routine is paused until they turn it on, offer to connect the code host, and say they can paste any pull request link for a review right away.",
       "",
       "- Focus on correctness, security, missing tests and unclear naming, in that order. Skip style nits a formatter would fix.",
       "- Quote the file and line for every point. Say how sure you are when you're not certain.",
@@ -172,8 +241,9 @@ export const BOT_TEMPLATES: readonly BotTemplate[] = [
   },
   {
     id: "topic-watch",
-    version: 1,
+    version: 3,
     name: "Topic watch",
+    category: "productivity",
     summary: "A weekly digest of what changed on topics you follow",
     sample: [
       "**This week**",
@@ -187,11 +257,29 @@ export const BOT_TEMPLATES: readonly BotTemplate[] = [
       "",
       "Nothing new on battery recycling.",
     ].join("\n"),
-    description: "Weekly digest",
+    whatItDoes: [
+      "Watches the topics and websites you name, and checks what changed",
+      "Sends a weekly digest of real changes, each with a source and how recent it is",
+      "Skips repeats and rumors, and says so when something is unconfirmed",
+      "Remembers what it already told you, so each digest is only what's new",
+    ],
+    howItHelps: [
+      "You stay current without checking the same sites every day",
+      "You only see what's new since last week, not a pile of old news",
+      "A pricing or policy change on a site you watch doesn't slip by",
+      "It's a digest only; it never contacts anyone or posts on your behalf",
+    ],
+    description: "Watches the topics and sites you follow",
     instructions: [
       "You keep the user up to date on the topics and websites they follow.",
       "",
-      "- In your first conversation, ask which topics and sites to watch and save them to memory.",
+      'In your first conversation, say in one line what you do ("I watch the topics and websites you care about and tell you once a week what changed."), then ask these one at a time and save the answers to memory:',
+      "1. What should I call you, and what's your work or business about?",
+      "2. Which topics should I follow? Two to five is a good start.",
+      "3. Any websites to watch for changes, such as a competitor's pricing page or a supplier's news page?",
+      "4. Which day and time suits the digest, and in what time zone?",
+      "Then tell them the weekly routine is paused until they turn it on, and offer a first digest now.",
+      "",
       "- Report only what's new since the last digest. Keep a short note in memory of what you reported.",
       "- Every item gets a source link and how long ago it happened.",
       "- Prefer primary sources over reposts. Say so when something is a rumor.",

@@ -17,6 +17,7 @@ import {
   Download,
   FolderOpen,
   Gauge,
+  LayoutTemplate,
   LifeBuoy,
   Link2,
   LogOut,
@@ -46,6 +47,7 @@ type Props = {
   onOpenChange: (open: boolean) => void;
   onIntegrations: () => void;
   onSkills: () => void;
+  onTemplates?: () => void;
   onBoard?: () => void;
   links?: NavLink[];
   onLink?: (link: NavLink) => void;
@@ -81,6 +83,7 @@ export function SidebarFooter({
   onOpenChange,
   onIntegrations,
   onSkills,
+  onTemplates,
   onBoard,
   links = [],
   onLink,
@@ -153,7 +156,7 @@ export function SidebarFooter({
             side="top"
             sideOffset={8}
             align="start"
-            className="max-h-(--available-height) w-[295px] max-w-[calc(100vw-69px)] gap-0 overflow-y-auto p-1 *:shrink-0 data-closed:animate-none"
+            className="max-h-(--available-height) w-[295px] max-w-[calc(100vw-69px)] gap-0 overflow-y-auto bg-popover p-1 opacity-100 shadow-lg *:shrink-0 animate-none!"
           >
             <div
               data-testid="account-menu-header"
@@ -214,6 +217,18 @@ export function SidebarFooter({
               <ScrollText className="text-muted-foreground" strokeWidth={1.75} />
               <Trans>Skills</Trans>
             </Button>
+            {onTemplates ? (
+              <Button
+                variant="ghost"
+                size="lg"
+                className="w-full justify-start gap-2.5 font-normal"
+                data-testid="account-menu-templates"
+                onClick={onTemplates}
+              >
+                <LayoutTemplate className="text-muted-foreground" strokeWidth={1.75} />
+                <Trans>Templates</Trans>
+              </Button>
+            ) : null}
             <Button
               variant="ghost"
               size="lg"
