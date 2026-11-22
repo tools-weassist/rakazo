@@ -44,6 +44,7 @@ import {
   routineTestRunNonce,
   routineTestTarget,
 } from "../routines/routines.js";
+import { reportThreadMessage } from "../threads/content-reports.js";
 import { purgeClearedThreadMemory } from "../threads/thread-memory.js";
 import {
   isBackgroundRun,
@@ -357,6 +358,16 @@ export function threadsRoutes(ctx: RouterContext) {
           });
         }
         return { ok: true as const, runIds: result.runIds };
+      }),
+      report: authed.threads.report.handler(async ({ context, input }) => {
+        const target = await resolveThreadTarget(deps.prisma, context.actor, input);
+        await reportThreadMessage(deps.prisma, context.actor, target.threadId, input);
+        getLogger().info("thread.message_reported", {
+          "thread.id": target.threadId,
+          "message.id": input.messageId,
+          "report.reason": input.reason,
+        });
+        return { ok: true as const };
       }),
       stop: authed.threads.stop.handler(async ({ context, input }) => {
         const target = await resolveThreadTarget(deps.prisma, context.actor, input);

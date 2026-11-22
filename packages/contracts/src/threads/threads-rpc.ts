@@ -14,6 +14,7 @@ import {
 } from "../personal-calendar/personal-calendar.js";
 import { botId } from "../rpc/inputs.js";
 import { SpaceChangeKind } from "../spaces/space.js";
+import { CONTENT_REPORT_DETAILS_MAX_LENGTH, ContentReportReasonSchema } from "./content-report.js";
 import { ProductEventSchema } from "./events.js";
 import {
   ExternalConversationPolicySchema,
@@ -92,6 +93,16 @@ export const threadsRpc = {
         }),
       )
       .output(z.object({ ok: z.literal(true), runIds: z.array(Id).optional() })),
+    /** Flags a bot's message as offensive or harmful for the people who run this server. */
+    report: oc
+      .input(
+        threadTarget.safeExtend({
+          messageId: Id,
+          reason: ContentReportReasonSchema,
+          details: z.string().trim().max(CONTENT_REPORT_DETAILS_MAX_LENGTH).optional(),
+        }),
+      )
+      .output(z.object({ ok: z.literal(true) })),
     stop: oc.input(threadTarget).output(z.object({ ok: z.literal(true) })),
     // Its own route, so a server without it refuses rather than stopping the whole chat.
     stopHelper: oc

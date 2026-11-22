@@ -6,7 +6,11 @@ import type {
   MessageBlock,
   MessageReaction,
 } from "@rakazo/contracts";
-import { canReactToThreadMessage, MESSAGE_REACTIONS } from "@rakazo/contracts";
+import {
+  canReactToThreadMessage,
+  canReportThreadMessage,
+  MESSAGE_REACTIONS,
+} from "@rakazo/contracts";
 import type { ChildBotBlock, PeerExchange } from "@rakazo/core";
 import {
   canMarkMessageUnread,
@@ -63,6 +67,8 @@ export type MessageRowActions = {
   speak: (message: MobileMessage) => void;
   react: (message: MobileMessage, reaction: MessageReaction) => Promise<boolean>;
   markUnread: (message: MobileMessage) => void;
+  /** Opens the report sheet for a bot's message. */
+  report: (message: MobileMessage) => void;
   answer: (
     message: MobileMessage,
     answer: string,
@@ -211,6 +217,7 @@ export const MessageRow = memo(function MessageRow({
     const includeSelectMessages = canSelectMessage(message);
     // Any sent message can be marked unread; the next open starts New at the first reply from it.
     const includeUnread = !readOnly && !markedUnread && canMarkMessageUnread(message);
+    const includeReport = !readOnly && canReportThreadMessage(message);
     const reply = () => actions.reply(message);
     const quote = () => actions.quote(message);
     const speakMessage = () => actions.speak(message);
@@ -225,6 +232,7 @@ export const MessageRow = memo(function MessageRow({
     };
     const react = (reaction: MessageReaction) => actions.react(message, reaction);
     const markUnread = () => actions.markUnread(message);
+    const report = () => actions.report(message);
     // VoiceOver reads the bubble as one element and can't reach a code block's copy button.
     const codeBlocks = message.role === "user" ? [] : markdownCodeBlocks(blockText(message));
     const copyCode = () => {
@@ -261,6 +269,7 @@ export const MessageRow = memo(function MessageRow({
       ...(codeBlocks.length === 1
         ? [{ name: "copyCode", text: t`Copy code`, onPress: copyCode }]
         : []),
+      ...(includeReport ? [{ name: "report", text: t`Report`, onPress: report }] : []),
     ];
     const menu = buildMessageContextMenu({
       labels: {
@@ -272,6 +281,7 @@ export const MessageRow = memo(function MessageRow({
         select: t`Select text`,
         selectMessages: t`Select messages`,
         unread: t`Mark as unread`,
+        report: t`Report`,
       },
       reactions: MESSAGE_REACTIONS,
       include: {
@@ -282,6 +292,7 @@ export const MessageRow = memo(function MessageRow({
         select: includeSelect,
         selectMessages: includeSelectMessages,
         unread: includeUnread,
+        report: includeReport,
       },
     });
     const openSheet = (event: GestureResponderEvent) =>
@@ -356,6 +367,18 @@ export const MessageRow = memo(function MessageRow({
                 ]
               : []),
           ],
+          ...(includeReport
+            ? [
+                [
+                  {
+                    name: "report",
+                    text: t`Report`,
+                    icon: "flag-outline" as const,
+                    onPress: report,
+                  },
+                ],
+              ]
+            : []),
         ],
       });
     return {
@@ -387,6 +410,7 @@ export const MessageRow = memo(function MessageRow({
         if (id === "select") select();
         if (id === "selectMessages") selectMessages();
         if (id === "unread") markUnread();
+        if (id === "report") report();
       },
       actionProps: {
         onLongPress: Platform.OS === "ios" ? undefined : openSheet,

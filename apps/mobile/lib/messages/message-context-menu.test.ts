@@ -11,6 +11,7 @@ const labels: Record<MessageMenuSymbol, string> = {
   select: "Select text",
   selectMessages: "Select messages",
   unread: "Mark as unread",
+  report: "Report",
 };
 
 const reactions = ["👍", "👎", "❤️", "😂", "🎉", "😮"] as const;
@@ -111,6 +112,26 @@ describe("message context menu", () => {
         }),
       ),
     ).not.toContain("selectMessages");
+  });
+
+  it("puts Report in its own last section, only when asked", () => {
+    const menu = buildMessageContextMenu({
+      labels,
+      reactions,
+      include: { quote: true, react: false, speak: false, select: false, report: true },
+    });
+    expect(menu.map((entry) => entry.id)).toEqual(["reply", "copy", "secondary", "reportGroup"]);
+    expect(menu.at(-1)).toMatchObject({ title: "", displayInline: true });
+    expect(menu.at(-1)?.subactions).toEqual([{ id: "report", title: "Report", symbol: "report" }]);
+    expect(
+      ids(
+        buildMessageContextMenu({
+          labels,
+          reactions,
+          include: { quote: true, react: false, speak: false, select: false },
+        }),
+      ),
+    ).not.toContain("report");
   });
 
   it("reads a reaction id back out of a menu event", () => {

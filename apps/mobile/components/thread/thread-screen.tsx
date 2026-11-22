@@ -464,6 +464,11 @@ export function Thread({ sessionEpoch, userId }: { sessionEpoch: number; userId:
     speak,
     react: composer.react,
     markUnread: markUnreadFrom,
+    report: (message) =>
+      router.push({
+        pathname: "/report-message",
+        params: { messageId: message.id, ...(groupId ? { groupId } : { botId }) },
+      }),
     answer: composer.answer,
     openBot,
     openComputer,

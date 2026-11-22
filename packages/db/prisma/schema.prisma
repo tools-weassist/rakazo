@@ -920,7 +920,8 @@ model UserModelCredential {
   @@map("user_model_credentials")
 }
 
-/// A problem or suggestion a user asked their bot to send to the people who run this server.
+/// A problem or suggestion a user asked their bot to send to the people who run this server,
+/// or a bot message a person reported as offensive or harmful.
 /// The ids point at where it happened; the description is written to leave out personal details.
 model FeedbackReport {
   id          String   @id @default(cuid())
@@ -930,8 +931,11 @@ model FeedbackReport {
   space       Space    @relation(fields: [spaceId], references: [id], onDelete: Cascade)
   botId       String
   threadId    String
-  runId       String
-  /// "bug" or "feedback".
+  /// The run that filed it, or that wrote the reported message; NULL when that message had none.
+  runId       String?
+  /// The bot message a person reported from the chat (kind "ai_content").
+  messageId   String?
+  /// "bug" or "feedback" from a bot; "ai_content" when a person reports a bot's message.
   kind        String
   description String
   createdAt   DateTime @default(now())

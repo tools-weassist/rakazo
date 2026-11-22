@@ -870,6 +870,7 @@ it.each([false, true])(
         "Messaging",
         "Labs",
         "Members",
+        "Privacy policy",
       ];
       expect(titles).toEqual(["tester@example.test", "Usage", ...links]);
       const artifacts = view.button("Artifacts")!;

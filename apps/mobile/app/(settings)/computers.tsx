@@ -19,6 +19,7 @@ import { SettingsGroup, SettingsRow } from "../../components/settings/settings-g
 import { listUserDevices, removeUserDevice } from "../../lib/account/user-devices";
 import { errorText } from "../../lib/api/user-error";
 import { mobileTokens } from "../../lib/appearance/appearance";
+import { inAppPurchasesHidden } from "../../lib/billing/store-build";
 import { useSideInsets } from "../../lib/layout/side-insets";
 import { native, useThemedStyles } from "../../lib/native/native";
 import { accountQuery, queryClient, rpcQuery, useSave } from "../../lib/query/query";
@@ -93,10 +94,16 @@ export default function ComputersSettings() {
     const choice = computerSizeChoice(size, computer, cloud.available);
     if (choice === "unchanged") return;
     if (choice === "upgrade") {
-      Alert.alert(t`Your plan does not include this size.`, undefined, [
-        { text: t`Cancel`, style: "cancel" },
-        { text: t`Upgrade`, onPress: () => router.push("/billing") },
-      ]);
+      Alert.alert(
+        t`Your plan does not include this size.`,
+        undefined,
+        inAppPurchasesHidden()
+          ? [{ text: t`OK`, style: "cancel" }]
+          : [
+              { text: t`Cancel`, style: "cancel" },
+              { text: t`Upgrade`, onPress: () => router.push("/billing") },
+            ],
+      );
       return;
     }
     setResized(null);

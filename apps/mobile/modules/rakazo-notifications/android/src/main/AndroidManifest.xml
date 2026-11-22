@@ -13,7 +13,8 @@
     </intent>
   </queries>
 
-  <uses-permission android:name="android.permission.USE_FULL_SCREEN_INTENT" />
+  <!-- No USE_FULL_SCREEN_INTENT: Google Play grants it only to apps whose core feature is calls or
+       alarms. Incoming bot calls ring as a heads-up notification instead (see IncomingCalls.kt). -->
   <application>
     <service android:name="expo.modules.notifications.service.ExpoFirebaseMessagingService" tools:node="remove" />
     <service android:name=".RakazoMessagingService" android:exported="false">

@@ -398,6 +398,10 @@ describeWithDatabase("API authorization and resource isolation", () => {
       ],
       ["threads/stop", { botId: "missing-bot" }],
       ["threads/stopHelper", { botId: "missing-bot", messageId: "missing-message" }],
+      [
+        "threads/report",
+        { botId: "missing-bot", messageId: "missing-message", reason: "offensive" },
+      ],
       ["threads/clear", { botId: "missing-bot" }],
       ["threads/followUp", { botId: "missing-bot", text: "Nope" }],
       [
@@ -806,6 +810,7 @@ describeWithDatabase("API authorization and resource isolation", () => {
       ["threads/send", { botId: ownerBot.id, artifactIds: [ownerArtifact.id] }],
       ["threads/stop", { botId: ownerBot.id }],
       ["threads/stopHelper", { botId: ownerBot.id, messageId: "missing-message" }],
+      ["threads/report", { botId: ownerBot.id, messageId: "missing-message", reason: "offensive" }],
       ["threads/clear", { botId: ownerBot.id }],
       ["threads/followUp", { botId: ownerBot.id, text: "intruder follow-up" }],
       [
