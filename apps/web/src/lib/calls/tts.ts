@@ -6,6 +6,7 @@ import {
   readVoiceAudio,
   readVoiceError,
   requestDeadline,
+  toUtterances,
   VOICE_RESPONSE_TIMEOUT_MS,
   withAbort,
 } from "@rakazo/core";
@@ -32,6 +33,8 @@ interface SpeakOptions {
   voiceId?: string;
   botId?: string;
   messageId?: string;
+  /** Speak with the browser's own voice instead of the connected provider: free, no key. */
+  device?: boolean;
 }
 
 const IDLE: SpeechSnapshot = { status: "idle" };
@@ -101,6 +104,9 @@ export class Speaker {
     const audio = this.element();
     audio.src = SILENT_CLIP;
     void audio.play().catch(() => undefined);
+    if (deviceSpeechAvailable() && !window.speechSynthesis.speaking) {
+      window.speechSynthesis.speak(new SpeechSynthesisUtterance(""));
+    }
   }
 
   private element(): HTMLAudioElement {
@@ -171,6 +177,7 @@ export class Speaker {
   }
 
   private newFeed(opts: SpeakOptions): SpeechFeed {
+    if (opts.device) return this.newDeviceFeed(opts);
     const spaceId = opts.spaceId ?? selectedSpaceId();
     return createSpeechFeed<Blob>({
       prepare: (text, signal) => withAbort(this.prepare(text, opts, signal, spaceId), signal),
@@ -184,6 +191,24 @@ export class Speaker {
         });
         const end = await this.play(blob, signal);
         if (end === "failed" || end === "blocked") throw new PlaybackError(end === "blocked");
+      },
+    });
+  }
+
+  private newDeviceFeed(opts: SpeakOptions): SpeechFeed {
+    return createSpeechFeed<string>({
+      prepare: async (text) => toUtterances(text),
+      render: async (utterance) => utterance,
+      play: async (utterance, _same, signal) => {
+        this.set({
+          status: "speaking",
+          botId: opts.botId,
+          messageId: this.messageId,
+          caption: utterance,
+        });
+        if ((await speakOnDevice(utterance, signal)) === "failed") {
+          throw new Error(t`This browser could not speak that reply.`);
+        }
       },
     });
   }
@@ -284,6 +309,37 @@ export class Speaker {
         );
     });
   }
+}
+
+/** True when this browser can read text aloud by itself. */
+export function deviceSpeechAvailable(): boolean {
+  return typeof window !== "undefined" && "speechSynthesis" in window;
+}
+
+function speakOnDevice(text: string, signal: AbortSignal): Promise<PlaybackEnd> {
+  return new Promise((resolve) => {
+    if (signal.aborted) return resolve("stopped");
+    const synth = window.speechSynthesis;
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.lang = document.documentElement.lang || navigator.language;
+    let settled = false;
+    const done = (end: PlaybackEnd) => {
+      if (settled) return;
+      settled = true;
+      signal.removeEventListener("abort", stopped);
+      resolve(end);
+    };
+    const stopped = () => {
+      synth.cancel();
+      done("stopped");
+    };
+    signal.addEventListener("abort", stopped);
+    utterance.onend = () => done("ended");
+    // Cancelling fires an "interrupted" or "canceled" error: that is a stop, not a failure.
+    utterance.onerror = (event) =>
+      done(event.error === "interrupted" || event.error === "canceled" ? "stopped" : "failed");
+    synth.speak(utterance);
+  });
 }
 
 export const speaker = new Speaker();

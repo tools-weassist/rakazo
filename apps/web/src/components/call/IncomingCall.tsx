@@ -63,10 +63,13 @@ function startRingtone(): () => void {
 export function IncomingCall({
   bots,
   transcribe,
+  device,
   onAnswered,
 }: {
   bots: readonly Pick<Bot, "id" | "name" | "color" | "avatarSet" | "incomingCall">[];
   transcribe?: boolean;
+  /** Answer with the browser's own voice: no voice provider is connected. */
+  device?: boolean;
   onAnswered: (botId: string) => void;
 }) {
   const { t } = useLingui();
@@ -181,6 +184,7 @@ export function IncomingCall({
         botColor: bot.color,
         botAvatarSet: bot.avatarSet,
         transcribe,
+        device,
         answered: { callId: call.callId, opening: answered.opening },
       });
       onAnswered(bot.id);

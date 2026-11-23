@@ -2034,6 +2034,29 @@ describe("answered incoming call", () => {
     expect(speak).toHaveBeenCalledOnce();
   });
 
+  it("speaks with the browser's voice and listens without the provider on a device call", async () => {
+    startCall({
+      botId: "call-bot",
+      botName: "Ada",
+      transcribe: true,
+      device: true,
+      answered: { callId: "bot-call-2", opening: "Quick check-in." },
+    });
+    const feed = vi.mocked(runThreadSubscription).mock.calls.at(-1)?.[0];
+    await feed?.refresh();
+    await flushMicrotasks();
+
+    expect(speak).toHaveBeenCalledWith("Quick check-in.", {
+      botId: "call-bot",
+      callId: "bot-call-2",
+      device: true,
+    });
+    const speech = vi.mocked(speaker.subscribe).mock.calls.at(-1)?.[0];
+    speech?.({ status: "idle" });
+    await vi.advanceTimersByTimeAsync(ECHO_GUARD_MS);
+    expect(listen).toHaveBeenCalledWith(expect.objectContaining({ transcribe: false }));
+  });
+
   it("hangs up on the bot's call id", async () => {
     startCall({
       botId: "call-bot",

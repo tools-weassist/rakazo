@@ -94,6 +94,10 @@ const hangUps = new Set<Promise<void>>();
 /** Bumped when the session ends: a hang-up still queued then would run signed out or as someone else. */
 let sessionEpoch = 0;
 let transcribe: boolean | undefined;
+/** The call speaks with the browser's own voice: no provider is connected. */
+let deviceVoice = false;
+/** Speech options for the browser's own voice; empty for the provider, as before. */
+const deviceOption = () => (deviceVoice ? { device: true } : {});
 let thread: ThreadSnapshot | null = null;
 let feed: {
   controller: AbortController;
@@ -165,6 +169,8 @@ export function startCall(call: {
   botColor?: string;
   botAvatarSet?: BotAvatarSet;
   transcribe?: boolean;
+  /** Speak with the browser's own voice; listening then uses the browser too. */
+  device?: boolean;
   /** The bot called and the user picked up: no ringing, and the bot speaks first. */
   answered?: { callId: string; opening: string };
 }): void {
@@ -172,7 +178,8 @@ export function startCall(call: {
   endCall();
   prepareCallAudio();
   callId = call.answered?.callId ?? newClientId();
-  transcribe = call.transcribe;
+  deviceVoice = call.device === true;
+  transcribe = deviceVoice ? false : call.transcribe;
   spokenMemory.clear();
   replySpeech.clear();
   streamRunId = null;
@@ -256,7 +263,7 @@ export function startCall(call: {
     });
     spokenMemory.remember(opening);
     openingPending = true;
-    void speaker.speak(opening, { botId: call.botId, callId }).catch(() => {
+    void speaker.speak(opening, { botId: call.botId, callId, ...deviceOption() }).catch(() => {
       if (callId !== ringingCallId) return;
       openingPending = false;
       void listen();
@@ -535,7 +542,7 @@ function speakFarewell(payload: Record<string, unknown>) {
   awaitingReply = false;
   set({ exchanges: [...state.exchanges, { role: "bot", text: farewell }], heard: "" });
   spokenMemory.remember(farewell);
-  const options = { botId: state.botId, messageId, callId };
+  const options = { botId: state.botId, messageId, callId, ...deviceOption() };
   void (afterReply ? speaker.queue(farewell, options) : speaker.speak(farewell, options));
 }
 
@@ -791,7 +798,7 @@ function reactToThread() {
             ? t`Say yes or no, or answer in a sentence.`
             : "";
       const said = instruction ? (rest ? thenSay(rest, instruction) : instruction) : rest;
-      const options = { botId, messageId: lastBot.id, callId };
+      const options = { botId, messageId: lastBot.id, callId, ...deviceOption() };
       // The rest follows the sentences still playing; with nothing left, the turn ends once
       // they have played.
       if (!said) {
@@ -829,7 +836,12 @@ function speakAsWritten(runId: string | null, messages: readonly ThreadMessage[]
   spokenMemory.remember(sentences);
   // Until the reply lands as a message, the live message on screen is what is being read.
   void speaker
-    .queue(sentences, { botId: state.botId, messageId: progressMessageId({ runId }), callId })
+    .queue(sentences, {
+      botId: state.botId,
+      messageId: progressMessageId({ runId }),
+      callId,
+      ...deviceOption(),
+    })
     .then(() => {
       // A failed clip may have gone unheard: the finished reply is said whole instead.
       if (speaker.state.error) replySpeech.forget(runId);
