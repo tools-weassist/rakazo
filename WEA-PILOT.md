@@ -26,8 +26,18 @@ Upstream ships analytics and error reporting off by default (`ANALYTICS_PROVIDER
 anonymous telemetry notice during `pnpm dev`; run `pnpm exec turbo telemetry disable` or set
 `TURBO_TELEMETRY_DISABLED=1` on machines that run the dev stack.
 
-## Not yet rebranded
+## Attribution
 
-Remaining "Rakazo" strings in other screens, the desktop (Electron) and mobile (Expo) apps,
-emails, bot system prompts and docs links to rakazo.com, and the mobile app store links. These
-are follow-ups before any client sees Wea.
+Wea is built on Rakazo under the Apache License, Version 2.0. `LICENSE` and the NOTICE
+attributions are unchanged (required). Settings (web account menu and mobile Account) include an
+Open-source licenses screen with the credit, NOTICE, and license text. That is the intended
+place users still see the name Rakazo.
+
+## Not in this fork's product chrome
+
+Package names (`@rakazo/*`), env vars, database names, the `rakazo://` URL scheme, the Android
+package `com.rakazo.app`, desktop `appId` `dev.rakazo.desktop`, storage keys, and native
+module/target names stay as identifiers so installs, auth, and stored data keep working. The
+upstream marketing site (`apps/www`, rakazo.com) is not shipped as Wea. Official App Store / Play
+listings and some welcome-email desktop download links still point at upstream Rakazo URLs until
+Wea has its own listings.

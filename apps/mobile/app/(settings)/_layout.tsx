@@ -73,6 +73,13 @@ export default function SettingsLayout() {
         }}
       />
       <Stack.Screen
+        name="open-source-licenses"
+        options={{
+          ...glassHeaderOptions(t`Open-source licenses`),
+          contentStyle: { backgroundColor: native.groupedPage },
+        }}
+      />
+      <Stack.Screen
         name="profile"
         options={{
           ...glassHeaderOptions(t`Account`),

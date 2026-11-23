@@ -190,7 +190,7 @@ describe.skipIf(process.platform === "win32")("Claude Code CLI provider", () => 
     expect(record.frames).toEqual([
       { type: "user", message: { role: "user", content: [{ type: "text", text: "Hi" }] } },
     ]);
-    // The inventory server lists Rakazo's tools and never runs one.
+    // The inventory server lists Wea's tools and never runs one.
     expect(record.tools.init?.protocolVersion).toBe("2025-06-18");
     expect(record.tools.tools).toEqual([
       { name: "lookup", description: tools[0]!.description, inputSchema: tools[0]!.parameters },
@@ -322,7 +322,7 @@ describe.skipIf(process.platform === "win32")("Claude Code CLI provider", () => 
     expect(events.at(-1)?.type).toBe("error");
   });
 
-  it("hands a tool call back to Rakazo and stops the CLI before it goes on", async () => {
+  it("hands a tool call back to Wea and stops the CLI before it goes on", async () => {
     const cli = fakeClaude("tool");
     const { events, message } = await run(hello);
 

@@ -70,7 +70,7 @@ async function createFirstBot(deps: FirstBotDeps, actor: Actor): Promise<string 
     description: "",
     instructions: "",
     notifyOnFinish: true,
-    // Wea: the first bot wears the teal closest to the Wea brand instead of Rakazo orange.
+    // Wea: the first bot wears the teal closest to the Wea brand instead of the original orange.
     color: BOT_COLOR_LIST.find((color) => color.id === "cyan")?.hex,
     spawnKey: FIRST_BOT_SPAWN_KEY,
   });

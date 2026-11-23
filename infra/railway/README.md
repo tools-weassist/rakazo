@@ -11,7 +11,7 @@ The template runs Rakazo, PostgreSQL and agent computers on Railway. No Docker h
 1. Deploy the template. Enter your email in `OWNER_EMAIL` and a Railway workspace or account API token in `RAILWAY_API_TOKEN`.
 2. Wait for Rakazo to become healthy. Open its generated HTTPS domain.
 3. Sign in with your email and the generated `OWNER_PASSWORD` from the Rakazo service's Variables tab. Change the password in account settings.
-4. Connect your model account in Rakazo and send Chief a message.
+4. Connect your model account in Wea and send Chief a message.
 
 The token must be able to create environments and sandboxes in the project. Prefer a dedicated Railway workspace. Never place it in a bot's files or model connection settings.
 

@@ -185,7 +185,7 @@ describe("GraphQL nullable inputs", () => {
         resolveHostname: async () => [{ address: "203.0.113.10", family: 4 as const }],
         fetch: vi.fn(async (_url: unknown, init?: RequestInit) => {
           const body = JSON.parse(String(init?.body));
-          if (body.operationName === "RakazoIntrospection") {
+          if (body.operationName === "WeaIntrospection") {
             return Response.json(
               document([
                 { name: "nickname", type: scalar("String") },

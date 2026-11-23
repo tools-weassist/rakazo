@@ -55,8 +55,8 @@ describe("withAppIntents prebuild", () => {
         hasFile: (file) => files.has(file),
         pbxTargetByName: (name) => (name === "RakazoWidgets" ? {} : undefined),
         pbxNativeTargetSection: () => ({
-          "app-target": { name: "Rakazo" },
-          "app-target_comment": "Rakazo",
+          "app-target": { name: "Wea" },
+          "app-target_comment": "Wea",
           "widget-target": { name: '"RakazoWidgets"' },
         }),
         pbxXCBuildConfigurationSection: () => ({ widget: { buildSettings: widgetSettings } }),

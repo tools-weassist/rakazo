@@ -34,7 +34,7 @@ internal object SenderPush {
   fun notificationId(threadId: String) = "push:$threadId".hashCode()
 
   /**
-   * Decides a message push without Android calls, so the policy stays unit-testable. A Rakazo
+   * Decides a message push without Android calls, so the policy stays unit-testable. A Wea
    * push with no stored session belongs to an account that signed out or left for another
    * server; it is dropped here, because handing it back to Expo would still show it.
    */
@@ -70,7 +70,7 @@ internal object SenderPush {
         runCatching {
             post(context, data, data.optString("notificationTitle"), data.optString("botId"), data.optString("threadId"), foreground)
           }
-          .onFailure { Log.w("RakazoSenderPush", "Could not post push", it) }
+          .onFailure { Log.w("WeaSenderPush", "Could not post push", it) }
           .isSuccess
     }
   }
@@ -90,7 +90,7 @@ internal object SenderPush {
       data.optString("kind") in setOf("help", "takeover", "failure") -> Channels.ATTENTION
       else -> Channels.MESSAGES
     }
-    createRakazoChannels(context)
+    createWeaChannels(context)
     @Suppress("DEPRECATION")
     val builder = (if (Build.VERSION.SDK_INT >= 26) Notification.Builder(context, channel) else Notification.Builder(context))
       .setSmallIcon(R.drawable.ic_rakazo_notification)
@@ -116,7 +116,7 @@ internal object SenderPush {
         data.optString("groupId").takeIf(String::isNotBlank)?.let { putString("rakazo.groupId", it) }
       })
     runCatching { addSender(context, builder, data, title, body) }
-      .onFailure { Log.w("RakazoSenderPush", "Posting without the sender", it) }
+      .onFailure { Log.w("WeaSenderPush", "Posting without the sender", it) }
     context.getSystemService(NotificationManager::class.java).notify(notificationId(threadId), builder.build())
   }
 

@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "Rakazo",
+    "name": "Wea",
     "slug": "rakazo",
     "owner": "inbox-zero",
     "scheme": "rakazo",
@@ -26,22 +26,22 @@
         "expo-audio",
         {
           "enableBackgroundPlayback": false,
-          "microphonePermission": "Rakazo uses the microphone for voice calls with your bots."
+          "microphonePermission": "Wea uses the microphone for voice calls with your bots."
         }
       ],
       [
         "expo-speech-recognition",
         {
-          "speechRecognitionPermission": "Rakazo turns your speech into messages during voice calls.",
-          "microphonePermission": "Rakazo uses the microphone for voice calls with your bots."
+          "speechRecognitionPermission": "Wea turns your speech into messages during voice calls.",
+          "microphonePermission": "Wea uses the microphone for voice calls with your bots."
         }
       ],
       "expo-localization",
       [
         "expo-calendar",
         {
-          "calendarPermission": "Allow Rakazo to read and add events in calendars you choose for your bots.",
-          "remindersPermission": "Allow Rakazo to create and complete reminders in lists you choose for your bots."
+          "calendarPermission": "Allow Wea to read and add events in calendars you choose for your bots.",
+          "remindersPermission": "Allow Wea to create and complete reminders in lists you choose for your bots."
         }
       ],
       "@react-native-vector-icons/ionicons",
@@ -55,9 +55,9 @@
       [
         "expo-image-picker",
         {
-          "photosPermission": "Rakazo uses your photo library so you can attach images to a bot message.",
-          "cameraPermission": "Rakazo uses the camera so you can attach photos to a bot message.",
-          "microphonePermission": "Rakazo uses the microphone for voice calls with your bots."
+          "photosPermission": "Wea uses your photo library so you can attach images to a bot message.",
+          "cameraPermission": "Wea uses the camera so you can attach photos to a bot message.",
+          "microphonePermission": "Wea uses the microphone for voice calls with your bots."
         }
       ],
       "./plugins/with-share-extension",
@@ -118,9 +118,9 @@
         "usesNonExemptEncryption": false
       },
       "infoPlist": {
-        "NSCameraUsageDescription": "Rakazo uses the camera so you can attach photos to a bot message.",
-        "NSPhotoLibraryUsageDescription": "Rakazo uses your photo library so you can attach images to a bot message.",
-        "NSLocalNetworkUsageDescription": "Rakazo connects to a self-hosted Rakazo server on your local network.",
+        "NSCameraUsageDescription": "Wea uses the camera so you can attach photos to a bot message.",
+        "NSPhotoLibraryUsageDescription": "Wea uses your photo library so you can attach images to a bot message.",
+        "NSLocalNetworkUsageDescription": "Wea connects to a self-hosted Wea server on your local network.",
         "NSAppTransportSecurity": {
           "NSAllowsLocalNetworking": true
         },
