@@ -75,13 +75,16 @@ internal object IncomingCalls {
       .setCategory(Notification.CATEGORY_CALL).setVisibility(Notification.VISIBILITY_PUBLIC)
       .setContentIntent(open).setOngoing(Build.VERSION.SDK_INT >= 26).setOnlyAlertOnce(true)
     if (Build.VERSION.SDK_INT >= 26) builder.setTimeoutAfter(maxOf(1, expiry(call) - System.currentTimeMillis()))
-    if (Build.VERSION.SDK_INT >= 31) builder.setStyle(Notification.CallStyle.forIncomingCall(
+    // CallStyle must carry a full-screen intent. The app doesn't hold USE_FULL_SCREEN_INTENT (Play
+    // policy), and only Android 14+ still posts a call whose full-screen intent was denied, as a
+    // heads-up; earlier versions would refuse it, so they get plain Answer and Decline actions.
+    if (Build.VERSION.SDK_INT >= 34) builder.setStyle(Notification.CallStyle.forIncomingCall(
       Person.Builder().setName(call.optString("botName", "Rakazo")).setImportant(true).build(), decline, answer))
     else {
       builder.addAction(Notification.Action.Builder(null, copy.getString(R.string.rakazo_call_decline), decline).build())
       builder.addAction(Notification.Action.Builder(null, copy.getString(R.string.rakazo_call_answer), answer).build())
     }
-    // CallStyle requires a full-screen intent; without full-screen access Android 14+ shows it as a heads-up.
+    // Without full-screen access this rings as a heads-up notification rather than taking the screen.
     builder.setFullScreenIntent(open, true)
     val notification = builder.build()
     if (Build.VERSION.SDK_INT >= 26) notification.flags = notification.flags or Notification.FLAG_INSISTENT

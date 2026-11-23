@@ -3,6 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "expo-router";
 import { useEffect, useState } from "react";
 import type { MobileSnapshot } from "../../lib/api/mobile-types";
+import { inAppPurchasesHidden } from "../../lib/billing/store-build";
 import { computerHoursOutCopy, runErrorActionLabel } from "../../lib/cards/run-error-presentation";
 import { openModelSettings } from "../../lib/models/model-settings";
 import { queryClient, rpcQuery } from "../../lib/query/query";
@@ -32,7 +33,7 @@ export function useThreadRunError(run: MobileSnapshot["run"] | undefined, botId?
   const normalizedRunError =
     classified && hoursOut ? { ...classified, summary: hoursOut.summary } : classified;
   const label = needsPlan
-    ? billing?.canManage
+    ? billing?.canManage && !inAppPurchasesHidden()
       ? (hoursOut?.action ?? null)
       : null
     : normalizedRunError

@@ -194,3 +194,35 @@ it("names the action group after the message so each message's buttons are told 
   act(() => otherRoot.unmount());
   other.remove();
 });
+
+it("offers Report on a bot message only when the chat can report", async () => {
+  const onReport = vi.fn();
+  const render = (target: ThreadMessage, report?: (message: ThreadMessage) => void) =>
+    act(() =>
+      root.render(
+        <MessageHoverActions
+          message={target}
+          side="end"
+          onReply={vi.fn()}
+          onMarkUnread={vi.fn()}
+          onReact={vi.fn<(message: ThreadMessage, reaction: MessageReaction) => Promise<void>>()}
+          onReport={report}
+        />,
+      ),
+    );
+  const more = () => document.querySelector<HTMLButtonElement>('button[aria-label="More"]');
+
+  render(message, onReport);
+  await click(more());
+  await click(menuItem("Report"));
+  expect(onReport).toHaveBeenCalledWith(message);
+
+  render({ ...message, id: "m2", role: "user" }, onReport);
+  await click(more());
+  expect(menuItem("Report")).toBeUndefined();
+  await click(more());
+
+  render(message);
+  await click(more());
+  expect(menuItem("Report")).toBeUndefined();
+});

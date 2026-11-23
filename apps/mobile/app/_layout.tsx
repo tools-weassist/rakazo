@@ -570,6 +570,16 @@ function LayoutContent() {
                         }}
                       />
                       <Stack.Screen
+                        name="report-message"
+                        options={{
+                          title: t`Report message`,
+                          presentation: "formSheet",
+                          sheetAllowedDetents: [0.75, 1],
+                          sheetGrabberVisible: true,
+                          contentStyle: { backgroundColor: native.groupedPage },
+                        }}
+                      />
+                      <Stack.Screen
                         name="page-share"
                         options={{
                           title: t`Share`,

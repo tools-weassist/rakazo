@@ -47,6 +47,7 @@ import {
   setPaywallShown,
   subscribedPlan,
 } from "../lib/billing/billing";
+import { inAppPurchasesHidden } from "../lib/billing/store-build";
 import { endCallBeforeSessionEnd } from "../lib/calls/call-session";
 import { dateLocaleForUi } from "../lib/i18n/i18n";
 import { FORM_COLUMN_WIDTH } from "../lib/layout/adaptive-layout";
@@ -259,6 +260,26 @@ export default function Paywall() {
       {deletion.dialog}
     </View>
   );
+
+  // Play builds sell nothing in the app (lib/billing/store-build.ts): no plans, prices or checkout.
+  if (inAppPurchasesHidden()) {
+    return (
+      <View style={[styles.screen, { backgroundColor: tokens.background }]}>
+        {topBar}
+        <View style={[styles.screen, styles.center]}>
+          <View style={styles.failed}>
+            <Text accessibilityRole="header" style={[styles.title, { color: tokens.foreground }]}>
+              {t`No active plan`}
+            </Text>
+            <Text style={[styles.lead, { color: tokens.mutedForeground }]}>
+              {t`This Wea account doesn't have an active plan right now. Plans can't be bought or changed in this app.`}
+            </Text>
+            <NativeActionButton label={t`Check again`} prominence="secondary" onPress={load} />
+          </View>
+        </View>
+      </View>
+    );
+  }
 
   if (!status) {
     return (

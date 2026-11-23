@@ -7,6 +7,7 @@ export const messageMenuSymbols = [
   "select",
   "selectMessages",
   "unread",
+  "report",
 ] as const;
 
 export type MessageMenuSymbol = (typeof messageMenuSymbols)[number];
@@ -44,6 +45,8 @@ export function buildMessageContextMenu({
     select: boolean;
     selectMessages?: boolean;
     unread?: boolean;
+    /** Flag a bot's message as offensive or harmful (Google Play's AI content rule). */
+    report?: boolean;
   };
 }): MessageMenuEntry[] {
   const secondary: MessageMenuEntry[] = [
@@ -74,6 +77,16 @@ export function buildMessageContextMenu({
             title: "",
             displayInline: true,
             subactions: secondary,
+          },
+        ]
+      : []),
+    ...(include.report
+      ? [
+          {
+            id: "reportGroup",
+            title: "",
+            displayInline: true,
+            subactions: [entry("report", labels.report)],
           },
         ]
       : []),

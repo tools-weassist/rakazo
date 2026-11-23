@@ -29,11 +29,14 @@ import { errorText } from "../../lib/api/user-error";
 import { signOut } from "../../lib/auth/api-auth";
 import { replaceWithSignIn } from "../../lib/auth/auth-routing";
 import { selfHosted, showSelfHostedSupport } from "../../lib/billing/self-hosted-support";
+import { inAppPurchasesHidden } from "../../lib/billing/store-build";
 import { endCallBeforeSessionEnd } from "../../lib/calls/call-session";
 import { dateLocaleForUi, useUiLocale } from "../../lib/i18n/i18n";
 import { useSideInsets } from "../../lib/layout/side-insets";
 import { native, useMobileTokens, useThemedStyles } from "../../lib/native/native";
 import { formatUpdateLabel, getAppVersionInfo } from "../../lib/platform/app-version";
+import { WEA_PRIVACY_URL } from "../../lib/platform/legal-links";
+import { openExternalUrl } from "../../lib/platform/open-url";
 import { openWriteReview, writeReviewUrl } from "../../lib/platform/store-review";
 import { openStoreListing, useStoreUpdateAvailable } from "../../lib/platform/store-update";
 import { ACCOUNT_SETTINGS } from "../../lib/query/settings-target";
@@ -411,13 +414,22 @@ export default function Account() {
                 icon: { ios: "person.2", android: "people-outline" },
               })
             : null}
-          {me?.billingEnabled
+          {me?.billingEnabled && !inAppPurchasesHidden()
             ? settingsLink({
                 title: t`Billing`,
                 href: "/billing",
                 icon: { ios: "creditcard", android: "card-outline" },
               })
             : null}
+        </SettingsGroup>
+
+        <SettingsGroup>
+          <SettingsRow
+            accessibilityRole="link"
+            leading={icon({ ios: "hand.raised", android: "document-text-outline" })}
+            title={t`Privacy policy`}
+            onPress={() => void openExternalUrl(WEA_PRIVACY_URL)}
+          />
         </SettingsGroup>
 
         {writeReviewUrl() || selfHosted() ? (

@@ -52,6 +52,7 @@ import { IntegrationCallbackPage } from "./pages/integrations/IntegrationCallbac
 import { IntegrationSetupPage } from "./pages/integrations/IntegrationSetup";
 import { McpOAuthCallbackPage } from "./pages/integrations/McpOAuthCallback";
 import { SlackInstallCallbackPage } from "./pages/integrations/SlackInstallCallback";
+import { isLegalPath, LegalPage } from "./pages/legal/LegalPages";
 import { SharedPagePage } from "./pages/SharedPage";
 import { ShellPage } from "./pages/Shell";
 import { AppRailLayout } from "./pages/shell/app-rail";
@@ -109,7 +110,10 @@ export function App() {
     <RemoteImagesContext.Provider value={loadRemoteImages}>
       <LinkFaviconsContext.Provider value={linkFavicons}>
         <ErrorBoundary fallback={<AppFailed />}>
-          {window.location.pathname === SSO_CALLBACK_PATH ? (
+          {isLegalPath(window.location.pathname) ? (
+            // Public pages Google Play links to: served without a session, signed in or not.
+            <LegalPage pathname={window.location.pathname} />
+          ) : window.location.pathname === SSO_CALLBACK_PATH ? (
             <SsoCallbackPage />
           ) : window.location.pathname === "/integrations/callback" ? (
             <IntegrationCallbackPage />

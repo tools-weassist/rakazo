@@ -41,6 +41,8 @@ import { useParams } from "react-router-dom";
 import { CallCard, CallReturnBar } from "../components/call/CallCard";
 import { IncomingCall } from "../components/call/IncomingCall";
 import { ComputerUpdateProgress } from "../components/computers/ComputerUpdateProgress";
+import type { ReportMessageTarget } from "../components/messages/ReportMessageDialog";
+import { ReportMessageDialog } from "../components/messages/ReportMessageDialog";
 import { PageLoading } from "../components/PageLoading";
 import { PageViewHost } from "../components/pages/PageViewHost";
 import { authClient } from "../lib/auth/auth";
@@ -890,6 +892,14 @@ function SpaceShell() {
     },
     [active?.id, groupId, read.markBotUnread, read.markGroupUnreadFrom],
   );
+  const [reportTarget, setReportTarget] = useState<ReportMessageTarget | null>(null);
+  const reportMessage = useCallback(
+    (message: ThreadMessage) => {
+      if (groupId) setReportTarget({ groupId, messageId: message.id });
+      else if (active?.id) setReportTarget({ botId: active.id, messageId: message.id });
+    },
+    [active?.id, groupId],
+  );
   const openPeerMessages = useCallback(
     (peer: { peerBotId: string; peerBotName: string }) => {
       setPeerConversation(peer);
@@ -1230,6 +1240,7 @@ function SpaceShell() {
               onAnswer={composer.answerMessage}
               onReply={replyToMessage}
               onMarkUnread={markMessageUnread}
+              onReport={reportMessage}
               onQuote={quoteMessage}
               onQuoteShortcutChange={registerQuoteShortcut}
               onReact={composer.reactToMessage}
@@ -1250,6 +1261,7 @@ function SpaceShell() {
               rpc={rpc}
             />
           )}
+          <ReportMessageDialog target={reportTarget} onClose={() => setReportTarget(null)} />
         </div>
         {active || activeGroup ? (
           // Let messages continue behind the composer's rounded top corners.

@@ -93,6 +93,7 @@ export const MessageView = memo(function MessageView({
   onMarkUnread,
   markedUnread = false,
   onReact,
+  onReport,
 }: {
   artifactTarget: ArtifactTarget;
   canAnswer: boolean;
@@ -148,6 +149,8 @@ export const MessageView = memo(function MessageView({
   onMarkUnread: (message: ThreadMessage) => void;
   markedUnread?: boolean;
   onReact: (message: ThreadMessage, reaction: MessageReaction) => Promise<void>;
+  /** Reports a bot's message as offensive or harmful. */
+  onReport?: (message: ThreadMessage) => void;
 }) {
   const { t } = useLingui();
   const isNarration =
@@ -262,6 +265,7 @@ export const MessageView = memo(function MessageView({
       onMarkUnread={onMarkUnread}
       markedUnread={markedUnread}
       onReact={onReact}
+      onReport={onReport}
     />
   );
   if (isNarration) {

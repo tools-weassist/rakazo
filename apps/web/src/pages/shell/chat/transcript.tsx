@@ -102,6 +102,7 @@ export const Transcript = memo(function Transcript({
   onQuote,
   onQuoteShortcutChange,
   onReact,
+  onReport,
   onJumpToMessage,
   onOpenPeerMessages,
   memberName,
@@ -151,6 +152,8 @@ export const Transcript = memo(function Transcript({
   ) => Promise<void>;
   onReply: (message: ThreadMessage) => void;
   onMarkUnread: (message: ThreadMessage) => void;
+  /** Reports a bot's message as offensive or harmful. */
+  onReport?: (message: ThreadMessage) => void;
   markedUnreadMessageId?: string;
   onQuote: (message: ThreadMessage, quote: string) => void;
   onQuoteShortcutChange?: (handler: (() => boolean) | null) => void;
@@ -768,6 +771,7 @@ export const Transcript = memo(function Transcript({
                       onReply={onReply}
                       onMarkUnread={onMarkUnread}
                       onReact={onReact}
+                      onReport={onReport}
                     />
                   </div>
                 </div>

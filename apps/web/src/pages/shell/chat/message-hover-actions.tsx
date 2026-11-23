@@ -1,7 +1,11 @@
 import { i18n } from "@lingui/core";
 import { Trans, useLingui } from "@lingui/react/macro";
 import type { MessageReaction, ThreadMessage } from "@rakazo/contracts";
-import { canReactToThreadMessage, MESSAGE_REACTIONS } from "@rakazo/contracts";
+import {
+  canReactToThreadMessage,
+  canReportThreadMessage,
+  MESSAGE_REACTIONS,
+} from "@rakazo/contracts";
 import { canMarkMessageUnread, copyableMessageText, formatTimeSeparator } from "@rakazo/core";
 import {
   CopyTextFallback,
@@ -14,7 +18,7 @@ import {
   PopoverTrigger,
   useCopyText,
 } from "@rakazo/ui-web";
-import { Check, Copy, MessageSquareDot, MoreHorizontal, Reply, Smile } from "lucide-react";
+import { Check, Copy, Flag, MessageSquareDot, MoreHorizontal, Reply, Smile } from "lucide-react";
 import { useState } from "react";
 import { MessageHoverMetadata } from "../../../components/messages/MessageHoverMetadata";
 
@@ -26,6 +30,7 @@ export function MessageHoverActions({
   onMarkUnread,
   markedUnread = false,
   onReact,
+  onReport,
 }: {
   message: ThreadMessage;
   side: "start" | "end";
@@ -35,6 +40,8 @@ export function MessageHoverActions({
   onMarkUnread: (message: ThreadMessage) => void;
   markedUnread?: boolean;
   onReact: (message: ThreadMessage, reaction: MessageReaction) => Promise<void>;
+  /** Reports a bot's message as offensive or harmful; without it there is no Report item. */
+  onReport?: (message: ThreadMessage) => void;
 }) {
   const { t } = useLingui();
   const [copiedNow, copy, copyFailed, resetCopy, copyFailedText] = useCopyText();
@@ -142,6 +149,18 @@ export function MessageHoverActions({
               <Copy size={14} strokeWidth={1.7} />
               <Trans>Copy</Trans>
             </DropdownMenuItem>
+            {onReport && canReportThreadMessage(message) ? (
+              <DropdownMenuItem
+                data-testid="report-message"
+                onClick={() => {
+                  setMoreOpen(false);
+                  onReport(message);
+                }}
+              >
+                <Flag size={14} strokeWidth={1.7} />
+                <Trans>Report</Trans>
+              </DropdownMenuItem>
+            ) : null}
           </DropdownMenuContent>
         </DropdownMenu>
         <span role="status" className="sr-only">

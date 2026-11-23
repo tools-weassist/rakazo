@@ -42,6 +42,7 @@ import { NativeActionButton } from "../components/native/native-action-button";
 import { currentApiBase, rpc } from "../lib/api/api";
 import { errorText } from "../lib/api/user-error";
 import { stacksAtTextScale } from "../lib/appearance/text-scale";
+import { inAppPurchasesHidden } from "../lib/billing/store-build";
 import {
   COMPUTER_LIFECYCLE_TIMEOUT_MS,
   computerLabel,
@@ -490,7 +491,7 @@ export default function Computer() {
         </Text>
       ) : null}
       {retryScreenAction}
-      {allowanceUsed ? (
+      {allowanceUsed && !inAppPurchasesHidden() ? (
         <NativeActionButton
           label={t`Upgrade`}
           prominence="primary"
