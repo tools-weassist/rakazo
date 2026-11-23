@@ -33,6 +33,14 @@ export async function rpc<T>(page: Page, procedure: string, body: unknown): Prom
   return parsed.json as T;
 }
 
+/** Skips Wea's onboarding questions, waiting for the save so a reload does not ask again. */
+export async function skipSignupSurvey(page: Page) {
+  await expect(page.getByRole("heading", { name: "Welcome to Wea" })).toBeVisible();
+  const saved = page.waitForResponse("**/rpc/onboarding/signupSurvey");
+  await page.getByRole("button", { name: "Skip for now", exact: true }).click();
+  await saved;
+}
+
 export async function completeOnboarding(page: Page, testInfo?: TestInfo) {
   await page.waitForURL(/\/(onboarding|app)/, { timeout: 20_000 });
   // Optional Server integrations step (needsSetup). Skip when shown, then the
@@ -43,7 +51,7 @@ export async function completeOnboarding(page: Page, testInfo?: TestInfo) {
   const survey = page.getByRole("heading", { name: "Welcome to Wea" });
   await integrations.or(chief).or(survey).waitFor({ timeout: 20_000 });
   if (await survey.isVisible().catch(() => false)) {
-    await page.getByRole("button", { name: "Skip for now", exact: true }).click();
+    await skipSignupSurvey(page);
     await integrations.or(chief).waitFor({ timeout: 20_000 });
   }
   if ((await chief.isVisible().catch(() => false)) && page.url().includes("/app")) {

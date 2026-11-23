@@ -1,5 +1,5 @@
 import { expect, test } from "@playwright/test";
-import { captureScreenshot, signup } from "../helpers/helpers";
+import { captureScreenshot, signup, skipSignupSurvey } from "../helpers/helpers";
 
 test.afterEach(async ({ page }) => {
   // Not "wait": a handler whose fulfill() lost a race to the route teardown never settles,
@@ -24,6 +24,7 @@ test("onboarding cannot continue with an empty or failed model catalog", async (
   );
   const stamp = Date.now();
   await signup(page, `catalog-${stamp}@rakazo.test`, "password12", "Model setup");
+  await skipSignupSurvey(page);
 
   for (const next of ["empty", "failed"] as const) {
     if (next === "failed") {
@@ -52,6 +53,7 @@ test("hosted compatible providers appear in onboarding and require a key", async
   });
   const stamp = Date.now();
   await signup(page, `hosted-models-${stamp}@rakazo.test`, "password12", "Model setup");
+  await skipSignupSurvey(page);
   await expect(page.getByRole("heading", { name: "Connect a model" })).toBeVisible();
   const providerPicker = page.getByRole("combobox", { name: "Provider" });
   const continueButton = page.getByRole("button", { name: "Continue", exact: true });
@@ -107,6 +109,7 @@ test("Rakazo credits are chosen like a provider, with nothing else to fill in", 
     await route.fulfill({ json: { json: { ok: true } } });
   });
   await signup(page, `credits-${Date.now()}@rakazo.test`, "password12", "Credits");
+  await skipSignupSurvey(page);
   await expect(page.getByRole("heading", { name: "Connect a model" })).toBeVisible({
     timeout: 20_000,
   });
