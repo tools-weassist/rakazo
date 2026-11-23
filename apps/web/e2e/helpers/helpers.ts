@@ -39,7 +39,13 @@ export async function completeOnboarding(page: Page, testInfo?: TestInfo) {
   // first bot is created automatically — land in Chief's chat with no form.
   const integrations = page.getByRole("heading", { name: "Server integrations", exact: true });
   const chief = page.getByText("Chief").first();
-  await integrations.or(chief).waitFor({ timeout: 20_000 });
+  // Every new account is asked Wea's onboarding questions; skipping keeps the usual first chat.
+  const survey = page.getByRole("heading", { name: "Welcome to Wea" });
+  await integrations.or(chief).or(survey).waitFor({ timeout: 20_000 });
+  if (await survey.isVisible().catch(() => false)) {
+    await page.getByRole("button", { name: "Skip for now", exact: true }).click();
+    await integrations.or(chief).waitFor({ timeout: 20_000 });
+  }
   if ((await chief.isVisible().catch(() => false)) && page.url().includes("/app")) {
     if (testInfo) {
       await captureScreenshot(page, testInfo, "03-create-first-bot");

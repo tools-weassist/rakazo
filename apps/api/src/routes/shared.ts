@@ -94,8 +94,8 @@ export async function meDto(deps: RouterDeps, actor: Actor): Promise<Me> {
     timezone: user.timezone ?? null,
     locale: user.locale ?? null,
     billingEnabled: Boolean(deps.billing),
-    // Only billing deployments ask; self-hosted installs never see the survey.
-    needsSignupSurvey: Boolean(deps.billing) && !user.signupSurvey,
+    // Wea asks every new account, billing or not: the answers pick its starter bot or team.
+    needsSignupSurvey: !user.signupSurvey,
     paymentWalletProvider: deps.paymentWallet
       ? { id: deps.paymentWallet.describe().id, name: deps.paymentWallet.displayName }
       : null,

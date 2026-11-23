@@ -131,13 +131,18 @@ model User {
 
 /// A row with no answers means the user skipped the survey.
 model SignupSurvey {
-  userId    String   @id
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  reason    String?
-  use       String?
-  teamSize  String?
-  source    String?
-  createdAt DateTime @default(now())
+  userId     String   @id
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  reason     String?
+  use        String?
+  teamSize   String?
+  source     String?
+  /// Wea onboarding: who they are, where their AI brain lives, what they want help with first.
+  role       String?
+  roleDetail String?
+  brain      String?
+  needs      String[] @default([])
+  createdAt  DateTime @default(now())
 
   @@map("signup_surveys")
 }

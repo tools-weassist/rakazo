@@ -20,6 +20,7 @@ function fixture(
     deletion?: Row;
     created?: string;
     madeSpaces?: string[];
+    recommended?: boolean;
   } = {},
 ) {
   const deps = {
@@ -40,6 +41,7 @@ function fixture(
     ),
     introduce: vi.fn(async () => undefined),
     promptFocus: vi.fn(async () => undefined),
+    recommend: vi.fn(async () => options.recommended ?? false),
   };
   return { deps, run: () => ensureFirstBot(deps as unknown as FirstBotDeps, actor) };
 }
@@ -58,6 +60,14 @@ describe("ensureFirstBot", () => {
     expect(deps.introduce.mock.invocationCallOrder[0]).toBeLessThan(
       deps.promptFocus.mock.invocationCallOrder[0]!,
     );
+  });
+
+  it("opens with the starter pick instead of the intro when the answers give one", async () => {
+    const { deps, run } = fixture({ recommended: true });
+    await expect(run()).resolves.toEqual({ botId: "chief-new" });
+    expect(deps.recommend).toHaveBeenCalledWith(actor, "chief-new");
+    expect(deps.introduce).not.toHaveBeenCalled();
+    expect(deps.promptFocus).not.toHaveBeenCalled();
   });
 
   it("reuses the bot with the first-run key before a legacy Chief", async () => {
