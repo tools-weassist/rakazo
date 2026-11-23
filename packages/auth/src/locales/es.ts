@@ -96,7 +96,6 @@ export const ES_MESSAGES: Record<string, string> = {
     "También funciona con cualquier otro asistente: envíale un prompt y pega su respuesta.",
   "Import an agent": "Importar un agente",
   "Welcome to Wea. Here's how to get started:": "Te damos la bienvenida a Wea. Así puedes empezar:",
-  "Open Wea": "Abre Wea",
   "Sign in at {web} from any browser. Your first bot is waiting there to help you set up.":
     "Inicia sesión en {web} desde cualquier navegador. Tu primer bot te espera allí para ayudarte a configurarlo todo.",
   "Android app": "App para Android",

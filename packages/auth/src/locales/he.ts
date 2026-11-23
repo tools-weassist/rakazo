@@ -93,7 +93,6 @@ export const HE_MESSAGES: Record<string, string> = {
     "זה עובד גם עם כל עוזר אחר: שלחו לו פרומפט אחד והדביקו את התשובה שלו.",
   "Import an agent": "ייבוא סוכן",
   "Welcome to Wea. Here's how to get started:": "ברוכים הבאים ל-Wea. כך מתחילים:",
-  "Open Wea": "פתיחת Wea",
   "Sign in at {web} from any browser. Your first bot is waiting there to help you set up.":
     "התחברו ב-{web} מכל דפדפן. הבוט הראשון שלכם מחכה שם כדי לעזור לכם בהגדרה.",
   "Android app": "אפליקציית Android",

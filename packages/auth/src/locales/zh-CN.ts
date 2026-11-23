@@ -88,7 +88,6 @@ export const ZH_CN_MESSAGES: Record<string, string> = {
     "其他任何助手也可以：给它发送一条提示词，再粘贴它的回复。",
   "Import an agent": "导入智能体",
   "Welcome to Wea. Here's how to get started:": "欢迎使用 Wea。按以下步骤开始：",
-  "Open Wea": "打开 Wea",
   "Sign in at {web} from any browser. Your first bot is waiting there to help you set up.":
     "在任意浏览器中登录 {web}。你的第一个机器人正在那里等你，帮你完成设置。",
   "Android app": "Android 应用",

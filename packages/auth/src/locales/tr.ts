@@ -98,7 +98,6 @@ export const TR_MESSAGES: Record<string, string> = {
     "Başka herhangi bir asistanla da çalışır: ona tek bir istem gönderin ve yanıtını yapıştırın.",
   "Import an agent": "Ajan içe aktar",
   "Welcome to Wea. Here's how to get started:": "Wea'ya hoş geldiniz. Başlamak için:",
-  "Open Wea": "Wea'yı açın",
   "Sign in at {web} from any browser. Your first bot is waiting there to help you set up.":
     "Herhangi bir tarayıcıdan {web} adresinde oturum açın. İlk botunuz kurulumda yardım etmek için orada sizi bekliyor.",
   "Android app": "Android uygulaması",

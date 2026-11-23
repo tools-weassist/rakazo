@@ -94,7 +94,6 @@ export const HI_MESSAGES: Record<string, string> = {
     "यह किसी भी दूसरे असिस्टेंट के साथ भी काम करता है: उसे एक प्रॉम्प्ट भेजें और उसका जवाब पेस्ट करें।",
   "Import an agent": "एजेंट इंपोर्ट करें",
   "Welcome to Wea. Here's how to get started:": "Wea में आपका स्वागत है। ऐसे शुरू करें:",
-  "Open Wea": "Wea खोलें",
   "Sign in at {web} from any browser. Your first bot is waiting there to help you set up.":
     "किसी भी ब्राउज़र से {web} पर साइन इन करें। आपका पहला बॉट वहाँ सेटअप में मदद के लिए इंतज़ार कर रहा है।",
   "Android app": "Android ऐप",
