@@ -74,14 +74,63 @@ export function signupSurveyTeamSizeLabel(size: (typeof SIGNUP_SURVEY_TEAM_SIZES
   return size === "201+" ? "200+" : size.replace("-", "–");
 }
 
+export const SIGNUP_SURVEY_ROLES = ["business_owner", "va", "agency", "exploring"] as const;
+export type SignupSurveyRole = (typeof SIGNUP_SURVEY_ROLES)[number];
+/** The follow-up answers each role is asked; exploring has no follow-up. */
+export const SIGNUP_SURVEY_ROLE_DETAILS = {
+  business_owner: ["has_va", "hiring", "solo"],
+  va: ["one_client", "many_clients", "seeking"],
+  agency: ["1-5", "6-20", "20+"],
+  exploring: [],
+} as const satisfies Record<SignupSurveyRole, readonly string[]>;
+/** "unsure" is "What's an AI brain?", read as no brain yet. */
+export const SIGNUP_SURVEY_BRAINS = [
+  "drive",
+  "notion",
+  "assistant",
+  "other",
+  "none",
+  "unsure",
+] as const;
+/** What each role can pick first, up to two. */
+export const SIGNUP_SURVEY_NEEDS = {
+  business_owner: ["email", "delegate", "sops", "marketing", "money", "reports"],
+  va: ["eod", "client_inbox", "handoffs", "find_clients", "get_paid", "ai_skills"],
+  agency: ["coverage", "onboarding_vas", "sops", "client_reports", "billing"],
+  exploring: ["email", "research", "everything"],
+} as const satisfies Record<SignupSurveyRole, readonly string[]>;
+export const SIGNUP_SURVEY_MAX_NEEDS = 2;
+
 /** Every answer is optional; an empty survey records that the user skipped it. */
-export const SignupSurveySchema = z.object({
-  reason: z.string().trim().max(2000).optional(),
-  use: z.enum(SIGNUP_SURVEY_USES).optional(),
-  /** Only kept when the survey asks it; see signupSurveyAsksTeamSize. */
-  teamSize: z.enum(SIGNUP_SURVEY_TEAM_SIZES).optional(),
-  source: z.string().trim().max(500).optional(),
-});
+export const SignupSurveySchema = z
+  .object({
+    reason: z.string().trim().max(2000).optional(),
+    use: z.enum(SIGNUP_SURVEY_USES).optional(),
+    /** Only kept when the survey asks it; see signupSurveyAsksTeamSize. */
+    teamSize: z.enum(SIGNUP_SURVEY_TEAM_SIZES).optional(),
+    source: z.string().trim().max(500).optional(),
+    role: z.enum(SIGNUP_SURVEY_ROLES).optional(),
+    roleDetail: z.string().max(40).optional(),
+    brain: z.enum(SIGNUP_SURVEY_BRAINS).optional(),
+    needs: z.array(z.string().max(40)).max(SIGNUP_SURVEY_MAX_NEEDS).optional(),
+  })
+  // A follow-up or need only counts for the role that offers it.
+  .refine(
+    (survey) =>
+      !survey.roleDetail ||
+      (survey.role !== undefined &&
+        (SIGNUP_SURVEY_ROLE_DETAILS[survey.role] as readonly string[]).includes(survey.roleDetail)),
+    { path: ["roleDetail"] },
+  )
+  .refine(
+    (survey) =>
+      !survey.needs?.length ||
+      (survey.role !== undefined &&
+        survey.needs.every((need) =>
+          (SIGNUP_SURVEY_NEEDS[survey.role!] as readonly string[]).includes(need),
+        )),
+    { path: ["needs"] },
+  );
 export type SignupSurvey = z.infer<typeof SignupSurveySchema>;
 
 export function signupSurveyAsksTeamSize(use: SignupSurvey["use"]): boolean {

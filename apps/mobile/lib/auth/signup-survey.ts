@@ -1,30 +1,20 @@
-import type { SignupSurvey } from "@rakazo/contracts";
-import {
-  SIGNUP_SURVEY_TEAM_SIZES,
-  signupSurveyAsksTeamSize,
-  signupSurveyTeamSizeLabel,
-} from "@rakazo/contracts";
+import type { SignupSurvey, SignupSurveyRole } from "@rakazo/contracts";
 
-export type SignupSurveyTeamSize = (typeof SIGNUP_SURVEY_TEAM_SIZES)[number];
-
-export const SIGNUP_SURVEY_TEAM_SIZE_CHOICES = SIGNUP_SURVEY_TEAM_SIZES.map((key) => ({
-  key,
-  label: signupSurveyTeamSizeLabel(key),
-}));
-
-/** Trimmed answers with blanks left out; team size only counts when it was asked. */
+/** The answers to send, blanks left out; a follow-up or need only counts with its role. */
 export function signupSurveyAnswers(form: {
-  reason: string;
-  use?: SignupSurvey["use"];
-  teamSize?: SignupSurveyTeamSize;
+  role?: SignupSurveyRole;
+  roleDetail?: string;
+  brain?: SignupSurvey["brain"];
+  needs: (string | undefined)[];
   source: string;
 }): SignupSurvey {
-  const reason = form.reason.trim();
   const source = form.source.trim();
+  const needs = [...new Set(form.needs.filter((need): need is string => Boolean(need)))];
   return {
-    ...(reason ? { reason } : {}),
-    ...(form.use ? { use: form.use } : {}),
-    ...(signupSurveyAsksTeamSize(form.use) && form.teamSize ? { teamSize: form.teamSize } : {}),
+    ...(form.role ? { role: form.role } : {}),
+    ...(form.role && form.roleDetail ? { roleDetail: form.roleDetail } : {}),
+    ...(form.brain ? { brain: form.brain } : {}),
+    ...(form.role && needs.length ? { needs } : {}),
     ...(source ? { source } : {}),
   };
 }

@@ -1,0 +1,86 @@
+// @vitest-environment jsdom
+
+import type { ReactNode } from "react";
+import { act } from "react";
+import type { Root } from "react-dom/client";
+import { createRoot } from "react-dom/client";
+import { afterEach, beforeEach, expect, it, vi } from "vitest";
+
+const signupSurvey = vi.hoisted(() => vi.fn(async () => ({ ok: true })));
+vi.mock("../../lib/query/rpc", () => ({ rpc: { onboarding: { signupSurvey } } }));
+vi.mock("@lingui/react/macro", () => {
+  const t = (parts: TemplateStringsArray, ...values: unknown[]) => String.raw(parts, ...values);
+  return {
+    useLingui: () => ({ t }),
+    Trans: ({ children }: { children?: ReactNode }) => children,
+  };
+});
+
+import { SignupSurvey } from "./SignupSurvey";
+
+let container: HTMLDivElement;
+let root: Root;
+const onDone = vi.fn();
+
+beforeEach(async () => {
+  vi.stubGlobal("IS_REACT_ACT_ENVIRONMENT", true);
+  signupSurvey.mockClear();
+  onDone.mockClear();
+  container = document.createElement("div");
+  document.body.appendChild(container);
+  root = createRoot(container);
+  await act(async () => root.render(<SignupSurvey onDone={onDone} />));
+});
+afterEach(async () => {
+  await act(async () => root.unmount());
+  container.remove();
+  vi.unstubAllGlobals();
+});
+
+function button(name: string): HTMLButtonElement {
+  const found = [...container.querySelectorAll("button")].find(
+    (element) => element.textContent?.trim() === name,
+  );
+  if (!found) throw new Error(`No button ${name}`);
+  return found;
+}
+async function click(name: string) {
+  await act(async () => button(name).click());
+}
+
+it("sends the persona, brain and up to two first needs", async () => {
+  expect(container.textContent).toContain("Welcome to Wea");
+  expect(container.textContent).not.toContain("Rakazo");
+  await click("I'm a virtual assistant (VA)");
+  await click("One client");
+  await click("Yes, in Google Drive");
+  await click("Client reports (EOD)");
+  await click("Handoffs across time zones");
+  await click("Learning AI skills");
+  await click("Continue");
+  expect(signupSurvey).toHaveBeenCalledWith({
+    role: "va",
+    roleDetail: "one_client",
+    brain: "drive",
+    needs: ["handoffs", "ai_skills"],
+  });
+  expect(onDone).toHaveBeenCalled();
+});
+
+it("drops a follow-up from another role and explains an AI brain", async () => {
+  await click("I'm a business owner");
+  await click("Yes, one or more");
+  await click("Just exploring");
+  expect(container.textContent).not.toContain("Do you work with a VA today?");
+  await click("What's an AI brain?");
+  expect(container.textContent).toContain("We can set one up for you.");
+  await click("Continue");
+  expect(signupSurvey).toHaveBeenCalledWith({ role: "exploring", brain: "unsure" });
+});
+
+it("skips everything", async () => {
+  await click("I'm a business owner");
+  await click("Skip for now");
+  expect(signupSurvey).toHaveBeenCalledWith({});
+  expect(onDone).toHaveBeenCalled();
+});

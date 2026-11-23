@@ -97,7 +97,6 @@ export const KO_MESSAGES: Record<string, string> = {
     "다른 어시스턴트에서도 됩니다. 프롬프트 하나를 보내고 답변을 붙여넣으세요.",
   "Import an agent": "에이전트 가져오기",
   "Welcome to Wea. Here's how to get started:": "Wea에 오신 것을 환영합니다. 이렇게 시작하세요:",
-  "Open Wea": "Wea 열기",
   "Sign in at {web} from any browser. Your first bot is waiting there to help you set up.":
     "아무 브라우저에서나 {web}에 로그인하세요. 첫 번째 봇이 설정을 도와드리려고 기다리고 있어요.",
   "Android app": "Android 앱",

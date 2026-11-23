@@ -97,7 +97,6 @@ export const JA_MESSAGES: Record<string, string> = {
     "ほかのアシスタントでも使えます。プロンプトを 1 つ送り、その返信を貼り付けるだけです。",
   "Import an agent": "エージェントをインポート",
   "Welcome to Wea. Here's how to get started:": "Wea へようこそ。始め方はこちらです:",
-  "Open Wea": "Wea を開く",
   "Sign in at {web} from any browser. Your first bot is waiting there to help you set up.":
     "お好きなブラウザで {web} にサインインしてください。最初のボットがセットアップをお手伝いします。",
   "Android app": "Android アプリ",

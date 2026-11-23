@@ -40,6 +40,7 @@ vi.mock("react-native", () => {
     View,
     Platform: { OS: "ios" },
     StyleSheet: { create: (styles: unknown) => styles },
+    Text: ({ children }: { children?: ReactNode }) => <p>{children}</p>,
     TextInput: ({ accessibilityLabel }: { accessibilityLabel: string }) => (
       <input aria-label={accessibilityLabel} />
     ),
@@ -98,6 +99,13 @@ it("closes at once and sends the answers once, however often Continue is pressed
   await act(async () => continueButton().click());
   expect(state.rpc).toHaveBeenCalledOnce();
   await act(async () => saving.resolve({}));
+});
+
+it("asks Wea's questions, with the follow-up and needs only after a role", () => {
+  expect(container.textContent).toContain("Which best describes you?");
+  expect(container.textContent).toContain("AI brain");
+  expect(container.textContent).not.toContain("What do you want help with first?");
+  expect(container.textContent).not.toContain("Rakazo");
 });
 
 it("lets a failed save go without holding up the new account", async () => {

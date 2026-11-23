@@ -1,6 +1,14 @@
 import type { ConnectorRegistry } from "@rakazo/adapters";
-import type { Actor, ConnectionCatalogItem, MessageBlock } from "@rakazo/contracts";
-import { appConnectCard, connectedAppBlock, matchAppCatalog } from "@rakazo/core";
+import type { Actor, ConnectionCatalogItem, MessageBlock, SignupSurvey } from "@rakazo/contracts";
+import { SignupSurveySchema } from "@rakazo/contracts";
+import type { StarterPick } from "@rakazo/core";
+import {
+  appConnectCard,
+  connectedAppBlock,
+  matchAppCatalog,
+  recommendStarter,
+  starterTemplate,
+} from "@rakazo/core";
 import type { Prisma, PrismaClient, ThreadEvents } from "@rakazo/db";
 import {
   appendEventInTransaction,
@@ -388,4 +396,189 @@ export async function markAppConnected(
 
 function capitalize(value: string): string {
   return value.length > 0 ? (value[0] ?? "").toUpperCase() + value.slice(1) : value;
+}
+
+/** Choice ids on Wea's starter card; the start option carries the pick it was shown with. */
+const STARTER_PREFIX = "starter:";
+const STARTER_BROWSE = "starter:browse";
+const STARTER_CHAT = "starter:chat";
+
+export function isStarterOption(optionId: string): boolean {
+  return optionId.startsWith(STARTER_PREFIX);
+}
+
+function starterOptionPick(optionId: string): StarterPick | null {
+  const [, kind, id] = optionId.split(":");
+  return (kind === "bot" || kind === "team") && id ? { kind, id } : null;
+}
+
+/**
+ * Chief's first message for someone who answered the onboarding questions: one recommended bot or
+ * team. False when the answers give no pick (or the thread already asks something), so the caller
+ * keeps today's intro and focus card.
+ */
+export async function postStarter(
+  deps: OnboardingDeps,
+  actor: Actor,
+  botId: string,
+): Promise<boolean> {
+  const survey = await deps.prisma.signupSurvey.findUnique({ where: { userId: actor.userId } });
+  const pick = survey && recommendStarter(surveyAnswers(survey));
+  const template = pick && starterTemplate(pick);
+  if (!pick || !template) return false;
+  const { bot, thread } = await requireBotThread(deps, actor, botId);
+  const blocks: MessageBlock[] = [
+    {
+      kind: "text",
+      text: `Hi, I'm ${bot.name}. Thanks for telling me about yourself. Based on your answers, here's a good place to start.`,
+    },
+    {
+      kind: "choice",
+      question: `Start with ${template.name}?`,
+      subtitle: `${pick.kind === "team" ? `Team of ${template.size} bots` : "Single bot"} · ${template.summary}`,
+      options: [
+        { id: `${STARTER_PREFIX}${pick.kind}:${pick.id}`, letter: "A", label: "Set it up" },
+        { id: STARTER_BROWSE, letter: "B", label: "Show me other templates" },
+        { id: STARTER_CHAT, letter: "C", label: "Not now, just chat" },
+      ],
+    },
+  ];
+  const committed = await deps.prisma.$transaction(async (tx: Prisma.TransactionClient) => {
+    await tx.$executeRaw`SELECT id FROM threads WHERE id = ${thread.id} FOR UPDATE`;
+    const recent = await tx.message.findMany({
+      where: { threadId: thread.id },
+      select: { blocks: true },
+    });
+    if (recent.length) return null;
+    const message = await createThreadMessageInTransaction(tx, {
+      threadId: thread.id,
+      role: "bot",
+      markUnread: false,
+      blocks,
+    });
+    return appendEventInTransaction(tx, {
+      spaceId: actor.spaceId,
+      threadId: thread.id,
+      botId: bot.id,
+      type: "thread.message.created",
+      payload: { messageId: message.id, role: "bot", blocks },
+    });
+  }, THREAD_LOCK_TRANSACTION_OPTIONS);
+  if (committed) await deps.events.notify(thread.id, committed.seq);
+  return true;
+}
+
+function surveyAnswers(row: {
+  role: string | null;
+  roleDetail: string | null;
+  brain: string | null;
+  needs: string[];
+}): Pick<SignupSurvey, "role" | "roleDetail" | "brain" | "needs"> {
+  const parsed = SignupSurveySchema.safeParse({
+    role: row.role ?? undefined,
+    roleDetail: row.roleDetail ?? undefined,
+    brain: row.brain ?? undefined,
+    needs: row.needs,
+  });
+  return parsed.success ? parsed.data : {};
+}
+
+/**
+ * Answer the starter card: set up the pick, point to the other templates, or just chat, then the
+ * step for where the person's AI brain already lives. Only the first answer counts.
+ */
+export async function chooseStarter(
+  deps: OnboardingDeps,
+  actor: Actor,
+  botId: string,
+  optionId: string,
+  options: {
+    webOrigin: string;
+    start: (pick: StarterPick, version: number) => Promise<void>;
+  },
+): Promise<void> {
+  const pick = starterOptionPick(optionId);
+  const template = pick && starterTemplate(pick);
+  if (optionId !== STARTER_BROWSE && optionId !== STARTER_CHAT && !template) {
+    throw new IsolationError();
+  }
+  const { bot, thread } = await requireBotThread(deps, actor, botId);
+  const target = { spaceId: actor.spaceId, botId: bot.id, threadId: thread.id };
+  const claimed = await answerPendingChoice(deps, target, (block) =>
+    block.kind === "choice" && block.options.some((option) => option.id === optionId)
+      ? { ...block, answerId: optionId }
+      : block,
+  );
+  if (!claimed) return;
+
+  if (pick && template) {
+    await options.start(pick, template.version);
+    await post(deps, target, [
+      {
+        kind: "text",
+        text:
+          pick.kind === "team"
+            ? `Done. I set up **${template.name}**. Open its group chat in your list: the lead is asking its first setup question. Nothing is sent or shared without your yes.`
+            : `Done. I set up **${template.name}**. Open it in your list: it's asking its first setup question. Nothing is sent or shared without your yes.`,
+      },
+    ]);
+  } else if (optionId === STARTER_BROWSE) {
+    await post(deps, target, [
+      {
+        kind: "text",
+        text: "Tap **+** and choose **Template** to see every ready-made bot and team. Each one says what it does and how it helps.",
+      },
+    ]);
+  } else {
+    await post(deps, target, [
+      { kind: "text", text: "Sure. What would you like to work on first?" },
+    ]);
+  }
+
+  const survey = await deps.prisma.signupSurvey.findUnique({ where: { userId: actor.userId } });
+  await postBrainStep(deps, actor, target, survey?.brain ?? null, options.webOrigin);
+}
+
+const BRAIN_APPS: Record<string, { slug: string; text: string }> = {
+  drive: {
+    slug: "googledrive",
+    text: "You said your AI brain lives in Google Drive. Connect it so your bots can use what's already there.",
+  },
+  notion: {
+    slug: "notion",
+    text: "You said your AI brain lives in Notion. Connect it so your bots can use what's already there.",
+  },
+  other: {
+    slug: "googledrive",
+    text: "If your notes are in files or Obsidian, put them in a Google Drive folder and connect Drive here. Your bots will organize what's there instead of starting over.",
+  },
+};
+
+async function postBrainStep(
+  deps: OnboardingDeps,
+  actor: Actor,
+  target: { spaceId: string; botId: string; threadId: string },
+  brain: string | null,
+  webOrigin: string,
+): Promise<void> {
+  if (brain === "assistant") {
+    const importUrl = new URL("/app?import", webOrigin).toString();
+    await post(deps, target, [
+      {
+        kind: "text",
+        text: `Bring your assistant over with [Import an agent](${importUrl}): its instructions, memory and skills come along. On your phone? Finish on the web: import works in the Wea web and desktop apps.`,
+      },
+    ]);
+    return;
+  }
+  const app = brain ? BRAIN_APPS[brain] : undefined;
+  if (!app) return;
+  const catalog = await managedAppCatalog(deps.connectors, actor, "onboarding.brain", target.botId);
+  const entry = matchAppCatalog(catalog, app.slug);
+  if (entry?.connected) return;
+  // Without a card here, the apps page is where it connects.
+  await post(deps, target, [
+    { kind: "text", text: entry ? app.text : `${app.text} Open **Connect apps** to add it.` },
+  ]);
+  if (entry) await post(deps, target, [appConnectCard(entry)]);
 }

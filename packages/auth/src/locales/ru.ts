@@ -98,7 +98,6 @@ export const RU_MESSAGES: Record<string, string> = {
     "Это работает и с любым другим ассистентом: отправьте ему один промпт и вставьте его ответ.",
   "Import an agent": "Импортировать агента",
   "Welcome to Wea. Here's how to get started:": "Добро пожаловать в Wea. Вот как начать:",
-  "Open Wea": "Откройте Wea",
   "Sign in at {web} from any browser. Your first bot is waiting there to help you set up.":
     "Войдите на {web} в любом браузере. Там вас ждёт первый бот, который поможет всё настроить.",
   "Android app": "Приложение для Android",

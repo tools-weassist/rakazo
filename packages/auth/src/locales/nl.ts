@@ -97,7 +97,6 @@ export const NL_MESSAGES: Record<string, string> = {
     "Het werkt ook met elke andere assistent: stuur één prompt en plak het antwoord.",
   "Import an agent": "Een agent importeren",
   "Welcome to Wea. Here's how to get started:": "Welkom bij Wea. Zo ga je aan de slag:",
-  "Open Wea": "Wea openen",
   "Sign in at {web} from any browser. Your first bot is waiting there to help you set up.":
     "Log in op {web} vanuit elke browser. Je eerste bot wacht daar om je te helpen alles in te stellen.",
   "Android app": "Android-app",

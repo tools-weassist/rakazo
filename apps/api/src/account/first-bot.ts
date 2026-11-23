@@ -25,6 +25,8 @@ export type FirstBotDeps = {
   introduce: (actor: Actor, bot: Bot) => Promise<void>;
   /** Posts the focus choice while the thread is still idle and no intro run asks instead. */
   promptFocus: (actor: Actor, botId: string) => Promise<void>;
+  /** Posts Wea's starter pick from the onboarding answers; false when they give none. */
+  recommend: (actor: Actor, botId: string) => Promise<boolean>;
 };
 
 /**
@@ -72,6 +74,9 @@ async function createFirstBot(deps: FirstBotDeps, actor: Actor): Promise<string 
     color: BOT_COLOR_LIST.find((color) => color.id === "cyan")?.hex,
     spawnKey: FIRST_BOT_SPAWN_KEY,
   });
+  // Someone who answered the onboarding questions gets one recommended bot or team instead of
+  // the generic intro; skipping the questions keeps today's opening.
+  if (await bestEffort("first bot starter pick", deps.recommend(actor, bot.id))) return bot.id;
   // Each runs at most once per thread, and in this order: the focus card waits for an intro run
   // that is already committed, so a concurrent call cannot leave both openers. A Chief that is
   // only found is left as it is, since whoever created it greets it.
