@@ -27,6 +27,7 @@ const settingsScreens = new Set([
   "memory-note",
   "model-settings",
   "models",
+  "open-source-licenses",
   "organization",
   "organization-members",
   "plugin",

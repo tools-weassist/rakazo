@@ -123,7 +123,7 @@ export default function AiDataSharing() {
               />
             ))}
             <SettingsRow
-              title={t`Rakazo`}
+              title={t`Wea`}
               accessibilityRole="link"
               chevron="right"
               onPress={() => void openExternalUrl(status.privacyUrl ?? AI_PRIVACY_URL)}

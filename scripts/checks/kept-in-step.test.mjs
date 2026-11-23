@@ -20,7 +20,7 @@ function capture(file, pattern) {
 test("Android's recent-runs page size matches the API's", () => {
   assert.equal(
     capture(
-      "apps/mobile/modules/rakazo-notifications/android/src/main/java/com/rakazo/notifications/RakazoNotificationService.kt",
+      "apps/mobile/modules/rakazo-notifications/android/src/main/java/com/rakazo/notifications/WeaNotificationService.kt",
       /const val RECENT_LIMIT = (\d+)/,
     ),
     capture("apps/api/src/threads/runs.ts", /const RECENT_LIMIT = (\d+);/),
@@ -30,7 +30,7 @@ test("Android's recent-runs page size matches the API's", () => {
 test("iOS file drop finds the composer by its test id", () => {
   assert.equal(
     capture(
-      "apps/mobile/modules/rakazo-file-drop/ios/RakazoFileDropModule.swift",
+      "apps/mobile/modules/rakazo-file-drop/ios/WeaFileDropModule.swift",
       /static let composerID = "([^"]+)"/,
     ),
     capture("apps/mobile/components/composer/thread-composer.tsx", /testID="(chat-composer[^"]*)"/),

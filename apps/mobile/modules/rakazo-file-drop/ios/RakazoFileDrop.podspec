@@ -1,5 +1,5 @@
 Pod::Spec.new do |s|
-  s.name           = 'RakazoFileDrop'
+  s.name           = 'WeaFileDrop'
   s.version        = '0.1.0'
   s.summary        = 'Hands images pasted into the composer to the chat as attachments'
   s.author         = ''

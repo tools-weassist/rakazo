@@ -2,7 +2,7 @@ import * as z from "zod";
 
 /**
  * Operator-configured menu links (RAKAZO_NAV_LINKS) that open a same-origin page inside the app.
- * The operator's reverse proxy serves the path; Rakazo only frames it.
+ * The operator's reverse proxy serves the path; Wea only frames it.
  */
 
 /** App-owned paths a link must not frame. */

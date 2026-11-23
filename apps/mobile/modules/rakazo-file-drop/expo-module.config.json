@@ -4,6 +4,6 @@
     "modules": ["com.rakazo.filedrop.RakazoFileDropModule"]
   },
   "apple": {
-    "modules": ["RakazoFileDropModule"]
+    "modules": ["WeaFileDropModule"]
   }
 }

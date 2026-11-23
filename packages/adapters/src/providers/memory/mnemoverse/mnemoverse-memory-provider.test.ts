@@ -478,7 +478,7 @@ describe("Mnemoverse forget", () => {
   it("will not delete a memory that sits in another bot's or Space's domain", async () => {
     const { atoms, calls } = mnemoverse([
       { id: ATOM_OTHER, domain: "rakazo:bot:bot-2", content: "Not yours" },
-      { id: ATOM_FOREIGN, domain: "personal-notes", content: "Not Rakazo's" },
+      { id: ATOM_FOREIGN, domain: "personal-notes", content: "Not Wea's" },
     ]);
     expect((await forget(ATOM_OTHER, "shared")).ok).toBe(false);
     expect((await forget(ATOM_FOREIGN, "shared")).ok).toBe(false);

@@ -1,5 +1,5 @@
 Pod::Spec.new do |s|
-  s.name           = 'RakazoListScroll'
+  s.name           = 'WeaListScroll'
   s.version        = '0.1.0'
   s.summary        = 'Scrolls a native SwiftUI list to a row'
   s.author         = ''

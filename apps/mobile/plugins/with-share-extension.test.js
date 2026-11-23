@@ -45,10 +45,10 @@ it("names the pinned expo-sharing extension after the app", () => {
     });
     const original = readFileSync(join(directory, "Info.plist"), "utf8");
     expect(original).toContain("<string>$(PRODUCT_NAME)</string>");
-    const renamed = renameShareExtension(original, "Rakazo");
+    const renamed = renameShareExtension(original, "Wea");
     expect(renamed).toMatch(/<key>CFBundleDisplayName<\/key>\s*<string>Rakazo<\/string>/);
     // The bundle name and everything else are untouched.
-    expect(renamed.replace("Rakazo", "$(PRODUCT_NAME)")).toBe(original);
+    expect(renamed.replace("Wea", "$(PRODUCT_NAME)")).toBe(original);
   });
 });
 

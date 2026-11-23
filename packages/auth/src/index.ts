@@ -257,7 +257,7 @@ export function createAuth(prisma: PrismaClient, env: AuthEnv) {
     returned: false,
   } as const;
   const auth = betterAuth({
-    appName: "Rakazo",
+    appName: "Wea",
     logger: env.logger,
     secret: env.secret,
     baseURL: env.baseURL,
@@ -522,7 +522,7 @@ export function createAuth(prisma: PrismaClient, env: AuthEnv) {
         ? [
             passkey({
               rpID: relyingParty.rpID,
-              rpName: "Rakazo",
+              rpName: "Wea",
               origin: relyingParty.origins,
             }) as BetterAuthPlugin,
           ]

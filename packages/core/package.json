@@ -9,6 +9,7 @@
       "development": "./src/index.ts",
       "default": "./src/index.ts"
     },
+    "./open-source-notice": "./src/open-source-notice.ts",
     "./user-error": {
       "types": "./src/primitives/user-error.ts",
       "development": "./src/primitives/user-error.ts",

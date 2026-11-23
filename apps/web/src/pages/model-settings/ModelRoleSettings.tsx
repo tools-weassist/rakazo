@@ -207,7 +207,7 @@ export function ModelRoleSettings({
     }),
     creditOfferingId: choice.creditOfferingId,
     providerName: choice.creditOfferingId
-      ? t`Rakazo credits`
+      ? t`Wea credits`
       : choice.credentialId
         ? choice.connectionName
         : providerLabel(choice.provider),
@@ -222,7 +222,7 @@ export function ModelRoleSettings({
         )
       : [];
   const providerName = (choice: ModelRoleChoice) =>
-    (choice.creditOfferingId ? t`Rakazo credits` : undefined) ||
+    (choice.creditOfferingId ? t`Wea credits` : undefined) ||
     (choice.credentialId &&
       options.find((option) => option.credentialId === choice.credentialId)?.providerName) ||
     providerLabel(choice.provider);

@@ -31,6 +31,7 @@ import {
   UserRound,
 } from "lucide-react";
 import { useLayoutEffect, useRef, useState } from "react";
+import { OpenSourceLicensesDialog } from "../../../components/account/open-source-licenses-dialog";
 import { useSidebarUpdate } from "../../../components/DesktopUpdates";
 import { IconTooltip } from "../../../components/IconTooltip";
 import { WEA_SUPPORT_URL } from "../../../lib/brand/wea";
@@ -104,6 +105,7 @@ export function SidebarFooter({
   const { t } = useLingui();
   const update = useSidebarUpdate();
   const [failedImage, setFailedImage] = useState<string | null>(null);
+  const [licensesOpen, setLicensesOpen] = useState(false);
   const pillRef = useRef<HTMLButtonElement>(null);
   const labelRef = useRef<HTMLSpanElement>(null);
   const [markCount, setMarkCount] = useState(3);
@@ -296,15 +298,15 @@ export function SidebarFooter({
                 <Trans>Invite friends</Trans>
               </Button>
             ) : null}
-            <a
-              className={`${buttonVariants({ variant: "ghost", size: "lg" })} w-full justify-start gap-2.5 font-normal`}
-              href="https://github.com/elie222/rakazo/blob/main/docs/self-host.md"
-              target="_blank"
-              rel="noreferrer"
+            <Button
+              variant="ghost"
+              size="lg"
+              className="w-full justify-start gap-2.5 font-normal"
+              onClick={() => setLicensesOpen(true)}
             >
-              <BookOpen className="text-muted-foreground" strokeWidth={1.75} />
-              <Trans>Docs</Trans>
-            </a>
+              <ScrollText className="text-muted-foreground" strokeWidth={1.75} />
+              <Trans>Open-source licenses</Trans>
+            </Button>
             <a
               className={`${buttonVariants({ variant: "ghost", size: "lg" })} w-full justify-start gap-2.5 font-normal`}
               href={WEA_SUPPORT_URL}
@@ -334,6 +336,7 @@ export function SidebarFooter({
           </PopoverContent>
         ) : null}
       </Popover>
+      <OpenSourceLicensesDialog open={licensesOpen} onOpenChange={setLicensesOpen} />
       {!mini ? (
         <Button
           variant="secondary"

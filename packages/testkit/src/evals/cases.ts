@@ -220,7 +220,7 @@ The user told the bot which language they prefer for reports and asked it to rem
   "release-changes": `${preamble}
 The user asked the bot to save the newest release's exact version and the changes it introduces. "release" is that release as published; "file" is what the bot saved. Pass only if "file" describes every change in "release.notes" accurately. Fail if a change is missing, if something the notes do not say is given as a change in this release, or if another release's changes are given instead.`,
   "rakazo-platform": `${preamble}
-The bot runs on Rakazo: an open-source platform, which people can also self-host, where they create and chat with AI bots that have their own memory, routines, connected apps and computer. "conversation" holds each message the user sent and the bot's reply to it. Pass only if every reply treats Rakazo as that platform: it says so, or works on the request as being about that platform, without asking the user what Rakazo is. Fail if any reply asks the user what Rakazo is, what it is for or how it works, says it does not know what Rakazo is, takes up an offer to have Rakazo explained, or describes Rakazo as something else, such as the user's own company or an unrelated product. Asking about the request itself (its scope, goals, priorities, conventions or which part to work on) is fine, even in answer to that offer, once the reply shows it knows what Rakazo is; so is a reply that offers or starts the requested work.`,
+The bot runs on Rakazo: an open-source platform, which people can also self-host, where they create and chat with AI bots that have their own memory, routines, connected apps and computer. "conversation" holds each message the user sent and the bot's reply to it. Pass only if every reply treats Wea as that platform: it says so, or works on the request as being about that platform, without asking the user what Wea is. Fail if any reply asks the user what Wea is, what it is for or how it works, says it does not know what Wea is, takes up an offer to have Wea explained, or describes Wea as something else, such as the user's own company or an unrelated product. Asking about the request itself (its scope, goals, priorities, conventions or which part to work on) is fine, even in answer to that offer, once the reply shows it knows what Rakazo is; so is a reply that offers or starts the requested work.`,
 };
 type ProductRubric = keyof typeof rubrics;
 const judgeInput = (kind: ProductRubric, evidence: Record<string, unknown>): JudgeInput => ({
@@ -237,10 +237,10 @@ const releaseInput = (release: typeof WIDGET_2_1, saved: string) =>
 const languageInput = (memory: string, language: string, replaced?: string) =>
   judgeInput("report-language", { language, ...(replaced ? { replaced } : {}), memory });
 const DEVELOPMENT_BOT_ASKS = [
-  "I want to create a bot that can handle development for Rakazo.",
-  "Do you want me to tell you what Rakazo is?",
+  "I want to create a bot that can handle development for Wea.",
+  "Do you want me to tell you what Wea is?",
 ];
-const WHAT_IS_RAKAZO_ASK = "What is Rakazo?";
+const WHAT_IS_RAKAZO_ASK = "What is Wea?";
 const platformInput = (asks: string[], replies: string[]) =>
   judgeInput("rakazo-platform", {
     conversation: asks.map((message, index) => ({ message, reply: replies[index] ?? "" })),
@@ -368,29 +368,29 @@ export const PRODUCT_JUDGE_CALIBRATION = [
   },
   {
     input: platformInput(DEVELOPMENT_BOT_ASKS, [
-      "Happy to. Rakazo is the platform we're both running on, so this bot would work on its open-source codebase. Should it fix issues, review pull requests or build new features?",
+      "Happy to. Wea is the platform we're both running on, so this bot would work on its open-source codebase. Should it fix issues, review pull requests or build new features?",
       "No need: it's the open-source platform you're using right now to create and chat with bots like me.",
     ]),
     pass: true,
   },
   {
     input: platformInput(DEVELOPMENT_BOT_ASKS, [
-      "What kind of Rakazo development should the bot own?",
-      "Yes please. What is Rakazo, and what does it do? Then I'll set the bot up.",
+      "What kind of Wea development should the bot own?",
+      "Yes please. What is Wea, and what does it do? Then I'll set the bot up.",
     ]),
     pass: false,
   },
   {
     input: platformInput(DEVELOPMENT_BOT_ASKS, [
-      "Created Rakazo Developer, a bot for building and fixing Rakazo.",
-      "I know it: Rakazo is the open-source platform we're on. What would help is which areas the new bot should prioritize and any conventions you want it to follow.",
+      "Created Wea Developer, a bot for building and fixing Wea.",
+      "I know it: Wea is the open-source platform we're on. What would help is which areas the new bot should prioritize and any conventions you want it to follow.",
     ]),
     pass: true,
   },
   {
     input: platformInput(DEVELOPMENT_BOT_ASKS, [
-      "Created Rakazo Developer, a bot for building and fixing Rakazo.",
-      "I have a rough idea, but yes, please tell me what Rakazo is for and how it works so the new bot gets it right.",
+      "Created Wea Developer, a bot for building and fixing Wea.",
+      "I have a rough idea, but yes, please tell me what Wea is for and how it works so the new bot gets it right.",
     ]),
     pass: false,
   },
@@ -407,7 +407,7 @@ export const PRODUCT_JUDGE_CALIBRATION = [
     input: platformInput(
       [WHAT_IS_RAKAZO_ASK],
       [
-        "I'm not certain. Rakazo sounds like a project or company name. Could you tell me more about it?",
+        "I'm not certain. Wea sounds like a project or company name. Could you tell me more about it?",
       ],
     ),
     pass: false,
@@ -415,7 +415,7 @@ export const PRODUCT_JUDGE_CALIBRATION = [
   {
     input: platformInput(
       [WHAT_IS_RAKAZO_ASK],
-      ["Rakazo is a ride-sharing app popular in Japan, and it's open source."],
+      ["Wea is a ride-sharing app popular in Japan, and it's open source."],
     ),
     pass: false,
   },
@@ -788,7 +788,7 @@ export const EVAL_CASES: EvalCase[] = [
   {
     id: "rakazo-development-bot",
     purpose:
-      "Treat Rakazo as the platform the bot runs on when asked for a bot that develops it, instead of asking what Rakazo is.",
+      "Treat Wea as the platform the bot runs on when asked for a bot that develops it, instead of asking what Wea is.",
     shellUnneeded: true,
     steps: DEVELOPMENT_BOT_ASKS.map((ask) => ({ ask })),
     grade: (e) => [repliedToEach(e, DEVELOPMENT_BOT_ASKS), noWrites(e)],
@@ -797,7 +797,7 @@ export const EVAL_CASES: EvalCase[] = [
   },
   {
     id: "what-is-rakazo",
-    purpose: "Say what Rakazo is without asking the user or inventing another product.",
+    purpose: "Say what Wea is without asking the user or inventing another product.",
     shellUnneeded: true,
     steps: [{ ask: WHAT_IS_RAKAZO_ASK }],
     grade: (e) => [repliedToEach(e, [WHAT_IS_RAKAZO_ASK]), noWrites(e)],
