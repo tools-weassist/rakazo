@@ -220,6 +220,14 @@ export function PrivacyPolicyPage() {
             them.
           </Trans>
         </p>
+        <p>
+          <Trans>
+            On a voice call in Chrome or Edge without a voice provider connected, the browser sends
+            your speech to Google or Microsoft to turn it into text. If you connect your own voice
+            provider (for example OpenAI, ElevenLabs or Fish Audio), call audio and text go to that
+            provider under its terms.
+          </Trans>
+        </p>
       </Section>
 
       <Section title={<Trans>Google user data</Trans>}>
