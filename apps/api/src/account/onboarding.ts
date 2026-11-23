@@ -575,6 +575,10 @@ async function postBrainStep(
   if (!app) return;
   const catalog = await managedAppCatalog(deps.connectors, actor, "onboarding.brain", target.botId);
   const entry = matchAppCatalog(catalog, app.slug);
-  await post(deps, target, [{ kind: "text", text: app.text }]);
-  if (entry && !entry.connected) await post(deps, target, [appConnectCard(entry)]);
+  if (entry?.connected) return;
+  // Without a card here, the apps page is where it connects.
+  await post(deps, target, [
+    { kind: "text", text: entry ? app.text : `${app.text} Open **Connect apps** to add it.` },
+  ]);
+  if (entry) await post(deps, target, [appConnectCard(entry)]);
 }
