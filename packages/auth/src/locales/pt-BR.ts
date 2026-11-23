@@ -97,4 +97,14 @@ export const PT_BR_MESSAGES: Record<string, string> = {
   "It works for any other assistant too: send it one prompt and paste its reply.":
     "Também funciona com qualquer outro assistente: envie um prompt e cole a resposta.",
   "Import an agent": "Importar um agente",
+  "Welcome to Wea. Here's how to get started:": "Boas-vindas ao Wea. Veja como começar:",
+  "Open Wea": "Abra o Wea",
+  "Sign in at {web} from any browser. Your first bot is waiting there to help you set up.":
+    "Entre em {web} em qualquer navegador. Seu primeiro bot está esperando lá para ajudar você a configurar tudo.",
+  "Android app": "App para Android",
+  "The Wea app for Android is coming to Google Play soon. Until then, Wea works in your phone's browser too.":
+    "O app do Wea para Android chega em breve ao Google Play. Até lá, o Wea também funciona no navegador do seu celular.",
+  "Questions? Reply to this email or write to {email}.":
+    "Dúvidas? Responda a este e-mail ou escreva para {email}.",
+  "The Wea team": "Equipe Wea",
 };

@@ -7,8 +7,7 @@ export const JA_MESSAGES: Record<string, string> = {
   "This link expires in one hour. If you did not register, ignore this email.":
     "このリンクの有効期限は1時間です。登録した覚えがない場合は、このメールを無視してください。",
   "Your Wea sign-in code": "Weaのサインインコード",
-  "Enter this code to sign in to Wea:":
-    "Weaにサインインするには、次のコードを入力してください:",
+  "Enter this code to sign in to Wea:": "Weaにサインインするには、次のコードを入力してください:",
   "This code expires in ten minutes. If you did not request it, ignore this email.":
     "このコードの有効期限は10分です。リクエストした覚えがない場合は、このメールを無視してください。",
   "Reset your Wea password": "Weaのパスワードをリセット",
@@ -80,8 +79,7 @@ export const JA_MESSAGES: Record<string, string> = {
   "Join {organization}": "{organization}に参加",
   "This invitation expires in 7 days. Sign in with this email address to accept it.":
     "この招待は7日後に期限切れになります。承諾するには、このメールアドレスでサインインしてください。",
-  "{inviter} invited you to {space} on Wea":
-    "{inviter}さんがWeaの{space}にあなたを招待しました",
+  "{inviter} invited you to {space} on Wea": "{inviter}さんがWeaの{space}にあなたを招待しました",
   "{inviter} invited you to join {space} on Wea.":
     "{inviter}さんがWeaの{space}への参加にあなたを招待しました。",
   "Join {space}": "{space}に参加",
@@ -98,4 +96,14 @@ export const JA_MESSAGES: Record<string, string> = {
   "It works for any other assistant too: send it one prompt and paste its reply.":
     "ほかのアシスタントでも使えます。プロンプトを 1 つ送り、その返信を貼り付けるだけです。",
   "Import an agent": "エージェントをインポート",
+  "Welcome to Wea. Here's how to get started:": "Wea へようこそ。始め方はこちらです:",
+  "Open Wea": "Wea を開く",
+  "Sign in at {web} from any browser. Your first bot is waiting there to help you set up.":
+    "お好きなブラウザで {web} にサインインしてください。最初のボットがセットアップをお手伝いします。",
+  "Android app": "Android アプリ",
+  "The Wea app for Android is coming to Google Play soon. Until then, Wea works in your phone's browser too.":
+    "Android 版 Wea アプリはまもなく Google Play で公開予定です。それまではスマートフォンのブラウザでも Wea をご利用いただけます。",
+  "Questions? Reply to this email or write to {email}.":
+    "ご不明な点は、このメールに返信するか {email} までご連絡ください。",
+  "The Wea team": "Wea チーム",
 };

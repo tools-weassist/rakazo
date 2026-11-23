@@ -96,4 +96,14 @@ export const KO_MESSAGES: Record<string, string> = {
   "It works for any other assistant too: send it one prompt and paste its reply.":
     "다른 어시스턴트에서도 됩니다. 프롬프트 하나를 보내고 답변을 붙여넣으세요.",
   "Import an agent": "에이전트 가져오기",
+  "Welcome to Wea. Here's how to get started:": "Wea에 오신 것을 환영합니다. 이렇게 시작하세요:",
+  "Open Wea": "Wea 열기",
+  "Sign in at {web} from any browser. Your first bot is waiting there to help you set up.":
+    "아무 브라우저에서나 {web}에 로그인하세요. 첫 번째 봇이 설정을 도와드리려고 기다리고 있어요.",
+  "Android app": "Android 앱",
+  "The Wea app for Android is coming to Google Play soon. Until then, Wea works in your phone's browser too.":
+    "Android용 Wea 앱이 곧 Google Play에 출시됩니다. 그전까지는 휴대폰 브라우저에서도 Wea를 사용할 수 있어요.",
+  "Questions? Reply to this email or write to {email}.":
+    "궁금한 점이 있으신가요? 이 이메일에 답장하거나 {email}로 문의하세요.",
+  "The Wea team": "Wea 팀",
 };

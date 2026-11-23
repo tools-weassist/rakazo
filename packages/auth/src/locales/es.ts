@@ -73,16 +73,14 @@ export const ES_MESSAGES: Record<string, string> = {
     "Los archivos guardados de tu ordenador se eliminarán el {date} a menos que vuelvas a suscribirte.",
   "Your saved computer files will be deleted on {date} unless you choose a plan.":
     "Los archivos guardados de tu ordenador se eliminarán el {date} a menos que elijas un plan.",
-  "{inviter} invited you to {organization} on Wea":
-    "{inviter} te invitó a {organization} en Wea",
+  "{inviter} invited you to {organization} on Wea": "{inviter} te invitó a {organization} en Wea",
   "{inviter} invited you to join {organization} on Wea.":
     "{inviter} te invitó a unirte a {organization} en Wea.",
   "Join {organization}": "Unirte a {organization}",
   "This invitation expires in 7 days. Sign in with this email address to accept it.":
     "Esta invitación caduca en 7 días. Inicia sesión con esta dirección de correo para aceptarla.",
   "{inviter} invited you to {space} on Wea": "{inviter} te invitó a {space} en Wea",
-  "{inviter} invited you to join {space} on Wea.":
-    "{inviter} te invitó a unirte a {space} en Wea.",
+  "{inviter} invited you to join {space} on Wea.": "{inviter} te invitó a unirte a {space} en Wea.",
   "Join {space}": "Unirte a {space}",
   "This invitation expires in 7 days.": "Esta invitación caduca en 7 días.",
   "Connect a model to start using Wea": "Conecta un modelo para empezar a usar Wea",
@@ -97,4 +95,14 @@ export const ES_MESSAGES: Record<string, string> = {
   "It works for any other assistant too: send it one prompt and paste its reply.":
     "También funciona con cualquier otro asistente: envíale un prompt y pega su respuesta.",
   "Import an agent": "Importar un agente",
+  "Welcome to Wea. Here's how to get started:": "Te damos la bienvenida a Wea. Así puedes empezar:",
+  "Open Wea": "Abre Wea",
+  "Sign in at {web} from any browser. Your first bot is waiting there to help you set up.":
+    "Inicia sesión en {web} desde cualquier navegador. Tu primer bot te espera allí para ayudarte a configurarlo todo.",
+  "Android app": "App para Android",
+  "The Wea app for Android is coming to Google Play soon. Until then, Wea works in your phone's browser too.":
+    "La app de Wea para Android llegará pronto a Google Play. Mientras tanto, Wea también funciona en el navegador de tu teléfono.",
+  "Questions? Reply to this email or write to {email}.":
+    "¿Preguntas? Responde a este correo o escribe a {email}.",
+  "The Wea team": "El equipo de Wea",
 };

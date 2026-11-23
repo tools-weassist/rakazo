@@ -1,16 +1,10 @@
 /** @jsxRuntime automatic */
 import type { TransactionalEmail } from "@rakazo/adapter-kit";
-import { ANDROID_APP_STORE_URL, IOS_APP_STORE_URL } from "@rakazo/contracts";
 import { Link, Text } from "react-email";
 import { emailText, greeting, linkStyle, message, withNodes } from "./email.js";
 
-const APPS: Readonly<Record<string, string>> = {
-  iPhone: IOS_APP_STORE_URL,
-  Android: ANDROID_APP_STORE_URL,
-  Mac: "https://rakazo.com/api/download?platform=mac",
-  Windows: "https://rakazo.com/api/download?platform=windows",
-  Linux: "https://rakazo.com/api/download?platform=linux",
-};
+const WEA_WEB_URL = "https://wea.weassist.io";
+const HELP_EMAIL = "tools@weassist.io";
 
 const stepStyle = { margin: "20px 0 4px" };
 
@@ -26,54 +20,42 @@ export function welcomeEmail(
     say("Welcome to Wea"),
     <>
       <Text>{greeting(say, user.name)}</Text>
-      <Text>{say("Welcome to Wea. The people who get the most out of it do three things:")}</Text>
+      <Text>{say("Welcome to Wea. Here's how to get started:")}</Text>
       <Text style={stepStyle}>
-        <strong>1. {say("Get the apps")}</strong>
-      </Text>
-      <Text style={{ marginTop: 0 }}>
-        {withNodes(say("Wea runs on {platforms}, so your bots can reach you wherever you are."), {
-          // The language's own list ("A, B, and C", "A, B y C"), with each app a link.
-          platforms: new Intl.ListFormat(locale, { type: "conjunction" })
-            .formatToParts(Object.keys(APPS))
-            .map((part, index) =>
-              part.type === "element" ? (
-                <Link key={part.value} href={APPS[part.value]} style={linkStyle}>
-                  {part.value}
-                </Link>
-              ) : (
-                <span key={`${index}${part.value}`}>{part.value}</span>
-              ),
-            ),
-        })}
-      </Text>
-      <Text style={stepStyle}>
-        <strong>2. {say("Join the community")}</strong>
+        <strong>1. {say("Open Wea")}</strong>
       </Text>
       <Text style={{ marginTop: 0 }}>
         {withNodes(
           say(
-            "See what others are building, get help fast, and tell us what to build next on {discord}.",
+            "Sign in at {web} from any browser. Your first bot is waiting there to help you set up.",
           ),
           {
-            discord: (
-              <Link href="https://discord.gg/RWwKa2Sn7h" style={linkStyle}>
-                Discord
+            web: (
+              <Link href={WEA_WEB_URL} style={linkStyle}>
+                wea.weassist.io
               </Link>
             ),
           },
         )}
       </Text>
       <Text style={stepStyle}>
-        <strong>3. Open-source licenses</strong>
+        <strong>2. {say("Android app")}</strong>
       </Text>
       <Text style={{ marginTop: 0 }}>
-        Wea is built on Rakazo, open-source under the Apache License, Version 2.0. You'll find
-        the license in Settings.
+        {say(
+          "The Wea app for Android is coming to Google Play soon. Until then, Wea works in your phone's browser too.",
+        )}
       </Text>
       <Text style={{ marginTop: "28px" }}>
-        Questions? Reply to this email or write tools@weassist.io.
+        {withNodes(say("Questions? Reply to this email or write to {email}."), {
+          email: (
+            <Link href={`mailto:${HELP_EMAIL}`} style={linkStyle}>
+              {HELP_EMAIL}
+            </Link>
+          ),
+        })}
       </Text>
-      <Text>Wea</Text>
+      <Text>{say("The Wea team")}</Text>
     </>,
     unsubscribeUrl,
     { src: "https://wea.weassist.io/apple-touch-icon.png", alt: "Wea" },

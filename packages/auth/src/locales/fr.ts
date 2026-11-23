@@ -82,8 +82,7 @@ export const FR_MESSAGES: Record<string, string> = {
   "Join {organization}": "Rejoindre {organization}",
   "This invitation expires in 7 days. Sign in with this email address to accept it.":
     "Cette invitation expire dans 7 jours. Connectez-vous avec cette adresse e-mail pour l’accepter.",
-  "{inviter} invited you to {space} on Wea":
-    "{inviter} vous a invité à rejoindre {space} sur Wea",
+  "{inviter} invited you to {space} on Wea": "{inviter} vous a invité à rejoindre {space} sur Wea",
   "{inviter} invited you to join {space} on Wea.":
     "{inviter} vous a invité à rejoindre {space} sur Wea.",
   "Join {space}": "Rejoindre {space}",
@@ -100,4 +99,14 @@ export const FR_MESSAGES: Record<string, string> = {
   "It works for any other assistant too: send it one prompt and paste its reply.":
     "Cela fonctionne aussi avec n'importe quel autre assistant : envoyez-lui un prompt et collez sa réponse.",
   "Import an agent": "Importer un agent",
+  "Welcome to Wea. Here's how to get started:": "Bienvenue sur Wea. Voici comment commencer :",
+  "Open Wea": "Ouvrir Wea",
+  "Sign in at {web} from any browser. Your first bot is waiting there to help you set up.":
+    "Connectez-vous sur {web} depuis n'importe quel navigateur. Votre premier bot vous y attend pour vous aider à tout configurer.",
+  "Android app": "Application Android",
+  "The Wea app for Android is coming to Google Play soon. Until then, Wea works in your phone's browser too.":
+    "L'application Wea pour Android arrive bientôt sur Google Play. En attendant, Wea fonctionne aussi dans le navigateur de votre téléphone.",
+  "Questions? Reply to this email or write to {email}.":
+    "Des questions ? Répondez à cet e-mail ou écrivez à {email}.",
+  "The Wea team": "L'équipe Wea",
 };

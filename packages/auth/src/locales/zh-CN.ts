@@ -65,8 +65,7 @@ export const ZH_CN_MESSAGES: Record<string, string> = {
     "除非你重新订阅，否则你保存的电脑文件将于 {date} 被删除。",
   "Your saved computer files will be deleted on {date} unless you choose a plan.":
     "除非你选择一个套餐，否则你保存的电脑文件将于 {date} 被删除。",
-  "{inviter} invited you to {organization} on Wea":
-    "{inviter} 邀请你加入 Wea 上的 {organization}",
+  "{inviter} invited you to {organization} on Wea": "{inviter} 邀请你加入 Wea 上的 {organization}",
   "{inviter} invited you to join {organization} on Wea.":
     "{inviter} 邀请你加入 Wea 上的 {organization}。",
   "Join {organization}": "加入 {organization}",
@@ -88,4 +87,14 @@ export const ZH_CN_MESSAGES: Record<string, string> = {
   "It works for any other assistant too: send it one prompt and paste its reply.":
     "其他任何助手也可以：给它发送一条提示词，再粘贴它的回复。",
   "Import an agent": "导入智能体",
+  "Welcome to Wea. Here's how to get started:": "欢迎使用 Wea。按以下步骤开始：",
+  "Open Wea": "打开 Wea",
+  "Sign in at {web} from any browser. Your first bot is waiting there to help you set up.":
+    "在任意浏览器中登录 {web}。你的第一个机器人正在那里等你，帮你完成设置。",
+  "Android app": "Android 应用",
+  "The Wea app for Android is coming to Google Play soon. Until then, Wea works in your phone's browser too.":
+    "Wea Android 应用即将登陆 Google Play。在此之前，你也可以在手机浏览器中使用 Wea。",
+  "Questions? Reply to this email or write to {email}.":
+    "有问题？直接回复这封邮件，或写信至 {email}。",
+  "The Wea team": "Wea 团队",
 };

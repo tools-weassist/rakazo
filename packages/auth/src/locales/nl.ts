@@ -79,8 +79,7 @@ export const NL_MESSAGES: Record<string, string> = {
   "Join {organization}": "Word lid van {organization}",
   "This invitation expires in 7 days. Sign in with this email address to accept it.":
     "Deze uitnodiging verloopt over 7 dagen. Log in met dit e-mailadres om haar te accepteren.",
-  "{inviter} invited you to {space} on Wea":
-    "{inviter} heeft je uitgenodigd voor {space} op Wea",
+  "{inviter} invited you to {space} on Wea": "{inviter} heeft je uitgenodigd voor {space} op Wea",
   "{inviter} invited you to join {space} on Wea.":
     "{inviter} heeft je uitgenodigd om lid te worden van {space} op Wea.",
   "Join {space}": "Word lid van {space}",
@@ -97,4 +96,14 @@ export const NL_MESSAGES: Record<string, string> = {
   "It works for any other assistant too: send it one prompt and paste its reply.":
     "Het werkt ook met elke andere assistent: stuur één prompt en plak het antwoord.",
   "Import an agent": "Een agent importeren",
+  "Welcome to Wea. Here's how to get started:": "Welkom bij Wea. Zo ga je aan de slag:",
+  "Open Wea": "Wea openen",
+  "Sign in at {web} from any browser. Your first bot is waiting there to help you set up.":
+    "Log in op {web} vanuit elke browser. Je eerste bot wacht daar om je te helpen alles in te stellen.",
+  "Android app": "Android-app",
+  "The Wea app for Android is coming to Google Play soon. Until then, Wea works in your phone's browser too.":
+    "De Wea-app voor Android komt binnenkort naar Google Play. Tot die tijd werkt Wea ook in de browser van je telefoon.",
+  "Questions? Reply to this email or write to {email}.":
+    "Vragen? Beantwoord deze e-mail of schrijf naar {email}.",
+  "The Wea team": "Het Wea-team",
 };

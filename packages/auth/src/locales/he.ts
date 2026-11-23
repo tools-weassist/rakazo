@@ -70,16 +70,14 @@ export const HE_MESSAGES: Record<string, string> = {
     "קבצי המחשב השמורים שלך יימחקו ב-{date} אלא אם תחדש את המינוי.",
   "Your saved computer files will be deleted on {date} unless you choose a plan.":
     "קבצי המחשב השמורים שלך יימחקו ב-{date} אלא אם תבחר תוכנית.",
-  "{inviter} invited you to {organization} on Wea":
-    "{inviter} הזמין/ה אותך ל-{organization} ב-Wea",
+  "{inviter} invited you to {organization} on Wea": "{inviter} הזמין/ה אותך ל-{organization} ב-Wea",
   "{inviter} invited you to join {organization} on Wea.":
     "{inviter} הזמין/ה אותך להצטרף ל-{organization} ב-Wea.",
   "Join {organization}": "הצטרפות ל-{organization}",
   "This invitation expires in 7 days. Sign in with this email address to accept it.":
     "ההזמנה תפוג בעוד 7 ימים. כדי לקבל אותה, יש להתחבר עם כתובת האימייל הזו.",
   "{inviter} invited you to {space} on Wea": "{inviter} הזמין/ה אותך ל-{space} ב-Wea",
-  "{inviter} invited you to join {space} on Wea.":
-    "{inviter} הזמין/ה אותך להצטרף ל-{space} ב-Wea.",
+  "{inviter} invited you to join {space} on Wea.": "{inviter} הזמין/ה אותך להצטרף ל-{space} ב-Wea.",
   "Join {space}": "הצטרפות ל-{space}",
   "This invitation expires in 7 days.": "ההזמנה תפוג בעוד 7 ימים.",
   "Connect a model to start using Wea": "חיבור מודל כדי להתחיל להשתמש ב-Wea",
@@ -94,4 +92,14 @@ export const HE_MESSAGES: Record<string, string> = {
   "It works for any other assistant too: send it one prompt and paste its reply.":
     "זה עובד גם עם כל עוזר אחר: שלחו לו פרומפט אחד והדביקו את התשובה שלו.",
   "Import an agent": "ייבוא סוכן",
+  "Welcome to Wea. Here's how to get started:": "ברוכים הבאים ל-Wea. כך מתחילים:",
+  "Open Wea": "פתיחת Wea",
+  "Sign in at {web} from any browser. Your first bot is waiting there to help you set up.":
+    "התחברו ב-{web} מכל דפדפן. הבוט הראשון שלכם מחכה שם כדי לעזור לכם בהגדרה.",
+  "Android app": "אפליקציית Android",
+  "The Wea app for Android is coming to Google Play soon. Until then, Wea works in your phone's browser too.":
+    "אפליקציית Wea ל-Android תגיע בקרוב ל-Google Play. עד אז, Wea עובדת גם בדפדפן של הטלפון.",
+  "Questions? Reply to this email or write to {email}.":
+    "שאלות? השיבו למייל הזה או כתבו אל {email}.",
+  "The Wea team": "צוות Wea",
 };

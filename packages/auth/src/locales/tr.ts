@@ -16,8 +16,7 @@ export const TR_MESSAGES: Record<string, string> = {
   "This link expires in one hour. If you did not request this, you can ignore this email.":
     "Bu bağlantının süresi bir saat içinde dolar. Bunu siz istemediyseniz bu e-postayı yok sayabilirsiniz.",
   "Confirm Wea account deletion": "Wea hesabınızın silinmesini onaylayın",
-  "Enter this code in Wea to delete your account:":
-    "Hesabınızı silmek için bu kodu Wea’ya girin:",
+  "Enter this code in Wea to delete your account:": "Hesabınızı silmek için bu kodu Wea’ya girin:",
   "This code expires in ten minutes. If you did not request deletion, ignore this email.":
     "Bu kodun süresi on dakika içinde dolar. Silme isteğinde bulunmadıysanız bu e-postayı yok sayın.",
   "Your Wea confirmation code": "Wea onay kodunuz",
@@ -81,8 +80,7 @@ export const TR_MESSAGES: Record<string, string> = {
   "Join {organization}": "{organization} kuruluşuna katıl",
   "This invitation expires in 7 days. Sign in with this email address to accept it.":
     "Bu davetin süresi 7 gün içinde dolar. Kabul etmek için bu e-posta adresiyle oturum açın.",
-  "{inviter} invited you to {space} on Wea":
-    "{inviter} sizi Wea'da {space} alanına davet etti",
+  "{inviter} invited you to {space} on Wea": "{inviter} sizi Wea'da {space} alanına davet etti",
   "{inviter} invited you to join {space} on Wea.":
     "{inviter} sizi Wea'da {space} alanına katılmaya davet etti.",
   "Join {space}": "{space} alanına katıl",
@@ -99,4 +97,14 @@ export const TR_MESSAGES: Record<string, string> = {
   "It works for any other assistant too: send it one prompt and paste its reply.":
     "Başka herhangi bir asistanla da çalışır: ona tek bir istem gönderin ve yanıtını yapıştırın.",
   "Import an agent": "Ajan içe aktar",
+  "Welcome to Wea. Here's how to get started:": "Wea'ya hoş geldiniz. Başlamak için:",
+  "Open Wea": "Wea'yı açın",
+  "Sign in at {web} from any browser. Your first bot is waiting there to help you set up.":
+    "Herhangi bir tarayıcıdan {web} adresinde oturum açın. İlk botunuz kurulumda yardım etmek için orada sizi bekliyor.",
+  "Android app": "Android uygulaması",
+  "The Wea app for Android is coming to Google Play soon. Until then, Wea works in your phone's browser too.":
+    "Android için Wea uygulaması yakında Google Play'de. O zamana kadar Wea telefonunuzun tarayıcısında da çalışır.",
+  "Questions? Reply to this email or write to {email}.":
+    "Sorunuz mu var? Bu e-postayı yanıtlayın veya {email} adresine yazın.",
+  "The Wea team": "Wea ekibi",
 };

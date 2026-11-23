@@ -20,8 +20,7 @@ export const PL_MESSAGES: Record<string, string> = {
   "This code expires in ten minutes. If you did not request deletion, ignore this email.":
     "Ten kod wygaśnie za dziesięć minut. Jeśli to nie Ty prosisz o usunięcie konta, zignoruj tę wiadomość.",
   "Your Wea confirmation code": "Twój kod potwierdzający Wea",
-  "Enter this code in Wea to confirm it's you:":
-    "Wpisz ten kod w Wea, aby potwierdzić tożsamość:",
+  "Enter this code in Wea to confirm it's you:": "Wpisz ten kod w Wea, aby potwierdzić tożsamość:",
   "Welcome to Wea": "Witaj w Wea",
   "Welcome to Wea. The people who get the most out of it do three things:":
     "Witamy w Wea. Osoby, które korzystają z niego najlepiej, robią trzy rzeczy:",
@@ -96,4 +95,14 @@ export const PL_MESSAGES: Record<string, string> = {
   "It works for any other assistant too: send it one prompt and paste its reply.":
     "Działa to też z każdym innym asystentem: wyślij mu jeden prompt i wklej jego odpowiedź.",
   "Import an agent": "Importuj agenta",
+  "Welcome to Wea. Here's how to get started:": "Witamy w Wea. Oto jak zacząć:",
+  "Open Wea": "Otwórz Wea",
+  "Sign in at {web} from any browser. Your first bot is waiting there to help you set up.":
+    "Zaloguj się na {web} w dowolnej przeglądarce. Czeka tam Twój pierwszy bot, który pomoże Ci wszystko skonfigurować.",
+  "Android app": "Aplikacja na Androida",
+  "The Wea app for Android is coming to Google Play soon. Until then, Wea works in your phone's browser too.":
+    "Aplikacja Wea na Androida wkrótce pojawi się w Google Play. Do tego czasu Wea działa też w przeglądarce telefonu.",
+  "Questions? Reply to this email or write to {email}.":
+    "Masz pytania? Odpowiedz na tego e-maila lub napisz na {email}.",
+  "The Wea team": "Zespół Wea",
 };

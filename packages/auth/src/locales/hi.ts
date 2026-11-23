@@ -51,8 +51,7 @@ export const HI_MESSAGES: Record<string, string> = {
     "अगर आपने कोई प्लगइन नहीं भेजा है, तो इस ईमेल को अनदेखा करें।",
   "{name} is in the Wea marketplace": "{name} Wea मार्केटप्लेस में है",
   "Your Wea plugin submission: {name}": "आपका Wea प्लगइन सबमिशन: {name}",
-  "{name} is now listed in the Wea plugin marketplace.":
-    "{name} अब Wea प्लगइन मार्केटप्लेस में लिस्ट है।",
+  "{name} is now listed in the Wea plugin marketplace.": "{name} अब Wea प्लगइन मार्केटप्लेस में लिस्ट है।",
   "We couldn't list {name} in the Wea plugin marketplace.":
     "हम {name} को Wea प्लगइन मार्केटप्लेस में लिस्ट नहीं कर सके।",
   "Confirm your Wea page claim": "Wea पर अपने पेज दावे की पुष्टि करें",
@@ -94,4 +93,14 @@ export const HI_MESSAGES: Record<string, string> = {
   "It works for any other assistant too: send it one prompt and paste its reply.":
     "यह किसी भी दूसरे असिस्टेंट के साथ भी काम करता है: उसे एक प्रॉम्प्ट भेजें और उसका जवाब पेस्ट करें।",
   "Import an agent": "एजेंट इंपोर्ट करें",
+  "Welcome to Wea. Here's how to get started:": "Wea में आपका स्वागत है। ऐसे शुरू करें:",
+  "Open Wea": "Wea खोलें",
+  "Sign in at {web} from any browser. Your first bot is waiting there to help you set up.":
+    "किसी भी ब्राउज़र से {web} पर साइन इन करें। आपका पहला बॉट वहाँ सेटअप में मदद के लिए इंतज़ार कर रहा है।",
+  "Android app": "Android ऐप",
+  "The Wea app for Android is coming to Google Play soon. Until then, Wea works in your phone's browser too.":
+    "Android के लिए Wea ऐप जल्द ही Google Play पर आ रहा है। तब तक Wea आपके फ़ोन के ब्राउज़र में भी काम करता है।",
+  "Questions? Reply to this email or write to {email}.":
+    "कोई सवाल? इस ईमेल का जवाब दें या {email} पर लिखें।",
+  "The Wea team": "Wea टीम",
 };
