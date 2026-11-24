@@ -109,6 +109,14 @@ it("clears the macOS traffic lights beside Open navigation on a narrow desktop w
   expect(container.querySelector(".app-drag")).toBeNull();
 });
 
+it("fades the transcript under the floating name chip", () => {
+  renderHeader();
+  expect(container.querySelector('[data-testid="chat-header-fade"]')).not.toBeNull();
+  expect(container.querySelector('[data-testid="bot-settings-trigger"]')?.textContent).toContain(
+    "Helper",
+  );
+});
+
 it("shows no gift when the account cannot invite", () => {
   billing.status = { referral: null };
   renderHeader();
