@@ -102,9 +102,14 @@ export const FR_MESSAGES: Record<string, string> = {
   "Welcome to Wea. Here's how to get started:": "Bienvenue sur Wea. Voici comment commencer :",
   "Sign in at {web} from any browser. Your first bot is waiting there to help you set up.":
     "Connectez-vous sur {web} depuis n'importe quel navigateur. Votre premier bot vous y attend pour vous aider à tout configurer.",
+  "Desktop app": "Application de bureau",
+  "Download the Wea app for {windows}. Mac and Linux are coming later.":
+    "Téléchargez l’application Wea pour {windows}. Les versions Mac et Linux arriveront plus tard.",
   "Android app": "Application Android",
   "The Wea app for Android is coming to Google Play soon. Until then, Wea works in your phone's browser too.":
     "L'application Wea pour Android arrive bientôt sur Google Play. En attendant, Wea fonctionne aussi dans le navigateur de votre téléphone.",
+  "Download the Wea app for {android}. Google Play is coming later. You can also use Wea in your phone's browser.":
+    "Téléchargez l’application Wea pour {android}. Google Play arrivera plus tard. Vous pouvez aussi utiliser Wea dans le navigateur de votre téléphone.",
   "Questions? Reply to this email or write to {email}.":
     "Des questions ? Répondez à cet e-mail ou écrivez à {email}.",
   "The Wea team": "L'équipe Wea",

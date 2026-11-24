@@ -17,8 +17,20 @@ export type ClientKind = (typeof CLIENT_KINDS)[number];
 export type MinimumClientBuilds = Partial<Record<ClientKind, string>>;
 
 export const IOS_APP_STORE_URL = "https://apps.apple.com/app/rakazo/id6801531099";
-export const ANDROID_APK_URL =
-  "https://github.com/elie222/rakazo/releases/download/android/rakazo.apk";
+
+/** Public Wea app downloads from the `wea-apps` GitHub release. */
+export const WEA_DESKTOP_DOWNLOAD_URL =
+  "https://github.com/tools-weassist/rakazo/releases/download/wea-apps/Wea-Setup.exe";
+export const WEA_ANDROID_DOWNLOAD_URL =
+  "https://github.com/tools-weassist/rakazo/releases/download/wea-apps/Wea-android.apk";
+export const WEA_DESKTOP_VERSION = "0.13.1";
+export const WEA_ANDROID_VERSION = "1.3.0";
+export const WEA_DESKTOP_SETUP_SHA256 =
+  "afbe5dbcb6c03266f43f40263f744cda1de899681876b4bea8e030edc408dd34";
+export const WEA_ANDROID_APK_SHA256 =
+  "516414f12f87b0e8a084623ce7e72bfd185d848281037ded9c9cf2a5e37d3cb7";
+
+export const ANDROID_APK_URL = WEA_ANDROID_DOWNLOAD_URL;
 export const ANDROID_APP_STORE_URL = "https://play.google.com/store/apps/details?id=com.rakazo.app";
 
 const BUILD_ID = /^\d{14}$/;

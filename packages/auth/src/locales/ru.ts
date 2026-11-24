@@ -100,9 +100,14 @@ export const RU_MESSAGES: Record<string, string> = {
   "Welcome to Wea. Here's how to get started:": "Добро пожаловать в Wea. Вот как начать:",
   "Sign in at {web} from any browser. Your first bot is waiting there to help you set up.":
     "Войдите на {web} в любом браузере. Там вас ждёт первый бот, который поможет всё настроить.",
+  "Desktop app": "Приложение для компьютера",
+  "Download the Wea app for {windows}. Mac and Linux are coming later.":
+    "Скачайте приложение Wea для {windows}. Версии для Mac и Linux появятся позже.",
   "Android app": "Приложение для Android",
   "The Wea app for Android is coming to Google Play soon. Until then, Wea works in your phone's browser too.":
     "Приложение Wea для Android скоро появится в Google Play. А пока Wea работает и в браузере телефона.",
+  "Download the Wea app for {android}. Google Play is coming later. You can also use Wea in your phone's browser.":
+    "Скачайте приложение Wea для {android}. Google Play появится позже. Wea также работает в браузере телефона.",
   "Questions? Reply to this email or write to {email}.":
     "Есть вопросы? Ответьте на это письмо или напишите на {email}.",
   "The Wea team": "Команда Wea",

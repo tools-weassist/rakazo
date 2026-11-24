@@ -100,9 +100,14 @@ export const TR_MESSAGES: Record<string, string> = {
   "Welcome to Wea. Here's how to get started:": "Wea'ya hoş geldiniz. Başlamak için:",
   "Sign in at {web} from any browser. Your first bot is waiting there to help you set up.":
     "Herhangi bir tarayıcıdan {web} adresinde oturum açın. İlk botunuz kurulumda yardım etmek için orada sizi bekliyor.",
+  "Desktop app": "Masaüstü uygulaması",
+  "Download the Wea app for {windows}. Mac and Linux are coming later.":
+    "{windows} için Wea uygulamasını indirin. Mac ve Linux sürümleri daha sonra gelecek.",
   "Android app": "Android uygulaması",
   "The Wea app for Android is coming to Google Play soon. Until then, Wea works in your phone's browser too.":
     "Android için Wea uygulaması yakında Google Play'de. O zamana kadar Wea telefonunuzun tarayıcısında da çalışır.",
+  "Download the Wea app for {android}. Google Play is coming later. You can also use Wea in your phone's browser.":
+    "{android} için Wea uygulamasını indirin. Google Play daha sonra gelecek. Wea’yı telefonunuzun tarayıcısında da kullanabilirsiniz.",
   "Questions? Reply to this email or write to {email}.":
     "Sorunuz mu var? Bu e-postayı yanıtlayın veya {email} adresine yazın.",
   "The Wea team": "Wea ekibi",

@@ -96,9 +96,14 @@ export const HI_MESSAGES: Record<string, string> = {
   "Welcome to Wea. Here's how to get started:": "Wea में आपका स्वागत है। ऐसे शुरू करें:",
   "Sign in at {web} from any browser. Your first bot is waiting there to help you set up.":
     "किसी भी ब्राउज़र से {web} पर साइन इन करें। आपका पहला बॉट वहाँ सेटअप में मदद के लिए इंतज़ार कर रहा है।",
+  "Desktop app": "डेस्कटॉप ऐप",
+  "Download the Wea app for {windows}. Mac and Linux are coming later.":
+    "{windows} के लिए Wea ऐप डाउनलोड करें। Mac और Linux बाद में आएंगे।",
   "Android app": "Android ऐप",
   "The Wea app for Android is coming to Google Play soon. Until then, Wea works in your phone's browser too.":
     "Android के लिए Wea ऐप जल्द ही Google Play पर आ रहा है। तब तक Wea आपके फ़ोन के ब्राउज़र में भी काम करता है।",
+  "Download the Wea app for {android}. Google Play is coming later. You can also use Wea in your phone's browser.":
+    "{android} के लिए Wea ऐप डाउनलोड करें। Google Play बाद में आएगा। आप अपने फ़ोन के ब्राउज़र में भी Wea का इस्तेमाल कर सकते हैं।",
   "Questions? Reply to this email or write to {email}.":
     "कोई सवाल? इस ईमेल का जवाब दें या {email} पर लिखें।",
   "The Wea team": "Wea टीम",

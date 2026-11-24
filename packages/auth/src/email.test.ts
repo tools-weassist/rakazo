@@ -247,8 +247,18 @@ describe("email languages", () => {
     expect(english.subject).toBe("Welcome to Wea");
     expect(english.text).toContain("Hi Ana,");
     expect(english.text).toContain("Sign in at wea.weassist.io");
+    expect(english.text).toContain("Download the Wea app for Windows");
+    expect(english.text).toContain("Download the Wea app for Android");
+    expect(english.text).toContain("Mac and Linux are coming later");
+    expect(english.text).toContain("Google Play is coming later");
+    expect(english.html).toContain(
+      "https://github.com/tools-weassist/rakazo/releases/download/wea-apps/Wea-Setup.exe",
+    );
+    expect(english.html).toContain(
+      "https://github.com/tools-weassist/rakazo/releases/download/wea-apps/Wea-android.apk",
+    );
     expect(english.text).toContain("The Wea team");
-    expect(english.html).not.toMatch(/rakazo|discord/i);
+    expect(english.html).not.toMatch(/rakazo\.com|discord|play\.google\.com|apps\.apple\.com/i);
   });
 
   it("names a Space invitation's Space, never an organization, in every language", async () => {
