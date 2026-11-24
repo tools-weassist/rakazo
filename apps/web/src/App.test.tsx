@@ -70,6 +70,9 @@ vi.mock("./pages/integrations/IntegrationSetup", () => ({ IntegrationSetupPage: 
 vi.mock("./pages/integrations/McpOAuthCallback", () => ({
   McpOAuthCallbackPage: () => <div>MCP callback</div>,
 }));
+vi.mock("./pages/landing/LandingPage", () => ({
+  LandingPage: () => <div>Landing</div>,
+}));
 
 import { App } from "./App";
 
@@ -247,3 +250,75 @@ it("tells the call session who is signed in, without counting an unreachable loo
     vi.unstubAllGlobals();
   }
 });
+
+it("sends a signed-in visitor from `/` into the app", async () => {
+  vi.stubGlobal("IS_REACT_ACT_ENVIRONMENT", true);
+  const container = document.createElement("div");
+  const root = createRoot(container);
+  try {
+    await act(async () =>
+      root.render(
+        <MemoryRouter initialEntries={["/"]}>
+          <App />
+        </MemoryRouter>,
+      ),
+    );
+    await vi.waitFor(() => expect(container.textContent).toBe("Shell"));
+  } finally {
+    await act(async () => root.unmount());
+    vi.unstubAllGlobals();
+  }
+});
+
+it("shows the landing page to a signed-out browser visitor at `/`", async () => {
+  vi.stubGlobal("IS_REACT_ACT_ENVIRONMENT", true);
+  const container = document.createElement("div");
+  const root = createRoot(container);
+  capability.session = { isPending: false, data: null, error: null };
+  try {
+    await act(async () =>
+      root.render(
+        <MemoryRouter initialEntries={["/"]}>
+          <App />
+        </MemoryRouter>,
+      ),
+    );
+    await vi.waitFor(() => expect(container.textContent).toBe("Landing"));
+  } finally {
+    capability.session = null;
+    await act(async () => root.unmount());
+    vi.unstubAllGlobals();
+  }
+});
+
+it.each([
+  [true, "Auth in"],
+  [false, "Auth up"],
+])(
+  "keeps a signed-out desktop client on the auth flow at `/` (returning=%s)",
+  async (returning, text) => {
+    vi.stubGlobal("IS_REACT_ACT_ENVIRONMENT", true);
+    const container = document.createElement("div");
+    const root = createRoot(container);
+    capability.session = { isPending: false, data: null, error: null };
+    window.rakazoDesktop = {} as never;
+    if (returning) window.localStorage.setItem("rakazo.signed-in-before", "1");
+    else window.localStorage.removeItem("rakazo.signed-in-before");
+    try {
+      await act(async () =>
+        root.render(
+          <MemoryRouter initialEntries={["/"]}>
+            <App />
+          </MemoryRouter>,
+        ),
+      );
+      await vi.waitFor(() => expect(container.textContent).toBe(text));
+    } finally {
+      delete window.rakazoDesktop;
+      window.localStorage.removeItem("rakazo.signed-in-before");
+      capability.session = null;
+      await act(async () => root.unmount());
+      vi.unstubAllGlobals();
+    }
+  },
+);
