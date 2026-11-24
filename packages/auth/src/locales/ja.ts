@@ -99,9 +99,14 @@ export const JA_MESSAGES: Record<string, string> = {
   "Welcome to Wea. Here's how to get started:": "Wea へようこそ。始め方はこちらです:",
   "Sign in at {web} from any browser. Your first bot is waiting there to help you set up.":
     "お好きなブラウザで {web} にサインインしてください。最初のボットがセットアップをお手伝いします。",
+  "Desktop app": "デスクトップアプリ",
+  "Download the Wea app for {windows}. Mac and Linux are coming later.":
+    "{windows} 向けの Wea アプリをダウンロードしてください。Mac と Linux は後日公開予定です。",
   "Android app": "Android アプリ",
   "The Wea app for Android is coming to Google Play soon. Until then, Wea works in your phone's browser too.":
     "Android 版 Wea アプリはまもなく Google Play で公開予定です。それまではスマートフォンのブラウザでも Wea をご利用いただけます。",
+  "Download the Wea app for {android}. Google Play is coming later. You can also use Wea in your phone's browser.":
+    "{android} 向けの Wea アプリをダウンロードしてください。Google Play は後日公開予定です。スマートフォンのブラウザでも Wea をご利用いただけます。",
   "Questions? Reply to this email or write to {email}.":
     "ご不明な点は、このメールに返信するか {email} までご連絡ください。",
   "The Wea team": "Wea チーム",

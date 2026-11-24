@@ -99,9 +99,14 @@ export const KO_MESSAGES: Record<string, string> = {
   "Welcome to Wea. Here's how to get started:": "Wea에 오신 것을 환영합니다. 이렇게 시작하세요:",
   "Sign in at {web} from any browser. Your first bot is waiting there to help you set up.":
     "아무 브라우저에서나 {web}에 로그인하세요. 첫 번째 봇이 설정을 도와드리려고 기다리고 있어요.",
+  "Desktop app": "데스크톱 앱",
+  "Download the Wea app for {windows}. Mac and Linux are coming later.":
+    "{windows}용 Wea 앱을 다운로드하세요. Mac과 Linux는 나중에 제공됩니다.",
   "Android app": "Android 앱",
   "The Wea app for Android is coming to Google Play soon. Until then, Wea works in your phone's browser too.":
     "Android용 Wea 앱이 곧 Google Play에 출시됩니다. 그전까지는 휴대폰 브라우저에서도 Wea를 사용할 수 있어요.",
+  "Download the Wea app for {android}. Google Play is coming later. You can also use Wea in your phone's browser.":
+    "{android}용 Wea 앱을 다운로드하세요. Google Play는 나중에 제공됩니다. 휴대폰 브라우저에서도 Wea를 사용할 수 있습니다.",
   "Questions? Reply to this email or write to {email}.":
     "궁금한 점이 있으신가요? 이 이메일에 답장하거나 {email}로 문의하세요.",
   "The Wea team": "Wea 팀",

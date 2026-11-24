@@ -90,9 +90,14 @@ export const ZH_CN_MESSAGES: Record<string, string> = {
   "Welcome to Wea. Here's how to get started:": "欢迎使用 Wea。按以下步骤开始：",
   "Sign in at {web} from any browser. Your first bot is waiting there to help you set up.":
     "在任意浏览器中登录 {web}。你的第一个机器人正在那里等你，帮你完成设置。",
+  "Desktop app": "桌面应用",
+  "Download the Wea app for {windows}. Mac and Linux are coming later.":
+    "下载适用于 {windows} 的 Wea 应用。Mac 和 Linux 版本稍后推出。",
   "Android app": "Android 应用",
   "The Wea app for Android is coming to Google Play soon. Until then, Wea works in your phone's browser too.":
     "Wea Android 应用即将登陆 Google Play。在此之前，你也可以在手机浏览器中使用 Wea。",
+  "Download the Wea app for {android}. Google Play is coming later. You can also use Wea in your phone's browser.":
+    "下载适用于 {android} 的 Wea 应用。Google Play 稍后推出。你也可以在手机浏览器中使用 Wea。",
   "Questions? Reply to this email or write to {email}.":
     "有问题？直接回复这封邮件，或写信至 {email}。",
   "The Wea team": "Wea 团队",

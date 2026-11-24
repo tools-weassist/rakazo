@@ -95,9 +95,14 @@ export const HE_MESSAGES: Record<string, string> = {
   "Welcome to Wea. Here's how to get started:": "ברוכים הבאים ל-Wea. כך מתחילים:",
   "Sign in at {web} from any browser. Your first bot is waiting there to help you set up.":
     "התחברו ב-{web} מכל דפדפן. הבוט הראשון שלכם מחכה שם כדי לעזור לכם בהגדרה.",
+  "Desktop app": "אפליקציית שולחן העבודה",
+  "Download the Wea app for {windows}. Mac and Linux are coming later.":
+    "הורידו את אפליקציית Wea עבור {windows}. גרסאות ל-Mac ול-Linux יגיעו בהמשך.",
   "Android app": "אפליקציית Android",
   "The Wea app for Android is coming to Google Play soon. Until then, Wea works in your phone's browser too.":
     "אפליקציית Wea ל-Android תגיע בקרוב ל-Google Play. עד אז, Wea עובדת גם בדפדפן של הטלפון.",
+  "Download the Wea app for {android}. Google Play is coming later. You can also use Wea in your phone's browser.":
+    "הורידו את אפליקציית Wea עבור {android}. Google Play יגיע בהמשך. אפשר גם להשתמש ב-Wea בדפדפן של הטלפון.",
   "Questions? Reply to this email or write to {email}.":
     "שאלות? השיבו למייל הזה או כתבו אל {email}.",
   "The Wea team": "צוות Wea",

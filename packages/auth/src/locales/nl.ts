@@ -99,9 +99,14 @@ export const NL_MESSAGES: Record<string, string> = {
   "Welcome to Wea. Here's how to get started:": "Welkom bij Wea. Zo ga je aan de slag:",
   "Sign in at {web} from any browser. Your first bot is waiting there to help you set up.":
     "Log in op {web} vanuit elke browser. Je eerste bot wacht daar om je te helpen alles in te stellen.",
+  "Desktop app": "Desktop-app",
+  "Download the Wea app for {windows}. Mac and Linux are coming later.":
+    "Download de Wea-app voor {windows}. Mac en Linux volgen later.",
   "Android app": "Android-app",
   "The Wea app for Android is coming to Google Play soon. Until then, Wea works in your phone's browser too.":
     "De Wea-app voor Android komt binnenkort naar Google Play. Tot die tijd werkt Wea ook in de browser van je telefoon.",
+  "Download the Wea app for {android}. Google Play is coming later. You can also use Wea in your phone's browser.":
+    "Download de Wea-app voor {android}. Google Play volgt later. Je kunt Wea ook in de browser van je telefoon gebruiken.",
   "Questions? Reply to this email or write to {email}.":
     "Vragen? Beantwoord deze e-mail of schrijf naar {email}.",
   "The Wea team": "Het Wea-team",

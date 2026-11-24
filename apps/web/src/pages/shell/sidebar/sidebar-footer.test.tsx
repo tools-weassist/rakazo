@@ -173,13 +173,14 @@ it("omits Board when unavailable", async () => {
   );
 });
 
-it("offers Google Play on Android", async () => {
+it("opens the Wea download page for the mobile app, including on Android", async () => {
   vi.spyOn(navigator, "userAgent", "get").mockReturnValue("Android");
   await render();
   const mobile = [...document.querySelectorAll("a")].find(
     (link) => link.textContent === "Get the mobile app",
   )!;
-  expect(mobile.href).toBe("https://play.google.com/store/apps/details?id=com.rakazo.app");
+  expect(mobile.getAttribute("href")).toBe("/download");
+  expect(mobile.href).not.toMatch(/play\.google\.com|apps\.apple\.com|com\.rakazo\.app/);
 });
 
 it("falls back when app artwork fails and accepts replacement artwork", async () => {

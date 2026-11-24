@@ -69,6 +69,9 @@ const OnboardingPage = lazyComponent(() =>
 const NotFoundPage = lazyComponent(() =>
   import("./pages/NotFound").then((module) => module.NotFoundPage),
 );
+const DownloadPage = lazyComponent(() =>
+  import("./pages/DownloadPage").then((module) => module.DownloadPage),
+);
 const ArtifactsPage = lazyComponent(() =>
   import("./pages/space/Artifacts").then((module) => module.ArtifactsPage),
 );
@@ -234,6 +237,7 @@ function SessionApp() {
                 }
               />
               <Route path="/reset-password" element={<PasswordResetPage />} />
+              <Route path="/download" element={<DownloadPage />} />
               <Route path="/p/:slugToken" element={<SharedPagePage />} />
               <Route
                 path="/review/:pageId?"

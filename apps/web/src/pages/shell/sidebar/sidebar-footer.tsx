@@ -1,6 +1,5 @@
 import { Trans, useLingui } from "@lingui/react/macro";
 import type { NavLink } from "@rakazo/contracts";
-import { ANDROID_APP_STORE_URL, IOS_APP_STORE_URL } from "@rakazo/contracts";
 import {
   AppMarkStack,
   Button,
@@ -34,7 +33,7 @@ import { useLayoutEffect, useRef, useState } from "react";
 import { OpenSourceLicensesDialog } from "../../../components/account/open-source-licenses-dialog";
 import { useSidebarUpdate } from "../../../components/DesktopUpdates";
 import { IconTooltip } from "../../../components/IconTooltip";
-import { WEA_SUPPORT_URL } from "../../../lib/brand/wea";
+import { WEA_DOWNLOAD_PATH, WEA_SUPPORT_URL } from "../../../lib/brand/wea";
 import type { Organization } from "../../../lib/spaces/organizations";
 
 type Props = {
@@ -278,9 +277,7 @@ export function SidebarFooter({
             <div className="my-1 border-t border-border" />
             <a
               className={`${buttonVariants({ variant: "ghost", size: "lg" })} w-full justify-start gap-2.5 font-normal`}
-              href={
-                /Android/i.test(navigator.userAgent) ? ANDROID_APP_STORE_URL : IOS_APP_STORE_URL
-              }
+              href={WEA_DOWNLOAD_PATH}
               target="_blank"
               rel="noreferrer"
             >
