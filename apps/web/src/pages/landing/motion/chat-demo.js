@@ -12,39 +12,38 @@ var root = typeof window !== 'undefined' ? window : globalThis;
 
   // Copy rules: sentence case, no dashes, no exclamation marks.
   var SCENES = [
-    { bot: 'inbox', time: '8:02 AM', line: 'Sent 3 replies', steps: [
+    { bot: 'inbox-admin-triage', time: '8:02 AM', line: 'Sent 3 replies', steps: [
       { t: 'bot', text: 'Good morning. Three client emails came in overnight. I drafted replies in your usual tone. Want me to send them?' },
       { t: 'card', title: 'Drafts ready', meta: '3 of 3', rows: [['Juniper Row Bakery', 'Reply: rescheduling our call'], ['Fernwick Florals', 'Reply: invoice question'], ['Saltmeadow Yoga', 'Reply: welcome and next steps']], yes: 'Send all', no: 'Edit first' },
       { t: 'tap' },
       { t: 'receipt', text: 'Sent 3 replies' } ] },
-    { bot: 'calendar', time: '8:04 AM', line: 'Invite sent for Thursday', steps: [
+    { bot: 'calendar-keeper', time: '8:04 AM', line: 'Invite sent for Thursday', steps: [
       { t: 'user', text: 'Move my call with Juniper Row Bakery to Thursday.' },
       { t: 'bot', text: 'Thursday 10:00 AM works for you both. Shall I send the new invite?' },
       { t: 'card', title: 'New time', meta: '30 min', rows: [['Thu 10:00 AM', 'Call with Juniper Row Bakery']], yes: 'Approve', no: 'Other times' },
       { t: 'tap' },
       { t: 'receipt', text: 'Invite sent for Thursday' } ] },
-    { bot: 'content', time: '8:10 AM', line: '2 posts scheduled', steps: [
+    { bot: 'content-calendar-planner', time: '8:10 AM', line: '2 posts scheduled', steps: [
       { t: 'bot', text: 'Two posts are ready for next week. Take a look before I schedule them.' },
       { t: 'card', title: 'Posts to review', meta: '2 of 2', rows: [['Monday', 'Quick tip: three ways to clear your inbox'], ['Wednesday', 'Client story: a calmer launch week']], yes: 'Schedule both', no: 'Edit first' },
       { t: 'tap' },
       { t: 'receipt', text: 'Scheduled for Monday and Wednesday' } ] },
-    { bot: 'followup', time: '8:15 AM', line: '4 reminders queued', steps: [
+    { bot: 'lead-follow-up', time: '8:15 AM', line: '4 reminders queued', steps: [
       { t: 'bot', text: 'Four leads have not replied in a week. I wrote gentle follow ups for each one.' },
       { t: 'card', title: 'Follow ups', meta: '4 leads', rows: [['Fernwick Florals', 'Checking in on the proposal'], ['Saltmeadow Yoga', 'Any questions about pricing'], ['2 more', 'Short and friendly nudges']], yes: 'Queue all', no: 'Edit first' },
       { t: 'tap' },
       { t: 'receipt', text: '4 reminders queued for tomorrow 9:00 AM' } ] },
-    { bot: 'research', time: '8:20 AM', line: 'Market notes for Monday', steps: [
-      { t: 'user', text: 'What changed in my market this week?' },
-      { t: 'bot', text: 'Here are three things worth knowing before Monday. Want me to save them to your notes?' },
-      { t: 'card', title: 'Market notes', meta: 'This week', rows: [['Pricing', 'Two competitors raised their rates'], ['Demand', 'More searches for done for you help']], yes: 'Save to notes', no: 'Not now' },
+    { bot: 'meeting-action-items', time: '8:20 AM', line: 'Notes shared', steps: [
+      { t: 'user', text: 'Can you write up my call with Saltmeadow Yoga?' },
+      { t: 'bot', text: 'Here are the notes and three next actions. Want me to share them?' },
+      { t: 'card', title: 'Meeting notes', meta: '3 actions', rows: [['Saltmeadow Yoga', 'Call notes and next actions'], ['Next action', 'Send the new class schedule by Friday']], yes: 'Share notes', no: 'Edit first' },
       { t: 'tap' },
-      { t: 'receipt', text: 'Saved to Monday notes' } ] },
-    { bot: 'books', time: '8:24 AM', line: 'Reminder on for the 5th', steps: [
-      { t: 'user', text: 'File receipts by the 5th.' },
-      { t: 'bot', text: 'Got it. I will sort new receipts into this month\u2019s folder and remind you on the 5th.' },
-      { t: 'card', title: 'Monthly reminder', meta: 'Every month', rows: [['5th of the month', 'File receipts and send to your bookkeeper']], yes: 'Turn on', no: 'Not now' },
+      { t: 'receipt', text: 'Notes shared' } ] },
+    { bot: 'morning-briefing', time: '8:24 AM', line: 'Briefing done for today', steps: [
+      { t: 'bot', text: 'Good morning. Here is your day before you start.' },
+      { t: 'card', title: 'Your morning briefing', meta: 'Today', rows: [['Inbox', '3 replies waiting for your yes'], ['Calendar', 'Call with Juniper Row Bakery at 10:00 AM']], yes: 'Looks good', no: 'Not now' },
       { t: 'tap' },
-      { t: 'receipt', text: 'Reminder on for the 5th' } ] }
+      { t: 'receipt', text: 'Briefing done for today' } ] }
   ];
 
   function h(tag, cls, html) { var n = document.createElement(tag); if (cls) n.className = cls; if (html != null) n.innerHTML = html; return n; }
@@ -59,7 +58,7 @@ var root = typeof window !== 'undefined' ? window : globalThis;
     if (!host.getAttribute('aria-label')) host.setAttribute('aria-label', 'The Wea app. Each bot drafts its work and waits for your yes before it sends anything.');
     host.innerHTML = '';
 
-    var bar = h('div', 'wchat-bar', '<i></i><i></i><i></i><span class="wchat-brand"><img src="' + (opts.mark || '/landing/wea-mark-light.svg') + '" alt="" width="22" height="22">Wea</span>');
+    var bar = h('div', 'wchat-bar', '<i></i><i></i><i></i><span class="wchat-brand"><img src="' + (opts.mark || '../assets/brand/logo/wea-mark-light.svg') + '" alt="" width="22" height="22">Wea</span>');
     var body = h('div', 'wchat-body');
     var side = h('aside', 'wchat-side');
     side.appendChild(h('div', 'wchat-side-h', '<span>Your bots</span><b aria-hidden="true">+</b>'));
@@ -69,7 +68,7 @@ var root = typeof window !== 'undefined' ? window : globalThis;
     var rows = {};
     SCENES.forEach(function (s) {
       var r = h('div', 'wchat-row');
-      var av = h('span', 'wchat-av'); av.appendChild(WeaBot.create(s.bot, { size: 40, badge: false }));
+      var av = h('span', 'wchat-av'); av.appendChild(WeaBot.create(s.bot, { size: 40 }));
       r.appendChild(av);
       var tx = h('div', 'wchat-row-t', '<b>' + esc(BOTS[s.bot].name) + '</b><span class="wchat-line">' + esc(s.idle || 'Ready when you are') + '</span>');
       r.appendChild(tx);
@@ -81,9 +80,9 @@ var root = typeof window !== 'undefined' ? window : globalThis;
     // hint that this is one of several teams
     var more = h('div', 'wchat-more');
     var mst = h('span', 'wchat-more-s');
-    ['support', 'social', 'invoice'].forEach(function (k) { if (BOTS[k]) mst.appendChild(WeaBot.create(k, { size: 26, badge: false })); });
+    ['social-post-repurposer', 'month-end-close', 'weekly-ops-report'].forEach(function (k) { if (BOTS[k]) mst.appendChild(WeaBot.create(k, { size: 26 })); });
     more.appendChild(mst);
-    more.appendChild(h('span', 'wchat-more-t', '<b>2 more teams</b><span>5 bots working</span>'));
+    more.appendChild(h('span', 'wchat-more-t', '<b>28 more bots</b><span>and 10 ready teams</span>'));
     side.appendChild(more);
     side.appendChild(h('div', 'wchat-you', '<span>Y</span>You'));
 
@@ -96,8 +95,8 @@ var root = typeof window !== 'undefined' ? window : globalThis;
     // mobile roster strip
     var strip = h('div', 'wchat-strip');
     var stripItems = {};
-    SCENES.forEach(function (s) { var it = h('span', 'wchat-strip-i'); it.appendChild(WeaBot.create(s.bot, { size: 34, badge: false })); strip.appendChild(it); stripItems[s.bot] = it; });
-    strip.appendChild(h('span', 'wchat-strip-more', '+5'));
+    SCENES.forEach(function (s) { var it = h('span', 'wchat-strip-i'); it.appendChild(WeaBot.create(s.bot, { size: 34 })); strip.appendChild(it); stripItems[s.bot] = it; });
+    strip.appendChild(h('span', 'wchat-strip-more', '+28'));
     var thread = h('div', 'wchat-thread');
     var scroller = h('div', 'wchat-scroll'); thread.appendChild(scroller);
     var composer = h('div', 'wchat-compose', '<b aria-hidden="true">+</b><span class="wchat-input"><span class="wchat-ph"></span><span class="wchat-typed"></span></span><span class="wchat-send"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M21 3L10 14M21 3l-7 18-4-7-7-4z" fill="none" stroke="#fff" stroke-width="1.9" stroke-linejoin="round"/></svg></span>');
@@ -137,7 +136,7 @@ var root = typeof window !== 'undefined' ? window : globalThis;
       hilite.style.height = r.offsetHeight + 'px';
       if (instant) hilite.style.transition = 'none'; else hilite.style.transition = '';
       Object.keys(rows).forEach(function (k) { rows[k].classList.toggle('is-on', k === s.bot); stripItems[k].classList.toggle('is-on', k === s.bot); });
-      headAv.innerHTML = ''; headAv.appendChild(WeaBot.create(s.bot, { size: 32, badge: false }));
+      headAv.innerHTML = ''; headAv.appendChild(WeaBot.create(s.bot, { size: 32 }));
       headName.textContent = BOTS[s.bot].name;
       ph.textContent = 'Message ' + BOTS[s.bot].name;
       setChip('working');
@@ -159,14 +158,14 @@ var root = typeof window !== 'undefined' ? window : globalThis;
     function add(n) { scroller.appendChild(n); fit(); return n; }
     function botMsg(s, text) {
       var m = h('div', 'wchat-msg');
-      var av = h('span', 'wchat-msg-av'); av.appendChild(WeaBot.create(s.bot, { size: 28, badge: false }));
+      var av = h('span', 'wchat-msg-av'); av.appendChild(WeaBot.create(s.bot, { size: 28 }));
       m.appendChild(av);
       m.appendChild(h('div', 'wchat-msg-b', '<div class="wchat-msg-h"><b>' + esc(BOTS[s.bot].name) + '</b><time>' + s.time + '</time></div><p>' + esc(text) + '</p>'));
       return m;
     }
     function typingRow(s) {
       var m = h('div', 'wchat-msg wchat-typing');
-      var av = h('span', 'wchat-msg-av'); av.appendChild(WeaBot.create(s.bot, { size: 28, badge: false }));
+      var av = h('span', 'wchat-msg-av'); av.appendChild(WeaBot.create(s.bot, { size: 28 }));
       m.appendChild(av);
       m.appendChild(h('div', 'wchat-dots', '<i></i><i></i><i></i>'));
       return m;
@@ -295,11 +294,6 @@ var root = typeof window !== 'undefined' ? window : globalThis;
     var onR = function () { var r = rows[SCENES[state.scene % SCENES.length].bot]; hilite.style.transition = 'none'; hilite.style.transform = 'translateY(' + r.offsetTop + 'px)'; hilite.style.height = r.offsetHeight + 'px'; };
     root.addEventListener('resize', onR);
     loop();
-    state.stop = function () {
-      state.alive = false;
-      state.running = false;
-      root.removeEventListener('resize', onR);
-    };
     return state;
   }
 

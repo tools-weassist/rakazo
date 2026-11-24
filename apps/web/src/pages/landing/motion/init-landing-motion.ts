@@ -3,6 +3,10 @@ import { WeaBot } from "./animated-bot.js";
 // @ts-expect-error plain JS motion module
 import { WeaChat } from "./chat-demo.js";
 // @ts-expect-error plain JS motion module
+import { WeaConnect } from "./connect-showcase.js";
+// @ts-expect-error plain JS motion module
+import { WeaDevices } from "./devices-showcase.js";
+// @ts-expect-error plain JS motion module
 import { initReveal } from "./reveal.js";
 // @ts-expect-error plain JS motion module
 import { WeaTeam } from "./team-showcase.js";
@@ -22,12 +26,16 @@ export function initLandingMotion(root: HTMLElement): () => void {
     );
   });
   WeaTeam.mount(root);
+  const stopDevices = WeaDevices.mount(root) as () => void;
+  const stopConnect = WeaConnect.mount(root) as () => void;
   const stopReveal = initReveal(root) as () => void;
 
   return () => {
     for (const state of chats) {
       state.stop?.();
     }
+    stopDevices?.();
+    stopConnect?.();
     stopReveal?.();
     WeaBot.destroy?.();
   };

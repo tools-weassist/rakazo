@@ -1,8 +1,7 @@
 import { Trans, useLingui } from "@lingui/react/macro";
-import { type ReactNode, useEffect, useId, useRef, useState } from "react";
+import type { ReactNode } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 import { Link } from "react-router-dom";
-import { BreathLine } from "./BreathLine";
-import { TeamPicker } from "./TeamPicker";
 import {
   WEA_ANDROID_DOWNLOAD_URL,
   WEA_ANDROID_VERSION,
@@ -11,19 +10,23 @@ import {
   WEA_DOWNLOAD_PATH,
   WEA_SUPPORT_URL,
 } from "../../lib/brand/wea";
+import { BreathLine } from "./BreathLine";
+import { ConnectSections } from "./ConnectSections";
+import { DevicesShowcase } from "./DevicesShowcase";
+import { TeamPicker } from "./TeamPicker";
 import "./landing.css";
 import "./motion/wea-motion.css";
 
 const LANDING_TITLE = "Wea, breathe, the busywork is handled";
 const DEFAULT_TITLE = "Wea";
 const HERO_CHAT_ARIA =
-  "The Wea app. Each bot drafts its work, waits for your yes, then marks it done. Inbox triage sends three replies, Calendar keeper moves a call to Thursday, and Receipt sorter sets a reminder for the 5th.";
+  "The Wea app. Each bot drafts its work, waits for your yes, then marks it done. Inbox and admin triage sends three replies, Calendar keeper moves a call to Thursday, and Morning briefing shares your day.";
 
 const FEATURES = [
   {
     id: "one-job",
     title: "Each bot has one job",
-    body: "Inbox triage, Calendar keeper, Content calendar, Lead follow-up. One clear job per bot keeps the work tidy and easy to check.",
+    body: "Inbox and admin triage, Calendar keeper, Content calendar, Lead follow-up. One clear job per bot keeps the work tidy and easy to check.",
     art: "feature-one-job.svg",
   },
   {
@@ -79,11 +82,11 @@ const FAQS = [
   },
   {
     q: "Where can I use Wea?",
-    a: "In your browser, on Windows desktop and on Android. Sign in with the same account on each.",
+    a: "On web, desktop and phone. Open Wea in a modern browser on your computer or your phone and sign in with the same account.",
   },
   {
     q: "What do I need to get started?",
-    a: "Create an account, then connect your own AI provider key. Wea works in your browser, on Windows and on Android.",
+    a: "Create an account and start in your browser, on Windows or on Android. You can use Wea right away, or connect your own AI plan or key.",
   },
   {
     q: "How do I get help?",
@@ -91,7 +94,10 @@ const FAQS = [
   },
 ] as const;
 
-type HeroSecondary = { href: string; label: "Download for Windows" | "Download for Android" | "Sign in" };
+type HeroSecondary = {
+  href: string;
+  label: "Download for Windows" | "Download for Android" | "Sign in";
+};
 
 /** Public marketing page at `/` for signed-out browser visitors. */
 export function LandingPage() {
@@ -291,13 +297,13 @@ export function LandingPage() {
                 data-mark="/landing/wea-mark-light.svg"
                 aria-label={HERO_CHAT_ARIA}
               >
-              <picture>
-                <source media="(max-width: 760px)" srcSet="/landing/wea-hero-app-mobile.svg" />
-                <img
-                  src="/landing/wea-hero-app.svg"
-                  alt={t`The Wea app. Inbox triage drafts three replies and asks before sending, then Calendar keeper asks you to approve a Thursday slot.`}
-                />
-              </picture>
+                <picture>
+                  <source media="(max-width: 760px)" srcSet="/landing/wea-hero-app-mobile.svg" />
+                  <img
+                    src="/landing/wea-hero-app.svg"
+                    alt={t`The Wea app. Inbox and admin triage drafts three replies and asks before sending, then Calendar keeper asks you to approve a Thursday slot.`}
+                  />
+                </picture>
               </div>
             </div>
           </div>
@@ -520,15 +526,11 @@ export function LandingPage() {
                 <Trans>Install tips and checksums</Trans>
               </Link>
             </p>
-            <div className="wea-devices" data-reveal="">
-              <img
-                data-parallax="0.05"
-                src="/landing/wea-devices.svg"
-                alt={t`Wea on the web, on a Windows desktop and on an Android phone.`}
-              />
-            </div>
+            <DevicesShowcase />
           </div>
         </section>
+
+        <ConnectSections />
 
         <section className="wea-sec wea-faq" id="faq">
           <div className="wea-wrap wea-split" data-reveal-group="">
@@ -558,9 +560,9 @@ export function LandingPage() {
         <section className="wea-final">
           <div className="wea-wrap" data-reveal-group="">
             <div className="wm-trio" data-reveal="" aria-hidden="true">
-              <span data-wea-bot="inbox" data-size="56" data-badge="false" />
-              <span data-wea-bot="calendar" data-size="64" data-badge="false" />
-              <span data-wea-bot="books" data-size="56" data-badge="false" />
+              <span data-wea-bot="inbox-admin-triage" data-size="56" />
+              <span data-wea-bot="morning-briefing" data-size="64" />
+              <span data-wea-bot="calendar-keeper" data-size="56" />
             </div>
             <h2 data-reveal="">
               <Trans>Take a breath. Wea has the list.</Trans>
@@ -648,9 +650,6 @@ export function LandingPage() {
             </div>
           </div>
           <p className="wea-footer-pilot">
-            <span>
-              <Trans>Wea is a WeAssist internal pilot</Trans>
-            </span>
             <a href={WEA_DESKTOP_DOWNLOAD_URL}>
               <Trans>Desktop (Windows)</Trans>
             </a>
@@ -699,11 +698,27 @@ function AudienceItem({ children }: { children: ReactNode }) {
 
 function MenuIcon({ open }: { open: boolean }) {
   return open ? (
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
+    <svg
+      width="20"
+      height="20"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      aria-hidden="true"
+    >
       <path d="M6 6l12 12M18 6L6 18" strokeLinecap="round" />
     </svg>
   ) : (
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
+    <svg
+      width="20"
+      height="20"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      aria-hidden="true"
+    >
       <path d="M4 7h16M4 12h16M4 17h16" strokeLinecap="round" />
     </svg>
   );
@@ -728,7 +743,11 @@ function CheckIcon() {
 function GlobeIcon() {
   return (
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true">
-      <path d="M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18zM3 12h18M12 3c3 3.5 3 14.5 0 18M12 3c-3 3.5-3 14.5 0 18" strokeLinecap="round" strokeLinejoin="round" />
+      <path
+        d="M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18zM3 12h18M12 3c3 3.5 3 14.5 0 18M12 3c-3 3.5-3 14.5 0 18"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
     </svg>
   );
 }
@@ -744,7 +763,11 @@ function MonitorIcon() {
 function PhoneIcon() {
   return (
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true">
-      <path d="M8 3h8a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2zM10 18h4" strokeLinecap="round" strokeLinejoin="round" />
+      <path
+        d="M8 3h8a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2zM10 18h4"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
     </svg>
   );
 }
