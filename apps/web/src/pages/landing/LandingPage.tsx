@@ -45,7 +45,7 @@ const FEATURES = [
   {
     id: "learns",
     title: "It learns how you work",
-    body: "Tell Wea something once, like when invoices go out, and it remembers and suggests ways to save time.",
+    body: "Tell Wea something once, like how you file receipts, and it remembers and can suggest a monthly reminder.",
     art: "feature-learns.svg",
   },
 ] as const;
@@ -270,7 +270,7 @@ export function LandingPage() {
                 <source media="(max-width: 760px)" srcSet="/landing/wea-hero-app-mobile.svg" />
                 <img
                   src="/landing/wea-hero-app.svg"
-                  alt={t`The Wea app. Inbox triage has drafted three client replies and asks before sending, then Calendar keeper asks you to approve a Thursday slot.`}
+                  alt={t`The Wea app. Inbox triage drafts three replies and asks before sending, then Calendar keeper asks you to approve a Thursday slot.`}
                 />
               </picture>
             </div>

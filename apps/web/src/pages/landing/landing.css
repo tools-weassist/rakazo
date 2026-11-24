@@ -14,6 +14,11 @@
   font-display: swap;
 }
 
+/* Sticky nav is 72px plus a 1px border. Keep hash targets visible beneath it. */
+html:has(.wea-landing) {
+  scroll-padding-top: 5.5rem;
+}
+
 .wea-landing {
   --wea-ink: #142134;
   --wea-slate: #4a5a70;

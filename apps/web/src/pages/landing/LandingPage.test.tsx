@@ -59,6 +59,9 @@ it("renders Brandi's landing copy, real bot names, and the download links", asyn
   expect(host.textContent).toContain("Wea asks before it acts");
   expect(host.textContent).toContain("Bots hand off to each other");
   expect(host.textContent).toContain("It learns how you work");
+  expect(host.textContent).toContain("how you file receipts");
+  expect(host.textContent).toContain("suggest a monthly reminder");
+  expect(host.querySelector('[data-testid="feature-learns"]')?.textContent).not.toContain("invoices");
   expect(host.textContent).toContain("Three steps to a lighter day");
   expect(host.textContent).toContain(`version ${WEA_DESKTOP_VERSION}`);
   expect(host.textContent).toContain("about 136 MB");
