@@ -97,6 +97,7 @@ function Checksum({ value }: { value: string }) {
   return (
     <p className="text-body-sm text-muted-foreground">
       <span className="me-2">SHA256</span>
+      {/* off-scale: shrink a long checksum so it wraps inside the column */}
       <code className="break-all font-mono text-[0.85em] text-foreground">{value}</code>
     </p>
   );
