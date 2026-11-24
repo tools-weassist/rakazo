@@ -1,6 +1,8 @@
 import { Trans, useLingui } from "@lingui/react/macro";
 import { type ReactNode, useEffect, useId, useRef, useState } from "react";
 import { Link } from "react-router-dom";
+import { BreathLine } from "./BreathLine";
+import { TeamPicker } from "./TeamPicker";
 import {
   WEA_ANDROID_DOWNLOAD_URL,
   WEA_ANDROID_VERSION,
@@ -10,18 +12,12 @@ import {
   WEA_SUPPORT_URL,
 } from "../../lib/brand/wea";
 import "./landing.css";
+import "./motion/wea-motion.css";
 
 const LANDING_TITLE = "Wea, breathe, the busywork is handled";
 const DEFAULT_TITLE = "Wea";
-
-const BOTS = [
-  { id: "inbox", file: "bot-inbox.svg", name: "Inbox triage" },
-  { id: "calendar", file: "bot-calendar.svg", name: "Calendar keeper" },
-  { id: "content", file: "bot-content.svg", name: "Content calendar" },
-  { id: "follow-up", file: "bot-follow-up.svg", name: "Lead follow-up" },
-  { id: "research", file: "bot-research.svg", name: "Topic watch" },
-  { id: "books", file: "bot-books.svg", name: "Receipt sorter" },
-] as const;
+const HERO_CHAT_ARIA =
+  "The Wea app. Each bot drafts its work, waits for your yes, then marks it done. Inbox triage sends three replies, Calendar keeper moves a call to Thursday, and Receipt sorter sets a reminder for the 5th.";
 
 const FEATURES = [
   {
@@ -71,7 +67,7 @@ const STEPS = [
 const FAQS = [
   {
     q: "What is Wea?",
-    a: "Wea is a small team of AI bots that take care of everyday busywork for business owners and virtual assistants. Each bot has one job, and they work together.",
+    a: "Wea gives you teams of AI bots that take care of everyday busywork for business owners, outsourced professionals or virtual assistants. Each bot has one job, and they work together.",
   },
   {
     q: "Does Wea do things without asking?",
@@ -79,7 +75,7 @@ const FAQS = [
   },
   {
     q: "Who is Wea for?",
-    a: "Business owners who want time back, and virtual assistants who manage work for several clients.",
+    a: "Business owners who want time back, and outsourced professionals or virtual assistants who manage work for several clients.",
   },
   {
     q: "Where can I use Wea?",
@@ -108,12 +104,28 @@ export function LandingPage() {
   });
   const menuBtnRef = useRef<HTMLButtonElement>(null);
   const menuRef = useRef<HTMLDivElement>(null);
+  const pageRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const previous = document.title;
     document.title = LANDING_TITLE;
     return () => {
       document.title = previous || DEFAULT_TITLE;
+    };
+  }, []);
+
+  useEffect(() => {
+    const root = pageRef.current;
+    if (!root || import.meta.env.MODE === "test") return;
+    let stop = () => {};
+    let cancelled = false;
+    void import("./motion/init-landing-motion").then((mod) => {
+      if (cancelled) return;
+      stop = mod.initLandingMotion(root);
+    });
+    return () => {
+      cancelled = true;
+      stop();
     };
   }, []);
 
@@ -158,7 +170,7 @@ export function LandingPage() {
   const closeMenu = () => setMenuOpen(false);
 
   return (
-    <div className="wea-landing" data-testid="landing-page" data-theme="light">
+    <div className="wea-landing" ref={pageRef} data-testid="landing-page" data-theme="light">
       <a className="wea-skip" href="#main">
         <Trans>Skip to content</Trans>
       </a>
@@ -169,6 +181,11 @@ export function LandingPage() {
           </a>
           <nav aria-label={t`Main`}>
             <ul className="wea-nav-links">
+              <li>
+                <a href="#bots">
+                  <Trans>Bots</Trans>
+                </a>
+              </li>
               <li>
                 <a href="#features">
                   <Trans>Features</Trans>
@@ -217,6 +234,9 @@ export function LandingPage() {
           className={`wea-menu${menuOpen ? " is-open" : ""}`}
           hidden={!menuOpen}
         >
+          <a href="#bots" onClick={closeMenu}>
+            <Trans>Bots</Trans>
+          </a>
           <a href="#features" onClick={closeMenu}>
             <Trans>Features</Trans>
           </a>
@@ -241,31 +261,36 @@ export function LandingPage() {
       <main id="main">
         <section className="wea-hero" id="top">
           <div className="wea-wrap">
-            <p className="wea-pill wea-hero-copy">
+            <p className="wea-pill" data-hero-in="">
               <i aria-hidden="true" />
               <Trans>Wea for web, Windows and Android</Trans>
             </p>
-            <h1 className="wea-hero-copy">
+            <h1 data-hero-in="">
               <Trans>Breathe, the busywork is handled.</Trans>
             </h1>
-            <p className="wea-lead wea-hero-copy">
+            <p className="wea-lead" data-hero-in="">
               <Trans>
-                Wea is a small team of AI bots for business owners and virtual assistants. They
-                draft, schedule and follow up, then wait for your yes.
+                Wea gives business owners, outsourced professionals or virtual assistants teams of
+                AI{"\u00A0"}bots. They draft, schedule and follow up, then wait for your yes.
               </Trans>
             </p>
-            <div className="wea-ctas wea-hero-copy">
+            <div className="wea-ctas" data-hero-in="">
               <Link className="wea-btn wea-btn-primary" to="/sign-up">
                 <Trans>Get started</Trans>
               </Link>
               <HeroSecondaryLink link={heroSecondary} />
             </div>
-            <p className="wea-micro wea-hero-copy">
+            <p className="wea-micro" data-hero-in="">
               <Trans>
                 Also on the web and Android. See <a href="#download">Download</a> for install tips.
               </Trans>
             </p>
-            <div className="wea-hero-visual">
+            <div className="wea-hero-visual" data-hero-in="">
+              <div
+                data-wea-chat=""
+                data-mark="/landing/wea-mark-light.svg"
+                aria-label={HERO_CHAT_ARIA}
+              >
               <picture>
                 <source media="(max-width: 760px)" srcSet="/landing/wea-hero-app-mobile.svg" />
                 <img
@@ -273,17 +298,20 @@ export function LandingPage() {
                   alt={t`The Wea app. Inbox triage drafts three replies and asks before sending, then Calendar keeper asks you to approve a Thursday slot.`}
                 />
               </picture>
+              </div>
             </div>
           </div>
         </section>
 
+        <TeamPicker />
+
         <section className="wea-sec">
           <div className="wea-wrap">
-            <Reveal className="wea-split">
-              <h2>
-                <Trans>Work with Wea like a small, calm team</Trans>
+            <div className="wea-split" data-reveal-group="">
+              <h2 data-reveal="">
+                <Trans>Work with Wea like a calm, capable team</Trans>
               </h2>
-              <div>
+              <div data-reveal="">
                 <p>
                   <Trans>
                     Hand Wea the jobs that eat your day: replies, scheduling, posts and follow ups.
@@ -296,21 +324,13 @@ export function LandingPage() {
                   </Trans>
                 </p>
               </div>
-            </Reveal>
-            <ul className="wea-bots" aria-label={t`Wea's starter bots`}>
-              {BOTS.map((bot) => (
-                <li key={bot.id}>
-                  <img src={`/landing/bots/${bot.file}`} alt="" width={72} height={72} />
-                  {bot.name}
-                </li>
-              ))}
-            </ul>
+            </div>
           </div>
         </section>
 
         <section className="wea-sec" id="features" style={{ paddingTop: 0 }}>
           <div className="wea-wrap">
-            <Reveal className="wea-center">
+            <div className="wea-center" data-reveal="">
               <h2>
                 <Trans>Help that lets you breathe</Trans>
               </h2>
@@ -320,13 +340,20 @@ export function LandingPage() {
                   say on everything.
                 </Trans>
               </p>
-            </Reveal>
-            <div className="wea-grid2">
+            </div>
+            <div className="wea-grid2" data-reveal-group="">
               {FEATURES.map((feature) => (
-                <article className="wea-card" key={feature.id} data-testid={`feature-${feature.id}`}>
+                <article
+                  className="wea-card"
+                  key={feature.id}
+                  data-testid={`feature-${feature.id}`}
+                  data-reveal="scale"
+                >
                   <h3>{feature.title}</h3>
                   <p>{feature.body}</p>
-                  <img src={`/landing/${feature.art}`} alt="" />
+                  <div className="wm-img">
+                    <img src={`/landing/${feature.art}`} alt="" />
+                  </div>
                 </article>
               ))}
             </div>
@@ -335,17 +362,17 @@ export function LandingPage() {
 
         <section className="wea-sec wea-dark" id="how">
           <div className="wea-wrap">
-            <Reveal className="wea-center">
+            <div className="wea-center" data-reveal="">
               <h2>
                 <Trans>Three steps to a lighter day</Trans>
               </h2>
               <p className="wea-lead">
                 <Trans>Start with one bot. Add more when you are ready.</Trans>
               </p>
-            </Reveal>
-            <div className="wea-steps">
+            </div>
+            <div className="wea-steps" data-reveal-group="">
               {STEPS.map((step) => (
-                <article className="wea-step" key={step.n}>
+                <article className="wea-step" key={step.n} data-reveal="">
                   <div className="wea-step-n" aria-hidden="true">
                     {step.n}
                   </div>
@@ -354,7 +381,7 @@ export function LandingPage() {
                 </article>
               ))}
             </div>
-            <div className="wea-ctas">
+            <div className="wea-ctas" data-reveal="">
               <Link className="wea-btn wea-btn-primary" to="/sign-up">
                 <Trans>Get started</Trans>
               </Link>
@@ -364,19 +391,19 @@ export function LandingPage() {
 
         <section className="wea-sec" aria-labelledby="landing-audience">
           <div className="wea-wrap">
-            <Reveal className="wea-center">
+            <div className="wea-center" data-reveal="">
               <h2 id="landing-audience">
                 <Trans>Made for the people who keep things moving</Trans>
               </h2>
-            </Reveal>
-            <div className="wea-aud">
-              <article className="wea-card">
+            </div>
+            <div className="wea-aud" data-reveal-group="">
+              <article className="wea-card" data-reveal="scale">
                 <h3>
                   <Trans>For business owners</Trans>
                 </h3>
                 <p>
                   <Trans>
-                    Spend your day on clients and growth. Wea clears the small stuff and keeps your
+                    Spend your day on clients and growth. Wea clears the busywork and keeps your
                     list moving.
                   </Trans>
                 </p>
@@ -392,9 +419,9 @@ export function LandingPage() {
                   </AudienceItem>
                 </ul>
               </article>
-              <article className="wea-card">
+              <article className="wea-card" data-reveal="scale">
                 <h3>
-                  <Trans>For virtual assistants</Trans>
+                  <Trans>For outsourced professionals or virtual assistants</Trans>
                 </h3>
                 <p>
                   <Trans>
@@ -421,7 +448,7 @@ export function LandingPage() {
         <section className="wea-sec" id="download" style={{ paddingTop: 0 }}>
           <div className="wea-wrap">
             <div className="wea-split">
-              <div>
+              <div data-reveal="">
                 <h2>
                   <Trans>Wea goes where you work</Trans>
                 </h2>
@@ -432,8 +459,8 @@ export function LandingPage() {
                   </Trans>
                 </p>
               </div>
-              <div className="wea-plat-rows">
-                <div className="wea-plat">
+              <div className="wea-plat-rows" data-reveal-group="">
+                <div className="wea-plat" data-reveal="">
                   <div className="wea-plat-ic" aria-hidden="true">
                     <GlobeIcon />
                   </div>
@@ -449,7 +476,7 @@ export function LandingPage() {
                     <Trans>Get started</Trans>
                   </Link>
                 </div>
-                <div className="wea-plat">
+                <div className="wea-plat" data-reveal="">
                   <div className="wea-plat-ic" aria-hidden="true">
                     <MonitorIcon />
                   </div>
@@ -469,7 +496,7 @@ export function LandingPage() {
                     <Trans>Download for Windows</Trans>
                   </a>
                 </div>
-                <div className="wea-plat">
+                <div className="wea-plat" data-reveal="">
                   <div className="wea-plat-ic" aria-hidden="true">
                     <PhoneIcon />
                   </div>
@@ -493,8 +520,9 @@ export function LandingPage() {
                 <Trans>Install tips and checksums</Trans>
               </Link>
             </p>
-            <div className="wea-devices">
+            <div className="wea-devices" data-reveal="">
               <img
+                data-parallax="0.05"
                 src="/landing/wea-devices.svg"
                 alt={t`Wea on the web, on a Windows desktop and on an Android phone.`}
               />
@@ -503,11 +531,11 @@ export function LandingPage() {
         </section>
 
         <section className="wea-sec wea-faq" id="faq">
-          <div className="wea-wrap wea-split">
-            <h2>
+          <div className="wea-wrap wea-split" data-reveal-group="">
+            <h2 data-reveal="">
               <Trans>Questions</Trans>
             </h2>
-            <div className="wea-faq-list">
+            <div className="wea-faq-list" data-reveal="">
               {FAQS.map((item, index) => (
                 <details key={item.q} open={index === 0}>
                   <summary>{item.q}</summary>
@@ -528,14 +556,19 @@ export function LandingPage() {
         </section>
 
         <section className="wea-final">
-          <div className="wea-wrap">
-            <h2>
+          <div className="wea-wrap" data-reveal-group="">
+            <div className="wm-trio" data-reveal="" aria-hidden="true">
+              <span data-wea-bot="inbox" data-size="56" data-badge="false" />
+              <span data-wea-bot="calendar" data-size="64" data-badge="false" />
+              <span data-wea-bot="books" data-size="56" data-badge="false" />
+            </div>
+            <h2 data-reveal="">
               <Trans>Take a breath. Wea has the list.</Trans>
             </h2>
-            <p className="wea-lead">
+            <p className="wea-lead" data-reveal="">
               <Trans>Start with one bot today and add more when you are ready.</Trans>
             </p>
-            <div className="wea-ctas">
+            <div className="wea-ctas" data-reveal="">
               <Link className="wea-btn wea-btn-primary" to="/sign-up">
                 <Trans>Get started</Trans>
               </Link>
@@ -544,9 +577,7 @@ export function LandingPage() {
               </Link>
             </div>
           </div>
-          <div className="wea-breath" aria-hidden="true">
-            <img src="/landing/breath-line.svg" alt="" />
-          </div>
+          <BreathLine />
         </section>
       </main>
 
@@ -566,6 +597,11 @@ export function LandingPage() {
                 <Trans>Product</Trans>
               </h3>
               <ul>
+                <li>
+                  <a href="#bots">
+                    <Trans>Bots</Trans>
+                  </a>
+                </li>
                 <li>
                   <a href="#features">
                     <Trans>Features</Trans>
@@ -649,34 +685,6 @@ function HeroSecondaryLink({ link }: { link: HeroSecondary }) {
     <a className="wea-btn wea-btn-ghost" href={link.href}>
       {inner}
     </a>
-  );
-}
-
-function Reveal({ children, className }: { children: ReactNode; className?: string }) {
-  const ref = useRef<HTMLDivElement>(null);
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    const reduced = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
-    if (reduced || typeof IntersectionObserver === "undefined") return;
-    el.classList.add("is-pending");
-    const io = new IntersectionObserver(
-      (entries) => {
-        if (entries[0]?.isIntersecting) {
-          el.classList.remove("is-pending");
-          el.classList.add("is-in");
-          io.disconnect();
-        }
-      },
-      { threshold: 0, rootMargin: "80px 0px" },
-    );
-    io.observe(el);
-    return () => io.disconnect();
-  }, []);
-  return (
-    <div ref={ref} className={`wea-reveal${className ? ` ${className}` : ""}`}>
-      {children}
-    </div>
   );
 }
 
