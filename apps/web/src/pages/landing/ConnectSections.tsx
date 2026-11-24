@@ -249,7 +249,8 @@ export function ConnectSections() {
             </ul>
           </div>
           <p className="byo-fine">
-            Your plan or key is billed by its provider. Product names belong to their owners.
+            Connect your own AI plan or key. That provider bills you directly. Product names belong
+            to their owners.
           </p>
         </div>
       </section>

@@ -291,8 +291,9 @@ export function TeamPicker() {
         <div className="wea-center" data-reveal="">
           <h2>Hire the team your work needs</h2>
           <p className="wea-lead">
-            Pick a ready team or mix your own bots. Run as many teams as you need, and every bot
-            waits for your yes before anything goes out.
+            Pick a ready team or mix your own bots. Run as many teams as you need. Bots draft the
+            work and ask before they send or change something, unless you choose to let some actions
+            through.
           </p>
         </div>
         <div
@@ -353,7 +354,7 @@ export function TeamPicker() {
           className="tb-lane"
           data-team-lane=""
           data-reveal=""
-          aria-label="Inside each team, bots hand work to each other. Nothing goes out until you say yes. Run several teams at once."
+          aria-label="Inside each team, bots hand work to each other. Bots draft the work and ask before they send or change something, unless you choose to let some actions through. Run several teams at once."
         >
           <div className="tb-node">
             <span data-wea-bot={leftKind} data-size="64" />
@@ -377,7 +378,10 @@ export function TeamPicker() {
           </div>
           <div className="tb-yes">
             <span className="tb-btn">Yes, send it</span>
-            <small>Nothing goes out until you say yes</small>
+            <small>
+              Bots draft the work and ask before they send or change something, unless you choose to
+              let some actions through
+            </small>
           </div>
           <div className="tb-add">
             <span className="tb-plus" aria-hidden="true">

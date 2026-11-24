@@ -97,8 +97,17 @@ it("renders Brandi's landing copy, real bot names, and the download links", asyn
   expect(host.textContent).toContain(`version ${WEA_ANDROID_VERSION}`);
   expect(host.textContent).toContain("direct APK");
   expect(host.textContent).toContain(
-    "You can use Wea right away, or connect your own AI plan or key.",
+    "Create an account, then connect your own AI provider. Sign in with ChatGPT, GitHub Copilot or SuperGrok, or paste an API key.",
   );
+  expect(host.textContent).toContain(
+    "Connect your own AI plan or key. That provider bills you directly.",
+  );
+  expect(host.textContent).toContain(
+    "Bots draft the work and ask before they send or change something, unless you choose to let some actions through.",
+  );
+  expect(host.textContent).not.toMatch(/included model|start without a key|use Wea right away/i);
+  expect(host.textContent).not.toContain("Your plan or key is billed by its provider.");
+  expect(host.textContent).not.toContain("every bot waits for your yes before anything goes out");
   expect(host.textContent).not.toContain("WeAssist");
   expect(host.textContent).toContain("Bring your own AI and tools");
   expect(host.textContent).toContain("Message them anywhere");

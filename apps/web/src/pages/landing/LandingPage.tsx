@@ -32,7 +32,7 @@ const FEATURES = [
   {
     id: "asks-first",
     title: "Wea asks before it acts",
-    body: "Every email, post and change waits for your yes. You stay in charge while the busywork gets done.",
+    body: "Bots draft the work and ask before they send or change something, unless you choose to let some actions through. You stay in charge while the busywork gets done.",
     art: "feature-asks-first.svg",
   },
   {
@@ -63,7 +63,7 @@ const STEPS = [
   {
     n: "3",
     title: "Review and say yes",
-    body: "Wea shows you the finished draft or plan. Nothing goes out until you approve it.",
+    body: "Wea shows you the finished draft or plan. Bots draft the work and ask before they send or change something, unless you choose to let some actions through.",
   },
 ] as const;
 
@@ -74,7 +74,7 @@ const FAQS = [
   },
   {
     q: "Does Wea do things without asking?",
-    a: "No. Wea shows you what it plans to do and waits for your yes before it sends, posts or changes anything.",
+    a: "Bots draft the work and ask before they send or change something, unless you choose to let some actions through.",
   },
   {
     q: "Who is Wea for?",
@@ -86,7 +86,7 @@ const FAQS = [
   },
   {
     q: "What do I need to get started?",
-    a: "Create an account and start in your browser, on Windows or on Android. You can use Wea right away, or connect your own AI plan or key.",
+    a: "Create an account, then connect your own AI provider. Sign in with ChatGPT, GitHub Copilot or SuperGrok, or paste an API key. Wea works in your browser, on Windows and on Android.",
   },
   {
     q: "How do I get help?",

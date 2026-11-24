@@ -112,7 +112,7 @@ var root = typeof window !== 'undefined' ? window : globalThis;
         node.querySelector('b').textContent = WeaBot.BOTS[kind].name;
         node.querySelector('small').textContent = cap;
       });
-      laneEl.setAttribute('aria-label', WeaBot.BOTS[h[0]].name + ' ' + h[1] + ' and hands it to ' + WeaBot.BOTS[h[2]].name + ', who ' + h[3] + '. Nothing goes out until you say yes. Run several teams at once.');
+      laneEl.setAttribute('aria-label', WeaBot.BOTS[h[0]].name + ' ' + h[1] + ' and hands it to ' + WeaBot.BOTS[h[2]].name + ', who ' + h[3] + '. Bots draft the work and ask before they send or change something, unless you choose to let some actions through. Run several teams at once.');
     }
     function show(i, focus) {
       if (i === current && !panels[i].hidden) return;
