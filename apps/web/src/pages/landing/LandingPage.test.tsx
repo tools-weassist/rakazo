@@ -48,52 +48,74 @@ it("renders Brandi's landing copy, real bot names, and the download links", asyn
   await renderPage();
   expect(host.querySelector('[data-testid="landing-page"]')).not.toBeNull();
   expect(host.textContent).toContain("Breathe, the busywork is handled.");
-  expect(host.textContent).toMatch(/Wea gives business owners, outsourced professionals or virtual assistants teams of AI\sbots/);
+  expect(host.textContent).toMatch(
+    /Wea gives business owners, outsourced professionals or virtual assistants teams of AI\sbots/,
+  );
   expect(host.textContent).toContain("Work with Wea like a calm, capable team");
   expect(host.textContent).toContain("Hire the team your work needs");
   expect(host.textContent).toContain("3 teams,");
-  expect(host.textContent).toContain("11 bots working right now");
-  expect(host.textContent).toContain("Admin and inbox");
-  expect(host.textContent).toContain("Sales and leads");
-  expect(host.textContent).toContain("Marketing and content");
-  expect(host.textContent).toContain("Finance and books");
-  expect(host.textContent).toContain("Customer support");
-  expect(host.textContent).toContain("Research and planning");
-  expect(host.textContent).toContain("Invoice chaser");
-  expect(host.textContent).toContain("Support replies");
-  expect(host.textContent).toContain("Social scheduler");
-  expect(host.textContent).toContain("Review responder");
-  expect(host.textContent).toContain("Meeting notes");
-  expect(host.textContent).toContain("Bookkeeping helper");
-  expect(host.textContent).toContain("Proposal drafter");
+  expect(host.textContent).toContain("14 bots working right now");
+  expect(host.textContent).toContain("Inbox and calendar team");
+  expect(host.textContent).toContain("Marketing team");
+  expect(host.textContent).toContain("Finance team");
+  expect(host.textContent).toContain("Operations team");
+  expect(host.textContent).toContain("Client delegation team");
+  expect(host.textContent).toContain("VA business team");
+  expect(host.textContent).toContain("Inbox and admin triage");
+  expect(host.textContent).toContain("Morning briefing");
+  expect(host.textContent).toContain("Social post repurposer");
+  expect(host.textContent).toContain("Month-end close");
+  expect(host.textContent).toContain("Delegation coach");
+  expect(host.textContent).toContain("Build your own on web or desktop");
   expect(host.textContent).toContain("Wea clears the busywork and keeps your list moving.");
   expect(host.textContent).toContain("For outsourced professionals or virtual assistants");
-  expect(host.textContent).toContain("Wea gives you teams of AI bots that take care of everyday busywork");
+  expect(host.textContent).toContain(
+    "Wea gives you teams of AI bots that take care of everyday busywork",
+  );
   expect(host.querySelector("#bots")).not.toBeNull();
   expect(host.querySelectorAll("[data-team-picker] [role=tab]")).toHaveLength(6);
   expect(host.textContent).not.toMatch(/\bsmall\b/i);
-  expect(host.querySelector("a[href=\"#bots\"]")).not.toBeNull();
+  expect(host.querySelector('a[href="#bots"]')).not.toBeNull();
   expect(host.textContent).toContain("Wea for web, Windows and Android");
-  expect(host.textContent).toContain("Inbox triage");
+  expect(host.textContent).toContain("Inbox and admin triage");
   expect(host.textContent).toContain("Calendar keeper");
   expect(host.textContent).toContain("Content calendar");
   expect(host.textContent).toContain("Lead follow-up");
-  expect(host.textContent).toContain("Topic watch");
   expect(host.textContent).toContain("Receipt sorter");
   expect(host.textContent).toContain("Wea asks before it acts");
   expect(host.textContent).toContain("Bots hand off to each other");
   expect(host.textContent).toContain("It learns how you work");
   expect(host.textContent).toContain("how you file receipts");
   expect(host.textContent).toContain("suggest a monthly reminder");
-  expect(host.querySelector('[data-testid="feature-learns"]')?.textContent).not.toContain("invoices");
+  expect(host.querySelector('[data-testid="feature-learns"]')?.textContent).not.toContain(
+    "invoices",
+  );
   expect(host.textContent).toContain("Three steps to a lighter day");
   expect(host.textContent).toContain(`version ${WEA_DESKTOP_VERSION}`);
   expect(host.textContent).toContain("about 136 MB");
   expect(host.textContent).toContain("Not in the Microsoft Store");
   expect(host.textContent).toContain(`version ${WEA_ANDROID_VERSION}`);
   expect(host.textContent).toContain("direct APK");
-  expect(host.textContent).toContain("connect your own AI provider key");
-  expect(host.textContent).toContain("Wea is a WeAssist internal pilot");
+  expect(host.textContent).toContain(
+    "Create an account, then connect your own AI provider. Sign in with ChatGPT, GitHub Copilot or SuperGrok, or paste an API key.",
+  );
+  expect(host.textContent).toContain(
+    "Connect your own AI plan or key. That provider bills you directly.",
+  );
+  expect(host.textContent).toContain(
+    "Bots draft the work and ask before they send or change something, unless you choose to let some actions through.",
+  );
+  expect(host.textContent).not.toMatch(/included model|start without a key|use Wea right away/i);
+  expect(host.textContent).not.toContain("Your plan or key is billed by its provider.");
+  expect(host.textContent).not.toContain("every bot waits for your yes before anything goes out");
+  expect(host.textContent).not.toContain("WeAssist");
+  expect(host.textContent).toContain("Bring your own AI and tools");
+  expect(host.textContent).toContain("Message them anywhere");
+  expect(host.textContent).toContain("Start a voice call with a bot inside the app");
+  expect(host.textContent).toContain("Coming soon");
+  expect(host.querySelector("#connect")).not.toBeNull();
+  expect(host.querySelector("#channels")).not.toBeNull();
+  expect(host.querySelector("[data-devices]")).not.toBeNull();
   expect(host.textContent).toContain("tools@weassist.io");
   expect(document.title).toBe("Wea, breathe, the busywork is handled");
 
@@ -107,7 +129,9 @@ it("renders Brandi's landing copy, real bot names, and the download links", asyn
   expect(hrefs).not.toContain("/privacy");
   expect(hrefs).not.toContain("/terms");
 
-  expect(host.textContent).not.toMatch(/free trial|How much does Wea cost|pricing|Google Play|Microsoft Store badge|AI Space|Discord|rakazo\.com/i);
-  expect(host.querySelector("a[href=\"/privacy\"], a[href=\"/terms\"]")).toBeNull();
+  expect(host.textContent).not.toMatch(
+    /free trial|How much does Wea cost|pricing|Google Play|Microsoft Store badge|AI Space|Discord|rakazo\.com/i,
+  );
+  expect(host.querySelector('a[href="/privacy"], a[href="/terms"]')).toBeNull();
   expect(host.textContent).not.toMatch(/[\u2013\u2014!]/);
 });

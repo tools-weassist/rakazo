@@ -24,3 +24,11 @@ declare module "./init-landing-motion.js" {
 declare module "./reveal.js" {
   export function initReveal(root: HTMLElement): () => void;
 }
+
+declare module "./devices-showcase.js" {
+  export const WeaDevices: { mount: (scope?: ParentNode | Document) => () => void };
+}
+
+declare module "./connect-showcase.js" {
+  export const WeaConnect: { mount: (scope?: ParentNode | Document) => () => void };
+}
