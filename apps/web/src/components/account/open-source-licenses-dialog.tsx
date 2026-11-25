@@ -2,6 +2,7 @@ import { Trans, useLingui } from "@lingui/react/macro";
 import { APACHE_LICENSE_TEXT, OPEN_SOURCE_NOTICE } from "@rakazo/core/open-source-notice";
 import { Button, Dialog, DialogClose, DialogContent, DialogTitle } from "@rakazo/ui-web";
 import { XIcon } from "lucide-react";
+import { useState } from "react";
 
 /** Apache-2.0 attribution and license text, as Settings presents it. */
 export function OpenSourceLicensesDialog({
@@ -44,5 +45,22 @@ export function OpenSourceLicensesDialog({
         </div>
       </DialogContent>
     </Dialog>
+  );
+}
+
+/** Low-key Settings footer that keeps attribution reachable without a menu row. */
+export function OpenSourceLicensesLink() {
+  const [open, setOpen] = useState(false);
+  return (
+    <>
+      <button
+        type="button"
+        className="text-body-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+        onClick={() => setOpen(true)}
+      >
+        <Trans>Open-source licenses</Trans>
+      </button>
+      <OpenSourceLicensesDialog open={open} onOpenChange={setOpen} />
+    </>
   );
 }

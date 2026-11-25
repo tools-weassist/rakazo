@@ -12,6 +12,7 @@ vi.mock("@lingui/react/macro", () => ({
       strings.reduce((text, part, index) => `${text}${values[index - 1] ?? ""}${part}`),
     i18n: { locale: "en" },
   }),
+  Trans: ({ children }: { children?: ReactNode }) => children,
 }));
 
 vi.mock("@rakazo/ui-web", () => ({
@@ -20,7 +21,8 @@ vi.mock("@rakazo/ui-web", () => ({
       {children}
     </button>
   ),
-  Dialog: ({ children }: { children?: ReactNode }) => <div>{children}</div>,
+  Dialog: ({ open, children }: { open?: boolean; children?: ReactNode }) =>
+    open === false ? null : <div>{children}</div>,
   DialogClose: ({ children }: { children?: ReactNode }) => <div>{children}</div>,
   DialogContent: ({
     children,
@@ -445,5 +447,30 @@ it("keeps the organization options in the page header, on the main Organization 
     expect(options()).toBeNull();
   } finally {
     await cleanup();
+  }
+});
+
+it("keeps open-source licenses as a footer link on General, and opens the licenses page", async () => {
+  const general = await render({ section: "general" });
+  try {
+    const link = [...general.container.querySelectorAll("button")].find(
+      (button) => button.textContent === "Open-source licenses",
+    );
+    expect(link).toBeTruthy();
+    expect(general.container.textContent).not.toContain("Apache License, Version 2.0");
+    await act(async () => link!.click());
+    expect(general.container.textContent).toContain("Wea is built on Rakazo");
+  } finally {
+    await general.cleanup();
+  }
+  const voice = await render({ section: "voice" });
+  try {
+    expect(
+      [...voice.container.querySelectorAll("button")].some(
+        (button) => button.textContent === "Open-source licenses",
+      ),
+    ).toBe(false);
+  } finally {
+    await voice.cleanup();
   }
 });
