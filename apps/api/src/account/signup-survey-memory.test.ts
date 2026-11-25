@@ -11,9 +11,12 @@ describe("about me memory", () => {
         needs: ["eod", "handoffs"],
       }),
     ).toEqual([
-      "- Role: Virtual assistant (VA), works for one client.",
+      "- Role: Virtual assistant or outsourced professional, works for one client.",
       "- AI brain (their knowledge base): in Google Drive. Organize what is there; don't start over.",
       "- Wants help first with: client reports (EOD); handoffs across time zones.",
+    ]);
+    expect(aboutMeLines({ brain: "github" })).toEqual([
+      "- AI brain (their knowledge base): in GitHub. Organize what is there; don't start over.",
     ]);
     expect(aboutMeLines({ source: "a friend" })).toEqual([]);
   });

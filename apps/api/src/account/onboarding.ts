@@ -548,6 +548,10 @@ const BRAIN_APPS: Record<string, { slug: string; text: string }> = {
     slug: "notion",
     text: "You said your AI brain lives in Notion. Connect it so your bots can use what's already there.",
   },
+  github: {
+    slug: "github",
+    text: "You said your AI brain lives in GitHub. Connect it so your bots can use what's already there.",
+  },
   other: {
     slug: "googledrive",
     text: "If your notes are in files or Obsidian, put them in a Google Drive folder and connect Drive here. Your bots will organize what's there instead of starting over.",

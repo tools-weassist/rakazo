@@ -87,6 +87,7 @@ export const SIGNUP_SURVEY_ROLE_DETAILS = {
 export const SIGNUP_SURVEY_BRAINS = [
   "drive",
   "notion",
+  "github",
   "assistant",
   "other",
   "none",
