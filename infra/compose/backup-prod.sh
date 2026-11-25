@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# watch: check-host.sh (rakazo-host-check.timer, every 5 min) fails when no verified backup finished in 36 hours; a failed run also fires rakazo-backup-alert.service (OnFailure)
 set -euo pipefail
 umask 077
 

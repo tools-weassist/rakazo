@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# watch: the `health` command exits nonzero when WAL archiving has stalled (uploads older than UPLOAD_STALE); check-host.sh and the host-alert path report it
 # Point-in-time recovery for the Compose Postgres (docs/self-host-backups.md#point-in-time-recovery).
 #
 #   run                 stream WAL with pg_receivewal over a replication slot, upload each finished
