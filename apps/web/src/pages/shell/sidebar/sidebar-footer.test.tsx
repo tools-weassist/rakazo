@@ -147,7 +147,6 @@ it("opens integrations and keeps the existing account actions and links", async 
     "Artifacts",
     "Board",
     "Get the mobile app",
-    "Open-source licenses",
     "Support",
     "Log out",
   ]);

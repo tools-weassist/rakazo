@@ -29,7 +29,7 @@ anonymous telemetry notice during `pnpm dev`; run `pnpm exec turbo telemetry dis
 ## Attribution
 
 Wea is built on Rakazo under the Apache License, Version 2.0. `LICENSE` and the NOTICE
-attributions are unchanged (required). Settings (web account menu and mobile Account) include an
+attributions are unchanged (required). Settings (web General settings and mobile Account) include an
 Open-source licenses screen with the credit, NOTICE, and license text. That is the intended
 place users still see the name Rakazo.
 
