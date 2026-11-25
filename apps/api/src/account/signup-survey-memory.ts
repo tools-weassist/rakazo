@@ -5,7 +5,7 @@ export const ABOUT_ME_HEADING = "## About me (from Wea sign-up)";
 
 const ROLES: Record<string, string> = {
   business_owner: "Business owner",
-  va: "Virtual assistant (VA)",
+  va: "Virtual assistant or outsourced professional",
   agency: "Runs a VA agency or team",
   exploring: "Just exploring",
 };
@@ -23,6 +23,7 @@ const ROLE_DETAILS: Record<string, string> = {
 const BRAINS: Record<string, string> = {
   drive: "in Google Drive. Organize what is there; don't start over.",
   notion: "in Notion. Organize what is there; don't start over.",
+  github: "in GitHub. Organize what is there; don't start over.",
   assistant: "in another AI assistant (ChatGPT, Claude, Grok Bot or similar); they can import it.",
   other: "in notes or files outside Wea (for example Obsidian). Organize it; don't start over.",
   none: "not set up yet.",

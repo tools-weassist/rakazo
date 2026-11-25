@@ -357,6 +357,27 @@ describe("Wea starter pick", () => {
     expect(start).toHaveBeenCalledTimes(1);
   });
 
+  it("offers to connect the GitHub brain from the catalog", async () => {
+    const { deps, actor, tx } = starterFixture({ brain: "github" }, [
+      { connectorId: "composio", slug: "github", name: "GitHub", connected: false },
+    ]);
+    tx.message.findMany = vi.fn(async () =>
+      answered([{ kind: "choice", options: [{ id: "starter:chat" }] }]),
+    ) as never;
+    await chooseStarter(deps, actor, "bot", "starter:chat", {
+      webOrigin: "https://wea.weassist.io",
+      start: vi.fn(),
+    });
+    expect(blocks()).toContainEqual(
+      expect.objectContaining({ kind: "app_connect", provider: "github" }),
+    );
+    expect(
+      blocks()
+        .map((block) => block.text)
+        .join("\n"),
+    ).toContain("You said your AI brain lives in GitHub.");
+  });
+
   it("points an assistant's brain to Import an agent, finished on the web from a phone", async () => {
     const { deps, actor, tx } = starterFixture({ brain: "assistant" });
     tx.message.findMany = vi.fn(async () =>

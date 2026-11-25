@@ -805,7 +805,7 @@ describe("billing", () => {
       expect.objectContaining({
         scope: "user",
         path: "MEMORY.md",
-        content: expect.stringContaining("- Role: Virtual assistant (VA), works for one client."),
+        content: expect.stringContaining("- Role: Virtual assistant or outsourced professional, works for one client."),
       }),
       expect.anything(),
     );

@@ -51,7 +51,7 @@ async function click(name: string) {
 it("sends the persona, brain and up to two first needs", async () => {
   expect(container.textContent).toContain("Welcome to Wea");
   expect(container.textContent).not.toContain("Rakazo");
-  await click("I'm a virtual assistant (VA)");
+  await click("I'm a virtual assistant or outsourced professional");
   await click("One client");
   await click("Yes, in Google Drive");
   await click("Client reports (EOD)");
@@ -65,6 +65,12 @@ it("sends the persona, brain and up to two first needs", async () => {
     needs: ["handoffs", "ai_skills"],
   });
   expect(onDone).toHaveBeenCalled();
+});
+
+it("offers GitHub as an AI brain and sends that answer", async () => {
+  await click("Yes, in GitHub");
+  await click("Continue");
+  expect(signupSurvey).toHaveBeenCalledWith({ brain: "github" });
 });
 
 it("drops a follow-up from another role and explains an AI brain", async () => {

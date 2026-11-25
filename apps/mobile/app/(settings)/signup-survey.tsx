@@ -53,7 +53,7 @@ export default function SignupSurvey() {
   });
   const roles: { key: SignupSurveyRole; label: string }[] = [
     { key: "business_owner", label: t`I'm a business owner` },
-    { key: "va", label: t`I'm a virtual assistant (VA)` },
+    { key: "va", label: t`I'm a virtual assistant or outsourced professional` },
     { key: "agency", label: t`I run a VA agency or team` },
     { key: "exploring", label: t`Just exploring` },
   ];
@@ -77,6 +77,7 @@ export default function SignupSurvey() {
   const brains: { key: Brain; label: string }[] = [
     { key: "drive", label: t`Yes, in Google Drive` },
     { key: "notion", label: t`Yes, in Notion` },
+    { key: "github", label: t`Yes, in GitHub` },
     { key: "assistant", label: t`Yes, in another AI assistant (ChatGPT, Claude, Grok Bot…)` },
     { key: "other", label: t`Yes, somewhere else (Obsidian, notes, files)` },
     { key: "none", label: t`Not yet` },

@@ -27,7 +27,7 @@ export function SignupSurvey({ onDone }: { onDone: () => void }) {
 
   const roles: { value: SignupSurveyRole; label: string }[] = [
     { value: "business_owner", label: t`I'm a business owner` },
-    { value: "va", label: t`I'm a virtual assistant (VA)` },
+    { value: "va", label: t`I'm a virtual assistant or outsourced professional` },
     { value: "agency", label: t`I run a VA agency or team` },
     { value: "exploring", label: t`Just exploring` },
   ];
@@ -51,6 +51,7 @@ export function SignupSurvey({ onDone }: { onDone: () => void }) {
   const brains: { value: Brain; label: string }[] = [
     { value: "drive", label: t`Yes, in Google Drive` },
     { value: "notion", label: t`Yes, in Notion` },
+    { value: "github", label: t`Yes, in GitHub` },
     { value: "assistant", label: t`Yes, in another AI assistant (ChatGPT, Claude, Grok Bot…)` },
     { value: "other", label: t`Yes, somewhere else (Obsidian, notes, files)` },
     { value: "none", label: t`Not yet` },
