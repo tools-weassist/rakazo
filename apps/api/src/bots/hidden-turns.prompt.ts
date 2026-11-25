@@ -33,7 +33,8 @@ export function botIntroPrompt(input: {
 
 /**
  * The first turn of a bot made from a template. Its instructions already say what it is for and
- * list its setup questions, so it opens the chat with the first of them instead of waiting.
+ * list its setup questions, so it opens the chat with the first still-unknown of them instead of
+ * waiting. Shared user memory (About me from Wea sign-up) and the user's name are already known.
  */
 export function templateIntroPrompt(input: {
   userName: string;
@@ -49,11 +50,11 @@ export function templateIntroPrompt(input: {
     ]
       .filter(Boolean)
       .join(" "),
-    "Open the chat now with your first-conversation setup: one line on what you do, then the first setup question your instructions list. Ask only that one question; the rest come one at a time after each answer.",
+    "Open the chat now with your first-conversation setup: one line on what you do, then the first setup question your instructions list that shared memory or their name has not already answered. Shared memory, especially the About me from Wea sign-up section, and their name if you have it, are already known: skip any question (or part of a question) they answer. If every listed setup question is already answered, give that one line and don't ask one. Ask only one question; the rest come one at a time after each answer.",
     canAsk
-      ? `Call ask_user right away, with no text before it. Its question greets them${byName} in a few words, gives that one line and asks the first setup question, with two to four short options when the question has natural answers. They can also type their own answer.`
-      : `Greet them${byName} in a few words, give that one line and ask the first setup question in one sentence.`,
-    "If your instructions list no setup questions, ask the one thing you most need to know to start.",
+      ? `Call ask_user right away, with no text before it. Its question greets them${byName} in a few words, gives that one line and asks that still-unknown setup question, with two to four short options when the question has natural answers. They can also type their own answer.`
+      : `Greet them${byName} in a few words, give that one line and ask that still-unknown setup question in one sentence.`,
+    "If your instructions list no setup questions, ask the one thing you most need to know to start, unless shared memory already covers it.",
     "Don't start the work yet, and don't say you have done, sent or saved anything.",
   ].join("\n");
 }

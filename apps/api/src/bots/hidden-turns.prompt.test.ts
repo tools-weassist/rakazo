@@ -50,13 +50,21 @@ describe("hidden turn prompts", () => {
 });
 
 describe("templateIntroPrompt", () => {
-  it("opens with the first setup question and leaves the profile alone", () => {
+  it("opens with the first still-unknown setup question and leaves the profile alone", () => {
     const prompt = templateIntroPrompt({ userName: "Ada", disabledBuiltinTools: [] });
     expect(prompt).toContain("Ada made you.");
     expect(prompt).toContain("Call ask_user right away");
-    expect(prompt).toContain("first setup question");
+    expect(prompt).toContain("still-unknown setup question");
     expect(prompt).toContain("don't change your name, description or instructions");
     expect(prompt).not.toContain("update_bot");
+  });
+
+  it("skips setup questions already answered in shared sign-up memory or by name", () => {
+    const prompt = templateIntroPrompt({ userName: "Ada", disabledBuiltinTools: [] });
+    expect(prompt).toContain("About me from Wea sign-up");
+    expect(prompt).toContain("shared memory or their name has not already answered");
+    expect(prompt).toContain("skip any question (or part of a question) they answer");
+    expect(prompt).toContain("If every listed setup question is already answered, give that one line and don't ask one");
   });
 
   it("asks in plain text when ask_user is off, and leaves out an empty name", () => {
