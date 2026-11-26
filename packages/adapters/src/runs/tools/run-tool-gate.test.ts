@@ -193,3 +193,125 @@ describe("gateToolCall: typing into a page after outside content, in Auto", () =
     expect(reviewOnly).toEqual([false, true]);
   });
 });
+
+describe("gateToolCall: outgoing Slack and email sends", () => {
+  function sendGate(options: {
+    name: string;
+    neverAsk?: boolean;
+    auto?: boolean;
+    rule?: "always_allow" | "deny";
+    args?: Record<string, unknown>;
+    batch?: { tools: { tool_slug: string; arguments: Record<string, unknown> }[] };
+  }) {
+    const args = options.batch ?? options.args ?? { channel: "C1", text: "Hello" };
+    const executionId = JSON.stringify(["pi-tool", "main", "call-1"]);
+    const request: ToolRequest = {
+      name: options.name,
+      args,
+      executionId,
+      connectorCall: { tool: options.name, args, executionId, route: undefined },
+      effectRequest: args,
+      resolvedTool: undefined,
+      catalogRemapped: false,
+      nextApprovedTool: undefined,
+      approvedEffectKey: undefined,
+      replayEffectToolName: options.name,
+      fleetSummary: undefined,
+      heldForApproval: false,
+      settingsChange: false,
+      ignoresAllowRules: false,
+      purchase: undefined,
+      cardUse: undefined,
+      loginUse: undefined,
+    };
+    const connectorTool = options.batch
+      ? {
+          name: options.name,
+          description: options.name,
+          inputSchema: { type: "object", properties: {} },
+          batch: { items: "tools", action: "tool_slug", arguments: "arguments" },
+        }
+      : {
+          name: options.name,
+          description: options.name,
+          inputSchema: { type: "object", properties: {} },
+        };
+    const ctx = {
+      deps: { prisma: {}, autoReview: {} },
+      run: { id: "run-1", userId: "user-1", spaceId: "space-1", trigger: "user" },
+      runId: "run-1",
+      bot: { id: "bot-1", name: "Helper" },
+      thread: { id: "thread-1" },
+      context: { signal: new AbortController().signal },
+      source: { ownerStartedRun: true },
+      tools: { connector: new Map([[options.name, connectorTool]]), connectedPlugins: [] },
+      state: {
+        tainted: false,
+        effects: { consumedIds: new Set(), counts: new Map(), occurrences: [] },
+      },
+      trust: {
+        loadApprovalRules: async () =>
+          options.rule
+            ? [{ effect: options.rule, matchKind: "tool", matchValue: options.name }]
+            : [],
+        loadAutoReviewPreference: async () => ({
+          enabled: options.neverAsk ? false : (options.auto ?? true),
+          skipApprovals: Boolean(options.neverAsk),
+        }),
+      },
+    };
+    return gateToolCall(ctx as never, request, undefined).then(
+      (outcome) => outcome,
+      (error: Error) => error.message,
+    );
+  }
+
+  beforeEach(() => {
+    plans.length = 0;
+  });
+
+  it("holds Slack and email sends for a person in Auto, even over an Always allow rule", async () => {
+    for (const options of [
+      { name: "SLACK_SEND_MESSAGE" },
+      {
+        name: "GMAIL_SEND_EMAIL",
+        args: { recipient_email: "a@example.test", subject: "Hi", body: "Hello" },
+      },
+      { name: "send_email", args: { to: "a@example.test", subject: "Hi", body: "Hello" } },
+      { name: "OUTLOOK_SEND_EMAIL", args: { to: "a@example.test", body: "Hello" } },
+      {
+        name: "SLACK_SEND_MESSAGE",
+        rule: "always_allow" as const,
+      },
+      {
+        name: "COMPOSIO_MULTI_EXECUTE_TOOL",
+        batch: {
+          tools: [{ tool_slug: "SLACK_SEND_MESSAGE", arguments: { channel: "C1", text: "Hello" } }],
+        },
+      },
+    ]) {
+      plans.length = 0;
+      expect(await sendGate(options)).toBe("asks the user");
+      expect(plans).toEqual(["ask"]);
+    }
+  });
+
+  it("runs those sends without asking in Never ask", async () => {
+    await sendGate({ name: "SLACK_SEND_MESSAGE", neverAsk: true });
+    await sendGate({
+      name: "GMAIL_SEND_EMAIL",
+      neverAsk: true,
+      args: { recipient_email: "a@example.test", subject: "Hi", body: "Hello" },
+    });
+    expect(plans).toEqual(["allow", "allow"]);
+  });
+
+  it("still judges other connector writes in Auto, and does not hold a Slack read", async () => {
+    await sendGate({ name: "GITHUB_CREATE_ISSUE", args: { title: "Notes" } });
+    expect(plans).toEqual(["judge"]);
+    plans.length = 0;
+    const listed = await sendGate({ name: "SLACK_LIST_CHANNELS", args: {} });
+    expect(plans).not.toContain("ask");
+    expect(listed).not.toBe("asks the user");
+  });
+});

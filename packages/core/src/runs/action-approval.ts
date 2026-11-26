@@ -227,6 +227,31 @@ export function toolRequiresExplicitApproval(toolName: string): boolean {
 }
 
 /**
+ * Slack or email sends a person must approve in Ask and Auto. Never ask still runs them, the same
+ * way it runs other human-required actions (purchases, explicit approvals) on the owner's own run.
+ */
+export function outgoingSendRequiresHumanApproval(toolName: string): boolean {
+  if (toolName === "send_email") return true;
+  const kind = connectorKindFromToolName(toolName);
+  const name = toolName.toLowerCase();
+  const slack = kind === "slack" || name.startsWith("slack_") || name.startsWith("slack-");
+  if (slack) {
+    if (/(^|[_-])(send|reply)([_-]|$)/i.test(name)) return true;
+    return (
+      /(^|[_-])post([_-]|$)/i.test(name) &&
+      /message|chat|thread|channel|ephemeral|broadcast/i.test(name)
+    );
+  }
+  const email =
+    EMAIL_CONNECTOR_SLUGS.has(kind) || /^(gmail|outlook|microsoft_outlook)([_-]|$)/i.test(name);
+  if (!email) return false;
+  return (
+    /(^|[_-])(send|reply|forward)([_-]|$)/i.test(name) ||
+    /send.*mail|gmail_send|outlook_send/i.test(name)
+  );
+}
+
+/**
  * A run the owner started: their own message in the app or a chat app they linked, a follow-up
  * they wrote, the close of their call, or a routine, whose prompt they wrote. A chat-app message
  * from anyone else (`otherPersonChat`), bot messages, spawns, tickets and webhooks are not, nor is

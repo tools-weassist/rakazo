@@ -29,10 +29,17 @@ const argumentKey = z
   .regex(/^[a-z][a-z0-9_]*$/)
   .max(64);
 
+export const OutgoingDraftThread = z.object({
+  ts: z.string().trim().min(1).max(64),
+  broadcast: z.boolean().optional(),
+});
+export type OutgoingDraftThread = z.infer<typeof OutgoingDraftThread>;
+
 export const OutgoingDraft = z.object({
   source: z.string().min(1).max(80),
   values: OutgoingDraftValues,
   keys: z.object({ to: argumentKey, body: argumentKey, subject: argumentKey.optional() }),
+  thread: OutgoingDraftThread.optional(),
   batch: z
     .object({
       items: argumentKey,
