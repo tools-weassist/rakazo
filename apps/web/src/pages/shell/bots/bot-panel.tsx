@@ -4,10 +4,11 @@ import type {
   BotAvatarSet,
   ComputerMode,
   ModelCatalogEntry,
+  RunStatus,
   ThinkingLevel,
 } from "@rakazo/contracts";
 import { BOT_NAME_MAX_LENGTH, isBuiltinToolName, resolveBotAvatarSet } from "@rakazo/contracts";
-import { botModelState, modelOptionKey } from "@rakazo/core";
+import { botModelState, isActive, modelOptionKey } from "@rakazo/core";
 import {
   Button,
   DropdownMenu,
@@ -138,6 +139,16 @@ export function BotSettings({
   });
   const automaticRevision = useRef({ color: 0, avatarSet: 0, notifyOnFinish: 0 });
   const [computerMode, setComputerMode] = useState(bot.computerMode);
+  const [computerError, setComputerError] = useState<string | null>(null);
+  const runActive = isActive(bot.status as RunStatus);
+  const runWasActive = useRef(runActive);
+  useEffect(() => {
+    if (runWasActive.current && !runActive) setComputerError(null);
+    runWasActive.current = runActive;
+  }, [runActive]);
+  useEffect(() => {
+    setComputerError(null);
+  }, [bot.id, view]);
   const [autoSpeak, setAutoSpeak] = useState(bot.autoSpeak);
   const [crossSpaceCommunication, setCrossSpaceCommunication] = useState(
     bot.crossSpaceCommunication ?? true,
@@ -299,6 +310,7 @@ export function BotSettings({
     },
     revisions?: { color: number; avatarSet: number; notifyOnFinish: number },
   ) {
+    let computerWrite = false;
     try {
       setSaving(true);
       setError(null);
@@ -355,6 +367,9 @@ export function BotSettings({
             }
           : {}),
       };
+      const savedMode = (JSON.parse(savedAdvanced) as ReturnType<typeof advancedValues>)[2];
+      computerWrite = computerMode !== savedMode;
+      if (computerWrite) setComputerError(null);
       const requestedTools = patchOverrides?.disabledBuiltinTools;
       const baseTools = patchOverrides?.baseDisabledBuiltinTools ?? [];
       // Preserve this edit's additions/removals against any refreshed server list.
@@ -426,7 +441,9 @@ export function BotSettings({
         setAutoSpeak(saved[3]);
         setVoiceId(saved[4]);
       }
-      setError(errorText(err, t`Could not save`));
+      const message = errorText(err, t`Could not save`);
+      if (computerWrite) setComputerError(message);
+      else setError(message);
     } finally {
       pendingSavesRef.current -= 1;
       if (pendingSavesRef.current === 0) {
@@ -686,13 +703,22 @@ export function BotSettings({
                   void enqueueSave({ notifyOnFinish: checked });
                 }}
               />
-              <SwitchRow
-                id={`${ids}-own-computer`}
-                label={<Trans>Own computer</Trans>}
-                checked={computerMode === "dedicated"}
-                disabled={saving}
-                onChange={(checked) => setComputerMode(checked ? "dedicated" : "team")}
-              />
+              <div data-testid="own-computer-setting">
+                <SwitchRow
+                  id={`${ids}-own-computer`}
+                  label={<Trans>Own computer</Trans>}
+                  checked={computerMode === "dedicated"}
+                  disabled={saving || runActive}
+                  onChange={(checked) => setComputerMode(checked ? "dedicated" : "team")}
+                />
+                {runActive ? (
+                  <p className="-mt-1 mb-2 text-body-sm text-muted-foreground">
+                    <Trans>Stop the bot's current run to switch computers.</Trans>
+                  </p>
+                ) : computerError ? (
+                  <p className="-mt-1 mb-2 text-body-sm text-destructive">{computerError}</p>
+                ) : null}
+              </div>
               {/* Read only once the settings are open: listing versions reads object storage. */}
               {settingsOpen ? <ComputerHomeVersions botId={bot.id} /> : null}
               {changed.readAloud ? (
