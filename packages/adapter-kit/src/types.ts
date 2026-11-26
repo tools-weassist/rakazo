@@ -346,6 +346,8 @@ export interface OutgoingDraftDescriptor {
   kind: "email" | "message";
   source: string;
   keys: { to: string; body: string; subject?: string };
+  /** Known Slack reply fields; they stay on the request and can appear on the draft card. */
+  threadKeys?: { ts: string; broadcast?: string };
   defaults?: Record<string, string | boolean>;
   recipientAlias?: string;
 }

@@ -1,4 +1,5 @@
 import {
+  outgoingSendRequiresHumanApproval,
   toolRequiresApproval,
   toolRequiresExplicitApproval,
   toolResultTaintsRun,
@@ -973,6 +974,7 @@ describe("send_email", () => {
     expect(names(false)).not.toContain("send_email");
     expect(toolRequiresApproval("send_email", false)).toBe(true);
     expect(toolRequiresExplicitApproval("send_email")).toBe(false);
+    expect(outgoingSendRequiresHumanApproval("send_email")).toBe(true);
     expect(toolResultTaintsRun("send_email")).toBe(false);
   });
 });

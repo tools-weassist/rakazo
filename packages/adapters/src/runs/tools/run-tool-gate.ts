@@ -10,6 +10,7 @@ import {
   displayName,
   humanizeToolName,
   outboundSiteGate,
+  outgoingSendRequiresHumanApproval,
   outsideRunToolRequiresApproval,
   ownComputerActionNeedsReview,
   planActionGate,
@@ -310,7 +311,13 @@ export async function gateToolCall(
   // A reviewed call still fails closed when its review errors, and keeps its approval key.
   const gated = requiresApprovalByDefault || reviewOnly;
   // In Ask and Auto these ask a person every time, whatever started the run.
-  const mandatoryInAnyRun = paying || unattendedWatch || toolRequiresExplicitApproval(name);
+  const mandatoryInAnyRun =
+    paying ||
+    unattendedWatch ||
+    approvalToolNames.some(
+      (toolName) =>
+        toolRequiresExplicitApproval(toolName) || outgoingSendRequiresHumanApproval(toolName),
+    );
   // Outside text may have asked for these, so an Always allow rule saved for calls the owner asked
   // for does not skip them; they still go through the approval mode.
   const ignoresAllowRules = routineWrittenAfterOutside || request.ignoresAllowRules;
@@ -575,7 +582,9 @@ export async function gateToolCall(
     reviewReason,
     summary: request.fleetSummary,
     batch: connectorTool?.batch,
-    onceOnly: asksEveryTime,
+    onceOnly:
+      asksEveryTime ||
+      approvalToolNames.some((toolName) => outgoingSendRequiresHumanApproval(toolName)),
     outgoingDraft: connectorTool?.outgoingDraft,
     allowOutgoingDraft:
       Boolean(connectorTool?.outgoingDraft || connectorTool?.batch?.outgoingDrafts) &&

@@ -101,6 +101,13 @@ export function OutgoingDraftCard({
               <p className="min-w-0 break-all text-body">{shown.to}</p>
             )}
           </div>
+          {draft.thread ? (
+            <p className="mt-2 text-body-sm text-muted-foreground">
+              {draft.thread.broadcast
+                ? t`Replying in thread ${draft.thread.ts}, also posting to the channel`
+                : t`Replying in thread ${draft.thread.ts}`}
+            </p>
+          ) : null}
           <div className="py-4">
             {open ? (
               <Textarea
