@@ -113,7 +113,7 @@ it("drops a follow-up from another role and explains an AI brain", async () => {
   await click("I'm a business owner");
   await click("Yes, one or more");
   await click("Just exploring");
-  expect(container.textContent).not.toContain("Do you work with a VA today?");
+  expect(container.textContent).not.toContain("Do you work with a VA/outsourced professional today?");
   await click("Next");
   await click("What's an AI brain?");
   expect(container.textContent).toContain("We can set one up for you.");

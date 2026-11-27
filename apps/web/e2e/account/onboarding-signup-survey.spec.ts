@@ -19,7 +19,7 @@ test("new users answer Wea's onboarding questions before their first chat", asyn
   ).toBeVisible();
   await expect(page.getByText("1 of 3", { exact: true })).toBeVisible();
   await expect(page).toHaveURL(/\/onboarding\/survey$/);
-  await expect(page.getByText("Do you work with a VA today?")).toHaveCount(0);
+  await expect(page.getByText("Do you work with a VA/outsourced professional today?")).toHaveCount(0);
   await captureScreenshot(page, testInfo, "01-signup-survey");
 
   await page.getByRole("button", { name: "I'm a business owner" }).click();

@@ -60,7 +60,7 @@ export default function SignupSurvey() {
     { key: "exploring", label: t`Just exploring` },
   ];
   const followUps: Record<SignupSurveyRole, string> = {
-    business_owner: t`Do you work with a VA today?`,
+    business_owner: t`Do you work with a VA/outsourced professional today?`,
     va: t`Who do you work for right now?`,
     agency: t`How many VAs are on your team?`,
     exploring: "",
@@ -144,7 +144,7 @@ export default function SignupSurvey() {
               style={styles.title}
             >{t`The AI assistant for outsourced professionals and business owners.`}</Text>
             <Text style={styles.intro}>
-              {t`3 quick questions to set you up with the right bot in less than 30 seconds.`}
+              {t`3 quick questions to set you up with the right team of AI assistants in less than 30 seconds.`}
             </Text>
           </>
         ) : null}
