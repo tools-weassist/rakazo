@@ -1,4 +1,5 @@
 import { useLingui } from "@lingui/react/macro";
+import type { SignupSurvey as SignupSurveyAnswers } from "@rakazo/contracts";
 import { useEffect, useId, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { AccountMenu } from "../../components/account/AccountMenu";
@@ -21,6 +22,8 @@ export function OnboardingPage() {
   const linkedStep = routeStep === "survey" || routeStep === "model" ? routeStep : undefined;
   const [creatingBot, setCreatingBot] = useState(false);
   const [surveyDone, setSurveyDone] = useState(false);
+  // Answers given this visit, so Back from the model step reopens the survey with them filled in.
+  const [surveyAnswers, setSurveyAnswers] = useState<SignupSurveyAnswers>();
   const step = creatingBot ? "bot" : surveyDone ? "loading" : (linkedStep ?? "loading");
   const [billingEnabled, setBillingEnabled] = useState(false);
   // The step after the survey; null until me loads.
@@ -99,8 +102,22 @@ export function OnboardingPage() {
     <div className="min-h-full bg-background px-6 py-12" data-rakazo-surface="onboarding">
       <AccountMenu signingOut={signingOut} onLogOut={() => void logOut()} />
       <div className="mx-auto w-full max-w-[560px]">
-        {step === "survey" ? <SignupSurvey onDone={() => setSurveyDone(true)} /> : null}
-        {step === "model" ? <ModelStep model={model} fieldId={fieldId} /> : null}
+        {step === "survey" ? (
+          <SignupSurvey
+            initial={surveyAnswers}
+            onDone={(answers) => {
+              setSurveyAnswers(answers);
+              setSurveyDone(true);
+            }}
+          />
+        ) : null}
+        {step === "model" ? (
+          <ModelStep
+            model={model}
+            fieldId={fieldId}
+            onBack={surveyAnswers ? () => goTo("survey") : undefined}
+          />
+        ) : null}
         {step === "bot" ? (
           <FirstBotRetry error={error} onRetry={() => void createFirstBot()} />
         ) : null}

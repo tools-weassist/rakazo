@@ -13,7 +13,7 @@ let account = deferred<unknown>();
 vi.mock("../../lib/query/rpc", () => ({
   selectedSpaceId: () => null,
   rpc: {
-    onboarding: { firstBot: vi.fn() },
+    onboarding: { firstBot: vi.fn(), signupSurvey: vi.fn(async () => ({ ok: true })) },
     me: vi.fn(() => {
       account = deferred();
       return account.promise;
@@ -85,6 +85,43 @@ it("marks onboarding as usable for the desktop only once a step shows", async ()
   );
   expect(host.querySelector("h1")?.textContent).toBe("Connect a model");
   expect(marked()).not.toBeNull();
+  // No questions were answered on this visit, so there is nothing to go back to.
+  expect(buttonNamed("Back")).toBeUndefined();
+  act(() => root.unmount());
+});
+
+const buttonNamed = (name: string) =>
+  [...document.querySelectorAll<HTMLButtonElement>("button")].find(
+    (button) => button.textContent === name,
+  );
+
+it("goes back from the model step to the questions with the answers kept", async () => {
+  const host = document.body.appendChild(document.createElement("div"));
+  const root = createRoot(host);
+  await act(async () =>
+    root.render(
+      <MemoryRouter initialEntries={["/onboarding"]}>
+        <Routes>
+          <Route path="/onboarding/:step?" element={<OnboardingPage />} />
+        </Routes>
+      </MemoryRouter>,
+    ),
+  );
+  await act(async () =>
+    account.resolve({ needsModel: true, needsSignupSurvey: true, billingEnabled: false }),
+  );
+  const click = async (name: string) => act(async () => buttonNamed(name)!.click());
+  await click("I'm a business owner");
+  await click("Next");
+  await click("Next");
+  await click("Continue");
+  expect(host.querySelector("h1")?.textContent).toBe("Connect a model");
+
+  await click("Back");
+  expect(host.textContent).toContain("What do you want help with first?");
+  await click("Back");
+  await click("Back");
+  expect(buttonNamed("I'm a business owner")?.getAttribute("aria-pressed")).toBe("true");
   act(() => root.unmount());
 });
 

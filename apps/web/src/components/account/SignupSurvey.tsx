@@ -17,18 +17,27 @@ const tile =
   "h-auto min-h-11 justify-start whitespace-normal rounded-lg border border-border px-3 py-2.5 text-start aria-pressed:border-primary aria-pressed:bg-primary/10";
 const STEP_COUNT = 3;
 
-/** Wea's three onboarding questions; every one can be skipped. The answers pick a starter bot. */
-export function SignupSurvey({ onDone }: { onDone: () => void }) {
+/**
+ * Wea's three onboarding questions; every one can be skipped. The answers pick a starter bot.
+ * Coming back from a later step passes the earlier answers in `initial` and opens the last question.
+ */
+export function SignupSurvey({
+  initial,
+  onDone,
+}: {
+  initial?: SignupSurveyAnswers;
+  onDone: (answers: SignupSurveyAnswers) => void;
+}) {
   const { t } = useLingui();
   const fieldId = useId();
   const questionRef = useRef<HTMLParagraphElement>(null);
   const submitted = useRef(false);
-  const [step, setStep] = useState(0);
-  const [role, setRole] = useState<SignupSurveyRole | null>(null);
-  const [roleDetail, setRoleDetail] = useState<string | null>(null);
-  const [brain, setBrain] = useState<Brain | null>(null);
-  const [needs, setNeeds] = useState<string[]>([]);
-  const [source, setSource] = useState("");
+  const [step, setStep] = useState(initial ? STEP_COUNT - 1 : 0);
+  const [role, setRole] = useState<SignupSurveyRole | null>(initial?.role ?? null);
+  const [roleDetail, setRoleDetail] = useState<string | null>(initial?.roleDetail ?? null);
+  const [brain, setBrain] = useState<Brain | null>(initial?.brain ?? null);
+  const [needs, setNeeds] = useState<string[]>(initial?.needs ?? []);
+  const [source, setSource] = useState(initial?.source ?? "");
 
   const roles: { value: SignupSurveyRole; label: string }[] = [
     { value: "business_owner", label: t`I'm a business owner` },
@@ -95,7 +104,7 @@ export function SignupSurvey({ onDone }: { onDone: () => void }) {
     submitted.current = true;
     // Answers are optional, so a slow or failed save never holds up onboarding.
     void bestEffort("save signup survey", rpc.onboarding.signupSurvey(answers));
-    onDone();
+    onDone(answers);
   }
 
   function answers(): SignupSurveyAnswers {
@@ -133,7 +142,8 @@ export function SignupSurvey({ onDone }: { onDone: () => void }) {
           </p>
           <p className="mt-2 text-body text-muted-foreground">
             <Trans>
-              3 quick questions to set you up with the right team of AI assistants in less than 30 seconds.
+              3 quick questions to set you up with the right team of AI assistants in less than 30
+              seconds.
             </Trans>
           </p>
         </>

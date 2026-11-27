@@ -20,7 +20,16 @@ import type { OnboardingModel } from "./use-onboarding-model";
 
 const CUSTOM_MODEL_OPTION = "__rakazo_custom_model__";
 
-export function ModelStep({ model, fieldId }: { model: OnboardingModel; fieldId: string }) {
+export function ModelStep({
+  model,
+  fieldId,
+  onBack,
+}: {
+  model: OnboardingModel;
+  fieldId: string;
+  /** Returns to the onboarding questions; only set when they were answered this visit. */
+  onBack?: () => void;
+}) {
   const { t } = useLingui();
   const {
     acceptsKey,
@@ -66,6 +75,12 @@ export function ModelStep({ model, fieldId }: { model: OnboardingModel; fieldId:
       <h1 className="text-display font-medium text-foreground">
         <Trans>Connect a model</Trans>
       </h1>
+      <p className="mt-2 text-body text-muted-foreground">
+        <Trans>
+          Choose the AI provider your bots will use, then sign in or add your API key. This is your
+          primary provider. You can add more later in Settings under Models.
+        </Trans>
+      </p>
       <div className="mt-8 block text-body font-medium text-foreground">
         <span>
           <Trans>Provider</Trans>
@@ -221,13 +236,19 @@ export function ModelStep({ model, fieldId }: { model: OnboardingModel; fieldId:
         </p>
       ) : null}
       {error ? <p className="mt-3 text-body text-destructive">{error}</p> : null}
-      <Button
-        className="mt-6"
-        disabled={!credits && !canSaveModel}
-        onClick={() => void (credits ? fundWithCredits() : saveModel())}
-      >
-        <Trans>Continue</Trans>
-      </Button>
+      <div className="mt-6 flex flex-wrap items-center gap-3">
+        <Button
+          disabled={!credits && !canSaveModel}
+          onClick={() => void (credits ? fundWithCredits() : saveModel())}
+        >
+          <Trans>Continue</Trans>
+        </Button>
+        {onBack ? (
+          <Button type="button" variant="ghost" onClick={onBack}>
+            <Trans>Back</Trans>
+          </Button>
+        ) : null}
+      </div>
     </div>
   );
 }
