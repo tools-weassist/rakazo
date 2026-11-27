@@ -37,7 +37,7 @@ export function SignupSurvey({ onDone }: { onDone: () => void }) {
     { value: "exploring", label: t`Just exploring` },
   ];
   const followUps: Record<SignupSurveyRole, string> = {
-    business_owner: t`Do you work with a VA today?`,
+    business_owner: t`Do you work with a VA/outsourced professional today?`,
     va: t`Who do you work for right now?`,
     agency: t`How many VAs are on your team?`,
     exploring: "",
