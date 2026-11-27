@@ -315,13 +315,21 @@ it("renders Polish plural categories and interpolated values in every counted me
       const values = Object.fromEntries(
         [...(entry.message ?? "").matchAll(/\{(\w+)(?=\s*[,}])/g)].map((match) => [
           match[1],
-          match[1] === "peer" || match[1] === "name" ? "Locale QA" : count,
+          match[1] === "peer" || match[1] === "name" || match[1] === "names"
+            ? "Locale QA"
+            : count,
         ]),
       );
       const rendered = local._({ id, values });
-      expect(rendered, `${entry.message}: ${count}`).toContain(number.format(count));
+      // Some plurals only pick a category (e.g. "{names} keeps its own model") and never
+      // print the count. Require the locale-formatted number only when # is in the message.
+      if ((entry.message ?? "").includes("#") || translation.includes("#")) {
+        expect(rendered, `${entry.message}: ${count}`).toContain(number.format(count));
+      }
       expect(rendered).not.toMatch(/[{}]/);
-      if ("peer" in values || "name" in values) expect(rendered).toContain("Locale QA");
+      if ("peer" in values || "name" in values || "names" in values) {
+        expect(rendered).toContain("Locale QA");
+      }
     }
   }
 });
