@@ -121,6 +121,11 @@
   outline: 3px solid var(--wo-glow);
   outline-offset: 2px;
 }
+/* The name field shows focus with its own border, and headings take focus only for screen readers. */
+.wea-onboarding .wo-field input:focus-visible,
+.wea-onboarding .wo-question:focus-visible {
+  outline: none;
+}
 
 /* Chief on a soft teal halo (splash and hello) */
 .wo-splash {
