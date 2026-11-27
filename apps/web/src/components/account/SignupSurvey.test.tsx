@@ -48,27 +48,63 @@ async function click(name: string) {
   await act(async () => button(name).click());
 }
 
-it("sends the persona, brain and up to two first needs", async () => {
+it("moves through three steps and sends the retained answers once", async () => {
   expect(container.textContent).toContain("Welcome to Wea");
+  expect(container.textContent).toContain(
+    "The AI assistant for outsourced professionals and business owners.",
+  );
+  expect(container.textContent).toContain("1 of 3");
+  expect(container.textContent).not.toContain("AI brain");
   expect(container.textContent).not.toContain("Rakazo");
   await click("I'm a virtual assistant or outsourced professional");
   await click("One client");
+  await click("Next");
+  expect(container.textContent).toContain("2 of 3");
   await click("Yes, in Google Drive");
+  await click("Back");
+  expect(container.querySelector('[aria-pressed="true"]')?.textContent).toBe(
+    "I'm a virtual assistant or outsourced professional",
+  );
+  await click("Next");
+  expect(button("Yes, in Google Drive").getAttribute("aria-pressed")).toBe("true");
+  await click("Next");
+  expect(container.textContent).toContain("3 of 3");
   await click("Client reports (EOD)");
   await click("Handoffs across time zones");
   await click("Learning AI skills");
-  await click("Continue");
+  const input = container.querySelector<HTMLInputElement>('input[placeholder="Optional"]')!;
+  await act(async () => {
+    Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, "value")!.set!.call(
+      input,
+      "A friend",
+    );
+    input.dispatchEvent(new Event("input", { bubbles: true }));
+  });
+  await click("Back");
+  await click("Next");
+  expect(button("Handoffs across time zones").getAttribute("aria-pressed")).toBe("true");
+  expect(container.querySelector<HTMLInputElement>('input[placeholder="Optional"]')?.value).toBe(
+    "A friend",
+  );
+  await act(async () => {
+    button("Continue").click();
+    button("Continue").click();
+  });
   expect(signupSurvey).toHaveBeenCalledWith({
     role: "va",
     roleDetail: "one_client",
     brain: "drive",
     needs: ["handoffs", "ai_skills"],
+    source: "A friend",
   });
+  expect(signupSurvey).toHaveBeenCalledOnce();
   expect(onDone).toHaveBeenCalled();
 });
 
 it("offers GitHub as an AI brain and sends that answer", async () => {
+  await click("Next");
   await click("Yes, in GitHub");
+  await click("Next");
   await click("Continue");
   expect(signupSurvey).toHaveBeenCalledWith({ brain: "github" });
 });
@@ -78,8 +114,10 @@ it("drops a follow-up from another role and explains an AI brain", async () => {
   await click("Yes, one or more");
   await click("Just exploring");
   expect(container.textContent).not.toContain("Do you work with a VA today?");
+  await click("Next");
   await click("What's an AI brain?");
   expect(container.textContent).toContain("We can set one up for you.");
+  await click("Next");
   await click("Continue");
   expect(signupSurvey).toHaveBeenCalledWith({ role: "exploring", brain: "unsure" });
 });

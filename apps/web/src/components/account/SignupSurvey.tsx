@@ -5,8 +5,9 @@ import {
   SIGNUP_SURVEY_NEEDS,
   SIGNUP_SURVEY_ROLE_DETAILS,
 } from "@rakazo/contracts";
+import { bestEffort } from "@rakazo/logging/best-effort";
 import { Button, Input, ToggleGroup, ToggleGroupItem } from "@rakazo/ui-web";
-import { useId, useState } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 import { rpc } from "../../lib/query/rpc";
 
 type Brain = NonNullable<SignupSurveyAnswers["brain"]>;
@@ -14,11 +15,15 @@ type Brain = NonNullable<SignupSurveyAnswers["brain"]>;
 const tileGroup = "mt-2 grid w-full grid-cols-1 gap-2 sm:grid-cols-2";
 const tile =
   "h-auto min-h-11 justify-start whitespace-normal rounded-lg border border-border px-3 py-2.5 text-start aria-pressed:border-primary aria-pressed:bg-primary/10";
+const STEP_COUNT = 3;
 
 /** Wea's three onboarding questions; every one can be skipped. The answers pick a starter bot. */
 export function SignupSurvey({ onDone }: { onDone: () => void }) {
   const { t } = useLingui();
   const fieldId = useId();
+  const questionRef = useRef<HTMLParagraphElement>(null);
+  const submitted = useRef(false);
+  const [step, setStep] = useState(0);
   const [role, setRole] = useState<SignupSurveyRole | null>(null);
   const [roleDetail, setRoleDetail] = useState<string | null>(null);
   const [brain, setBrain] = useState<Brain | null>(null);
@@ -86,8 +91,10 @@ export function SignupSurvey({ onDone }: { onDone: () => void }) {
   }
 
   function submit(answers: SignupSurveyAnswers) {
+    if (submitted.current) return;
+    submitted.current = true;
     // Answers are optional, so a slow or failed save never holds up onboarding.
-    void rpc.onboarding.signupSurvey(answers).catch(() => undefined);
+    void bestEffort("save signup survey", rpc.onboarding.signupSurvey(answers));
     onDone();
   }
 
@@ -104,130 +111,169 @@ export function SignupSurvey({ onDone }: { onDone: () => void }) {
   const details = role ? SIGNUP_SURVEY_ROLE_DETAILS[role] : [];
   const needChoices = SIGNUP_SURVEY_NEEDS[role ?? "exploring"];
 
+  useEffect(() => {
+    questionRef.current?.focus();
+  }, [step]);
+
   return (
     <form
       onSubmit={(event) => {
         event.preventDefault();
-        submit(answers());
+        if (step < STEP_COUNT - 1) setStep((current) => current + 1);
+        else submit(answers());
       }}
     >
-      <h1 className="text-display font-medium text-foreground">
-        <Trans>Welcome to Wea</Trans>
-      </h1>
-      <p className="mt-2 text-body text-muted-foreground">
-        <Trans>
-          Three quick questions so we can set you up with the right bots. Skip any of them.
-        </Trans>
-      </p>
-
-      <p id={`${fieldId}-role`} className="mt-8 text-body font-medium text-foreground">
-        <Trans>Which best describes you?</Trans>
-      </p>
-      <ToggleGroup
-        aria-labelledby={`${fieldId}-role`}
-        value={role ? [role] : []}
-        onValueChange={([next]) => chooseRole((next as SignupSurveyRole | undefined) ?? null)}
-        className={tileGroup}
-      >
-        {roles.map((option) => (
-          <ToggleGroupItem key={option.value} value={option.value} className={tile}>
-            {option.label}
-          </ToggleGroupItem>
-        ))}
-      </ToggleGroup>
-
-      {role && details.length ? (
+      {step === 0 ? (
         <>
-          <p id={`${fieldId}-detail`} className="mt-6 text-body font-medium text-foreground">
-            {followUps[role]}
+          <h1 className="text-display font-medium text-foreground">
+            <Trans>Welcome to Wea</Trans>
+          </h1>
+          <p className="mt-2 text-title-sm text-foreground">
+            <Trans>The AI assistant for outsourced professionals and business owners.</Trans>
           </p>
-          <ToggleGroup
-            aria-labelledby={`${fieldId}-detail`}
-            value={roleDetail ? [roleDetail] : []}
-            onValueChange={([next]) => setRoleDetail((next as string | undefined) ?? null)}
-            className={tileGroup}
-          >
-            {details.map((value) => (
-              <ToggleGroupItem key={value} value={value} className={tile}>
-                {detailLabels[value]}
-              </ToggleGroupItem>
-            ))}
-          </ToggleGroup>
+          <p className="mt-2 text-body text-muted-foreground">
+            <Trans>
+              3 quick questions to set you up with the right bot in less than 30 seconds.
+            </Trans>
+          </p>
         </>
       ) : null}
 
-      <p id={`${fieldId}-brain`} className="mt-6 text-body font-medium text-foreground">
-        <Trans>
-          Do you already have an AI brain, one place where your business knowledge lives (SOPs,
-          notes, client info) that AI can use?
-        </Trans>
-      </p>
-      <ToggleGroup
-        aria-labelledby={`${fieldId}-brain`}
-        value={brain ? [brain] : []}
-        onValueChange={([next]) => setBrain((next as Brain | undefined) ?? null)}
-        className={tileGroup}
+      <p
+        ref={questionRef}
+        className="mt-8 text-body-sm text-muted-foreground"
+        aria-live="polite"
+        tabIndex={-1}
       >
-        {brains.map((option) => (
-          <ToggleGroupItem key={option.value} value={option.value} className={tile}>
-            {option.label}
-          </ToggleGroupItem>
-        ))}
-      </ToggleGroup>
-      {brain === "unsure" ? (
-        <p className="mt-2 text-body-sm text-muted-foreground" role="status">
-          <Trans>
-            It's one organized place for how your business works, so you and your bots never have to
-            explain things twice. We can set one up for you.
-          </Trans>
-        </p>
-      ) : null}
-
-      {role ? (
-        <>
-          <p id={`${fieldId}-needs`} className="mt-6 text-body font-medium text-foreground">
-            <Trans>What do you want help with first?</Trans>{" "}
-            <span className="font-normal text-muted-foreground">
-              <Trans>Pick up to 2</Trans>
-            </span>
+        {t`${step + 1} of ${STEP_COUNT}`}
+      </p>
+      {step === 0 ? (
+        <section aria-label={t`Your role`}>
+          <p id={`${fieldId}-role`} className="mt-2 text-title-sm font-medium text-foreground">
+            <Trans>Which best describes you?</Trans>
           </p>
           <ToggleGroup
-            multiple
-            aria-labelledby={`${fieldId}-needs`}
-            value={needs}
-            onValueChange={(next) => setNeeds((next as string[]).slice(-SIGNUP_SURVEY_MAX_NEEDS))}
+            aria-labelledby={`${fieldId}-role`}
+            value={role ? [role] : []}
+            onValueChange={([next]) => chooseRole((next as SignupSurveyRole | undefined) ?? null)}
             className={tileGroup}
           >
-            {needChoices.map((value) => (
-              <ToggleGroupItem key={value} value={value} className={tile}>
-                {needLabels[value]}
+            {roles.map((option) => (
+              <ToggleGroupItem key={option.value} value={option.value} className={tile}>
+                {option.label}
               </ToggleGroupItem>
             ))}
           </ToggleGroup>
-        </>
+
+          {role && details.length ? (
+            <>
+              <p id={`${fieldId}-detail`} className="mt-6 text-body font-medium text-foreground">
+                {followUps[role]}
+              </p>
+              <ToggleGroup
+                aria-labelledby={`${fieldId}-detail`}
+                value={roleDetail ? [roleDetail] : []}
+                onValueChange={([next]) => setRoleDetail((next as string | undefined) ?? null)}
+                className={tileGroup}
+              >
+                {details.map((value) => (
+                  <ToggleGroupItem key={value} value={value} className={tile}>
+                    {detailLabels[value]}
+                  </ToggleGroupItem>
+                ))}
+              </ToggleGroup>
+            </>
+          ) : null}
+        </section>
       ) : null}
 
-      <label
-        htmlFor={`${fieldId}-source`}
-        className="mt-6 block text-body font-medium text-foreground"
-      >
-        <Trans>How did you hear about us?</Trans>
-      </label>
-      <Input
-        id={`${fieldId}-source`}
-        value={source}
-        onChange={(event) => setSource(event.target.value)}
-        maxLength={500}
-        placeholder={t`Optional`}
-        className="mt-2"
-      />
+      {step === 1 ? (
+        <section aria-label={t`Your AI knowledge`}>
+          <p id={`${fieldId}-brain`} className="mt-2 text-title-sm font-medium text-foreground">
+            <Trans>
+              Do you already have an AI brain, one place where your business knowledge lives (SOPs,
+              notes, client info) that AI can use?
+            </Trans>
+          </p>
+          <ToggleGroup
+            aria-labelledby={`${fieldId}-brain`}
+            value={brain ? [brain] : []}
+            onValueChange={([next]) => setBrain((next as Brain | undefined) ?? null)}
+            className={tileGroup}
+          >
+            {brains.map((option) => (
+              <ToggleGroupItem key={option.value} value={option.value} className={tile}>
+                {option.label}
+              </ToggleGroupItem>
+            ))}
+          </ToggleGroup>
+          {brain === "unsure" ? (
+            <p className="mt-2 text-body-sm text-muted-foreground" role="status">
+              <Trans>
+                It's one organized place for how your business works, so you and your bots never
+                have to explain things twice. We can set one up for you.
+              </Trans>
+            </p>
+          ) : null}
+        </section>
+      ) : null}
+
+      {step === 2 ? (
+        <section aria-label={t`What you need help with`}>
+          {role ? (
+            <>
+              <p id={`${fieldId}-needs`} className="mt-2 text-title-sm font-medium text-foreground">
+                <Trans>What do you want help with first?</Trans>{" "}
+                <span className="font-normal text-muted-foreground">
+                  <Trans>Pick up to 2</Trans>
+                </span>
+              </p>
+              <ToggleGroup
+                multiple
+                aria-labelledby={`${fieldId}-needs`}
+                value={needs}
+                onValueChange={(next) =>
+                  setNeeds((next as string[]).slice(-SIGNUP_SURVEY_MAX_NEEDS))
+                }
+                className={tileGroup}
+              >
+                {needChoices.map((value) => (
+                  <ToggleGroupItem key={value} value={value} className={tile}>
+                    {needLabels[value]}
+                  </ToggleGroupItem>
+                ))}
+              </ToggleGroup>
+            </>
+          ) : null}
+          <label
+            htmlFor={`${fieldId}-source`}
+            className="mt-6 block text-body font-medium text-foreground"
+          >
+            <Trans>How did you hear about us?</Trans>
+          </label>
+          <Input
+            id={`${fieldId}-source`}
+            value={source}
+            onChange={(event) => setSource(event.target.value)}
+            maxLength={500}
+            placeholder={t`Optional`}
+            className="mt-2"
+          />
+        </section>
+      ) : null}
       <div className="mt-8 flex flex-wrap items-center gap-3">
         <Button type="submit">
-          <Trans>Continue</Trans>
+          {step === STEP_COUNT - 1 ? <Trans>Continue</Trans> : <Trans>Next</Trans>}
         </Button>
-        <Button type="button" variant="ghost" onClick={() => submit({})}>
-          <Trans>Skip for now</Trans>
-        </Button>
+        {step > 0 ? (
+          <Button type="button" variant="ghost" onClick={() => setStep((current) => current - 1)}>
+            <Trans>Back</Trans>
+          </Button>
+        ) : (
+          <Button type="button" variant="ghost" onClick={() => submit({})}>
+            <Trans>Skip for now</Trans>
+          </Button>
+        )}
       </div>
     </form>
   );

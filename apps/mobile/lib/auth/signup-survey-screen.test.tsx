@@ -41,18 +41,59 @@ vi.mock("react-native", () => {
     Platform: { OS: "ios" },
     StyleSheet: { create: (styles: unknown) => styles },
     Text: ({ children }: { children?: ReactNode }) => <p>{children}</p>,
-    TextInput: ({ accessibilityLabel }: { accessibilityLabel: string }) => (
-      <input aria-label={accessibilityLabel} />
+    TextInput: ({
+      accessibilityLabel,
+      onChangeText,
+      value,
+    }: {
+      accessibilityLabel: string;
+      onChangeText: (value: string) => void;
+      value: string;
+    }) => (
+      <input
+        aria-label={accessibilityLabel}
+        onChange={(event) => onChangeText(event.currentTarget.value)}
+        value={value}
+      />
     ),
   };
 });
 vi.mock("../../components/ui/menu-picker", () => ({
-  MenuPickerMenu: ({ children }: { children?: ReactNode }) => <div>{children}</div>,
+  MenuPickerMenu: ({
+    children,
+    choices,
+    onChange,
+    value,
+  }: {
+    children?: ReactNode;
+    choices: { key: string; label: string }[];
+    onChange: (value: string) => void;
+    value: string;
+  }) => (
+    <div>
+      {children}
+      {choices.map((choice) => (
+        <button
+          aria-pressed={value === choice.key}
+          key={choice.key}
+          type="button"
+          onClick={() => onChange(choice.key)}
+        >
+          {choice.label}
+        </button>
+      ))}
+    </div>
+  ),
 }));
 vi.mock("../../components/native/native-symbol", () => ({ NativeSymbol: () => null }));
 vi.mock("../../components/settings/settings-group", () => ({
   useStackedSettings: () => false,
-  SettingsGroup: ({ children }: { children?: ReactNode }) => <div>{children}</div>,
+  SettingsGroup: ({ children, label }: { children?: ReactNode; label?: ReactNode }) => (
+    <div>
+      {label ? <p>{label}</p> : null}
+      {children}
+    </div>
+  ),
   SettingsRow: ({ title }: { title: string }) => <p>{title}</p>,
 }));
 vi.mock("../../components/native/native-action-button", () => ({
@@ -80,37 +121,61 @@ afterEach(async () => {
   vi.unstubAllGlobals();
 });
 
-const continueButton = () =>
-  [...container.querySelectorAll("button")].find((node) => node.textContent === "Continue")!;
+const surveyButton = (label: string) =>
+  [...container.querySelectorAll("button")].find((node) => node.textContent === label)!;
+const click = async (label: string) => act(async () => surveyButton(label).click());
 
 it("closes at once and sends the answers once, however often Continue is pressed", async () => {
   const saving = deferred<unknown>();
   state.rpc.mockReturnValue(saving.promise);
+  await click("I'm a business owner");
+  await click("Next");
+  await click("Next");
   await act(async () => {
-    continueButton().click();
-    continueButton().click();
+    surveyButton("Continue").click();
+    surveyButton("Continue").click();
   });
   expect(state.close).toHaveBeenCalledOnce();
   expect(state.rpc).toHaveBeenCalledExactlyOnceWith(
     "onboarding/signupSurvey",
-    {},
+    { role: "business_owner" },
     expect.objectContaining({ requestContext: expect.anything() }),
   );
-  await act(async () => continueButton().click());
+  await act(async () => surveyButton("Continue").click());
   expect(state.rpc).toHaveBeenCalledOnce();
   await act(async () => saving.resolve({}));
 });
 
-it("asks Wea's questions, with the follow-up and needs only after a role", () => {
+it("shows one question per step and retains answers when going back", async () => {
+  expect(container.textContent).toContain("1 of 3");
+  expect(container.textContent).toContain(
+    "The AI assistant for outsourced professionals and business owners.",
+  );
   expect(container.textContent).toContain("Which best describes you?");
-  expect(container.textContent).toContain("AI brain");
+  expect(container.textContent).not.toContain("AI brain");
   expect(container.textContent).not.toContain("What do you want help with first?");
   expect(container.textContent).not.toContain("Rakazo");
+  await click("I'm a virtual assistant or outsourced professional");
+  await click("Next");
+  expect(container.textContent).toContain("2 of 3");
+  expect(container.textContent).toContain("AI brain");
+  await click("Yes, in Google Drive");
+  await click("Back");
+  expect(
+    surveyButton("I'm a virtual assistant or outsourced professional").getAttribute("aria-pressed"),
+  ).toBe("true");
+  await click("Next");
+  expect(surveyButton("Yes, in Google Drive").getAttribute("aria-pressed")).toBe("true");
+  await click("Next");
+  expect(container.textContent).toContain("3 of 3");
+  expect(container.textContent).toContain("What do you want help with first?");
 });
 
-it("lets a failed save go without holding up the new account", async () => {
+it("lets a failed final save go without holding up the new account", async () => {
   state.rpc.mockRejectedValue(new Error("Offline"));
-  await act(async () => continueButton().click());
+  await click("Next");
+  await click("Next");
+  await act(async () => surveyButton("Continue").click());
   await act(flush);
   expect(state.close).toHaveBeenCalledOnce();
   expect(container.textContent).not.toContain("Offline");

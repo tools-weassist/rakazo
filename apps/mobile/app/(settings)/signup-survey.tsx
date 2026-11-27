@@ -28,6 +28,7 @@ import { ACCOUNT_SETTINGS } from "../../lib/query/settings-target";
 import { closeSettingsSheet } from "../../lib/settings/settings-sheet";
 
 type Brain = NonNullable<SignupSurveyAnswers["brain"]>;
+const STEP_COUNT = 3;
 
 /** Wea's onboarding questions, shown once after signing up; every one can be skipped. */
 export default function SignupSurvey() {
@@ -36,6 +37,7 @@ export default function SignupSurvey() {
   const { t } = useLingui();
   const styles = useThemedStyles(createStyles);
   const stacked = useStackedSettings();
+  const [step, setStep] = useState(0);
   const [role, setRole] = useState<SignupSurveyRole>();
   const [roleDetail, setRoleDetail] = useState<string>();
   const [brain, setBrain] = useState<Brain>();
@@ -136,58 +138,95 @@ export default function SignupSurvey() {
         contentInsetAdjustmentBehavior="automatic"
         keyboardShouldPersistTaps="handled"
       >
-        <Text style={styles.intro}>
-          {t`Three quick questions so we can set you up with the right bots. Skip any of them.`}
-        </Text>
-        <SettingsGroup>
-          <ChoiceRow
-            choices={roles}
-            label={t`Which best describes you?`}
-            onChange={chooseRole}
-            value={role}
-          />
-          {role && details.length ? (
-            <ChoiceRow
-              choices={details}
-              label={followUps[role]}
-              onChange={setRoleDetail}
-              value={roleDetail}
-            />
-          ) : null}
-        </SettingsGroup>
-        <SettingsGroup
-          label={t`Do you already have an AI brain, one place where your business knowledge lives (SOPs, notes, client info) that AI can use?`}
-        >
-          <ChoiceRow choices={brains} label={t`AI brain`} onChange={setBrain} value={brain} />
-        </SettingsGroup>
-        {brain === "unsure" ? (
-          <Text style={styles.intro}>
-            {t`It's one organized place for how your business works, so you and your bots never have to explain things twice. We can set one up for you.`}
-          </Text>
+        {step === 0 ? (
+          <>
+            <Text
+              style={styles.title}
+            >{t`The AI assistant for outsourced professionals and business owners.`}</Text>
+            <Text style={styles.intro}>
+              {t`3 quick questions to set you up with the right bot in less than 30 seconds.`}
+            </Text>
+          </>
         ) : null}
-        {role ? (
-          <SettingsGroup label={t`What do you want help with first?`}>
-            <ChoiceRow choices={needs} label={t`First`} onChange={setFirstNeed} value={firstNeed} />
+        <Text accessibilityLiveRegion="polite" style={styles.progress}>
+          {t`${step + 1} of ${STEP_COUNT}`}
+        </Text>
+        {step === 0 ? (
+          <SettingsGroup>
             <ChoiceRow
-              choices={needs.filter((need) => need.key !== firstNeed)}
-              label={t`Anything else? (optional)`}
-              onChange={setSecondNeed}
-              value={secondNeed}
+              choices={roles}
+              label={t`Which best describes you?`}
+              onChange={chooseRole}
+              value={role}
             />
+            {role && details.length ? (
+              <ChoiceRow
+                choices={details}
+                label={followUps[role]}
+                onChange={setRoleDetail}
+                value={roleDetail}
+              />
+            ) : null}
           </SettingsGroup>
         ) : null}
-        <SettingsGroup label={t`How did you hear about us?`}>
-          <TextInput
-            accessibilityLabel={t`How did you hear about us?`}
-            maxLength={500}
-            onChangeText={setSource}
-            placeholder={t`Optional`}
-            placeholderTextColor={native.tertiaryLabel}
-            style={styles.input}
-            value={source}
+        {step === 1 ? (
+          <>
+            <SettingsGroup
+              label={t`Do you already have an AI brain, one place where your business knowledge lives (SOPs, notes, client info) that AI can use?`}
+            >
+              <ChoiceRow choices={brains} label={t`AI brain`} onChange={setBrain} value={brain} />
+            </SettingsGroup>
+            {brain === "unsure" ? (
+              <Text style={styles.intro}>
+                {t`It's one organized place for how your business works, so you and your bots never have to explain things twice. We can set one up for you.`}
+              </Text>
+            ) : null}
+          </>
+        ) : null}
+        {step === 2 ? (
+          <>
+            {role ? (
+              <SettingsGroup label={t`What do you want help with first?`}>
+                <ChoiceRow
+                  choices={needs}
+                  label={t`First`}
+                  onChange={setFirstNeed}
+                  value={firstNeed}
+                />
+                <ChoiceRow
+                  choices={needs.filter((need) => need.key !== firstNeed)}
+                  label={t`Anything else? (optional)`}
+                  onChange={setSecondNeed}
+                  value={secondNeed}
+                />
+              </SettingsGroup>
+            ) : null}
+            <SettingsGroup label={t`How did you hear about us?`}>
+              <TextInput
+                accessibilityLabel={t`How did you hear about us?`}
+                maxLength={500}
+                onChangeText={setSource}
+                placeholder={t`Optional`}
+                placeholderTextColor={native.tertiaryLabel}
+                style={styles.input}
+                value={source}
+              />
+            </SettingsGroup>
+          </>
+        ) : null}
+        <View style={styles.actions}>
+          {step > 0 ? (
+            <NativeActionButton
+              label={t`Back`}
+              onPress={() => setStep((current) => current - 1)}
+              prominence="secondary"
+            />
+          ) : null}
+          <NativeActionButton
+            label={step === STEP_COUNT - 1 ? t`Continue` : t`Next`}
+            onPress={step === STEP_COUNT - 1 ? finish : () => setStep((current) => current + 1)}
           />
-        </SettingsGroup>
-        <NativeActionButton label={t`Continue`} onPress={finish} />
+        </View>
       </ScrollView>
     </KeyboardAvoidingView>
   );
@@ -248,6 +287,9 @@ function createStyles() {
       color: native.label,
       fontSize: 16,
     },
+    title: { color: native.label, fontSize: 17, lineHeight: 23, paddingHorizontal: 4 },
     intro: { color: native.secondaryLabel, fontSize: 15, paddingHorizontal: 4 },
+    progress: { color: native.secondaryLabel, fontSize: 14, paddingHorizontal: 4 },
+    actions: { flexDirection: "row", gap: 12, justifyContent: "space-between" },
   });
 }
