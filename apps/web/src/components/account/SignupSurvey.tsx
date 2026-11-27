@@ -133,7 +133,7 @@ export function SignupSurvey({ onDone }: { onDone: () => void }) {
           </p>
           <p className="mt-2 text-body text-muted-foreground">
             <Trans>
-              3 quick questions to set you up with the right bot in less than 30 seconds.
+              3 quick questions to set you up with the right team of AI assistants in less than 30 seconds.
             </Trans>
           </p>
         </>
