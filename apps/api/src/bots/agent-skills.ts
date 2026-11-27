@@ -5,6 +5,7 @@ import {
   signalRenamedRoutines,
 } from "@rakazo/adapters";
 import type { Actor, AgentSkill, AgentSkillSource } from "@rakazo/contracts";
+import { AGENT_IMPORT_MAX_FILE_LENGTH } from "@rakazo/contracts";
 import type { SkillSource } from "@rakazo/core";
 import {
   buildSkillMd,
@@ -79,9 +80,9 @@ export function resolveSkillContent(input: {
   prior?: { content: string };
 }): { name: string; description: string; content: string } {
   const ensureContentLimit = (content: string): string => {
-    if (content.length > 100_000) {
+    if (content.length > AGENT_IMPORT_MAX_FILE_LENGTH) {
       throw new ORPCError("BAD_REQUEST", {
-        message: "Skill content must be at most 100000 characters.",
+        message: `Skill content must be at most ${AGENT_IMPORT_MAX_FILE_LENGTH} characters.`,
       });
     }
     return content;

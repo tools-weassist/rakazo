@@ -1,6 +1,7 @@
 import * as z from "zod";
 import { SpaceAvailabilitySchema } from "../account/space-availability.js";
 import { Id } from "../ids.js";
+import { AGENT_IMPORT_MAX_FILE_LENGTH } from "../integrations/agent-import.js";
 
 export const AgentSkillSourceSchema = z.enum(["user", "builtin", "plugin"]);
 export type AgentSkillSource = z.infer<typeof AgentSkillSourceSchema>;
@@ -43,10 +44,10 @@ export type AgentSkillCatalogEntry = z.infer<typeof AgentSkillCatalogEntrySchema
 
 export const CreateAgentSkillInput = z
   .object({
-    content: z.string().min(1).max(100_000).optional(),
+    content: z.string().min(1).max(AGENT_IMPORT_MAX_FILE_LENGTH).optional(),
     name: z.string().min(1).max(80).optional(),
     description: z.string().min(1).max(2000).optional(),
-    body: z.string().max(100_000).optional(),
+    body: z.string().max(AGENT_IMPORT_MAX_FILE_LENGTH).optional(),
   })
   .superRefine((input, ctx) => {
     if (input.content?.trim()) return;
@@ -62,10 +63,10 @@ export const CreateAgentSkillInput = z
 export const UpdateAgentSkillInput = z
   .object({
     skillId: Id,
-    content: z.string().min(1).max(100_000).optional(),
+    content: z.string().min(1).max(AGENT_IMPORT_MAX_FILE_LENGTH).optional(),
     name: z.string().min(1).max(80).optional(),
     description: z.string().min(1).max(2000).optional(),
-    body: z.string().max(100_000).optional(),
+    body: z.string().max(AGENT_IMPORT_MAX_FILE_LENGTH).optional(),
   })
   .superRefine((input, ctx) => {
     if (

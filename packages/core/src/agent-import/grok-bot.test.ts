@@ -1,4 +1,6 @@
 import {
+  AGENT_IMPORT_MAX_FILE_LENGTH,
+  AGENT_IMPORT_MAX_TOTAL_LENGTH,
   GROK_BOT_EXPORT_MAX_LENGTH,
   GROK_BOT_EXPORT_PATH,
   THREAD_MESSAGE_TEXT_MAX_LENGTH,
@@ -156,7 +158,7 @@ describe("reading a Grok Bot's reply", () => {
     expect(errorCode(exportOf(bramble).replace('"version":1', '"version":2'))).toBe(
       "newer_version",
     );
-    expect(errorCode("x".repeat(4_000_001))).toBe("too_large");
+    expect(errorCode("x".repeat(AGENT_IMPORT_MAX_TOTAL_LENGTH + 1))).toBe("too_large");
   });
 
   it("reads back the document it writes for one Bot, strictly on the server", () => {
@@ -361,6 +363,27 @@ describe("a Grok Bot as an import plan", () => {
   });
 });
 
+it("imports an export over 1M characters that holds a skill over 100k", () => {
+  const instructions = `Use this library.\n${"x".repeat(1_100_000)}`;
+  const source = exportOf({
+    name: "Lead",
+    skills: [
+      {
+        name: "Motion style library",
+        description: "When styling motion",
+        instructions,
+      },
+    ],
+  });
+  expect(source.length).toBeGreaterThan(1_000_000);
+  const parsed = parseAgentImport([{ path: GROK_BOT_EXPORT_PATH, content: source }]);
+  if ("error" in parsed) throw new Error(parsed.error);
+  const skill = parsed.skills.find((item) => item.name === "motion-style-library");
+  expect(skill).toBeDefined();
+  expect(skill!.content.length).toBeGreaterThan(100_000);
+  expect(skill!.content).toContain("Use this library.");
+});
+
 it("rejects oversized collections before allocating import names", () => {
   for (const field of ["skills", "apps", "routines"]) {
     const source = JSON.stringify({
@@ -398,7 +421,8 @@ it("bounds memories by the size of the document they become, not by count", () =
   expect(onceParsed.memory).toHaveLength(1);
 
   // More than one document holds is split across several, every entry whole and in order.
-  const longMemories = Array.from({ length: 60 }, (_, index) => `${index} ${"x".repeat(4_000)}`);
+  const half = Math.floor(AGENT_IMPORT_MAX_FILE_LENGTH / 2) + 50;
+  const longMemories = Array.from({ length: 3 }, (_, index) => `${index} ${"x".repeat(half)}`);
   const [split] = readGrokBotExportJson(
     JSON.stringify({
       bots: [{ name: "Example", memories: longMemories, user_facts: ["Name: Sam"] }],
@@ -417,12 +441,14 @@ it("bounds memories by the size of the document they become, not by count", () =
   const memoryText = splitPlan.memory
     .filter((item) => item.path.startsWith("MEMORY"))
     .map((item) => item.content);
-  expect(memoryText.every((text) => text.length <= 100_000)).toBe(true);
+  expect(memoryText.every((text) => text.length <= AGENT_IMPORT_MAX_FILE_LENGTH)).toBe(true);
   expect(memoryText.join("")).toBe(longMemories.map((entry) => `- ${entry}\n`).join(""));
   // Only an entry too long for a document of its own is refused.
   expect(() =>
     readGrokBotExportJson(
-      JSON.stringify({ bots: [{ name: "Example", memories: ["z".repeat(100_000)] }] }),
+      JSON.stringify({
+        bots: [{ name: "Example", memories: ["z".repeat(AGENT_IMPORT_MAX_FILE_LENGTH)] }],
+      }),
     ),
   ).toThrow(GrokBotExportError);
   // A pasted reply full of repeats is re-sent with each entry once, within the upload limit.
