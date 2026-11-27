@@ -102,6 +102,8 @@ it("shares the layout across account, product and marketplace emails", async () 
     expect(message.html).toContain('role="presentation"');
     expect(message.text.length).toBeGreaterThan(0);
     expect(message.text).not.toContain("<table");
+    // Wea branding: no upstream name in any email (release download links aside).
+    expect(message.html!.replaceAll("tools-weassist/rakazo", "")).not.toMatch(/rakazo/i);
   }
 });
 
