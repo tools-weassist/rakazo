@@ -11,7 +11,7 @@ export type WeaBotLook = {
   token?: string;
 };
 
-export const WeaBot: {
+export declare const WeaBot: {
   BOTS: Record<string, WeaBotLook>;
   create: (kind: string, opts?: { size?: number; label?: string }) => SVGSVGElement;
   mood: (svg: Element | null, mood?: "idle" | "happy" | "working" | "waiting") => void;
