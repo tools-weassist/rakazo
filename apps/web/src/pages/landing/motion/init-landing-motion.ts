@@ -1,4 +1,3 @@
-// @ts-expect-error plain JS motion module
 import { WeaBot } from "./animated-bot.js";
 // @ts-expect-error plain JS motion module
 import { WeaChat } from "./chat-demo.js";

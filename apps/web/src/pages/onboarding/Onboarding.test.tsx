@@ -81,18 +81,27 @@ it("marks onboarding as usable for the desktop only once a step shows", async ()
   expect(marked()).toBeNull();
 
   await act(async () =>
-    account.resolve({ needsModel: true, needsSignupSurvey: false, billingEnabled: false }),
+    account.resolve({
+      name: "Survey Person",
+      needsModel: true,
+      needsSignupSurvey: false,
+      billingEnabled: false,
+    }),
   );
-  expect(host.querySelector("h1")?.textContent).toBe("Connect a model");
+  expect(host.querySelector("h1")?.textContent).toBe("Bring your own AI");
   expect(marked()).not.toBeNull();
   // No questions were answered on this visit, so there is nothing to go back to.
   expect(buttonNamed("Back")).toBeUndefined();
   act(() => root.unmount());
 });
 
+/** A button by its text, its accessible name, or the label beside its icon. */
 const buttonNamed = (name: string) =>
   [...document.querySelectorAll<HTMLButtonElement>("button")].find(
-    (button) => button.textContent === name,
+    (button) =>
+      button.textContent === name ||
+      button.getAttribute("aria-label") === name ||
+      [...button.children].some((child) => child.textContent === name),
   );
 
 it("goes back from the model step to the questions with the answers kept", async () => {
@@ -108,22 +117,103 @@ it("goes back from the model step to the questions with the answers kept", async
     ),
   );
   await act(async () =>
-    account.resolve({ needsModel: true, needsSignupSurvey: true, billingEnabled: false }),
+    account.resolve({
+      name: "Survey Person",
+      needsModel: true,
+      needsSignupSurvey: true,
+      billingEnabled: false,
+    }),
   );
   const click = async (name: string) => act(async () => buttonNamed(name)!.click());
-  await click("I'm a business owner");
-  await click("Next");
-  await click("Next");
+  // Chief's hello, then the name screen prefilled from the account.
   await click("Continue");
-  expect(host.querySelector("h1")?.textContent).toBe("Connect a model");
+  expect(
+    document.querySelector<HTMLInputElement>('input[aria-label="Your first name"]')?.value,
+  ).toBe("Survey");
+  await click("Continue");
+  await click("I'm a business owner");
+  await click("Skip");
+  await click("Maybe later");
+  await click("Skip");
+  await click("Skip");
+  expect(host.querySelector("h1")?.textContent).toBe("Bring your own AI");
+  expect(rpc.onboarding.signupSurvey).toHaveBeenLastCalledWith({ role: "business_owner" });
 
   await click("Back");
-  expect(host.textContent).toContain("What do you want help with first?");
+  expect(host.querySelector("h1")?.textContent).toBe("Survey, how did you hear about us?");
+  await click("Back");
+  await click("Back");
   await click("Back");
   await click("Back");
   expect(buttonNamed("I'm a business owner")?.getAttribute("aria-pressed")).toBe("true");
   act(() => root.unmount());
 });
+
+it("shows Chief while the account loads", async () => {
+  const host = document.body.appendChild(document.createElement("div"));
+  const root = createRoot(host);
+  await act(async () =>
+    root.render(
+      <MemoryRouter initialEntries={["/onboarding"]}>
+        <Routes>
+          <Route path="/onboarding/:step?" element={<OnboardingPage />} />
+        </Routes>
+      </MemoryRouter>,
+    ),
+  );
+  const splash = host.querySelector('[role="status"]');
+  expect(splash?.getAttribute("aria-label")).toBe("Loading…");
+  expect(splash?.querySelector("svg.wbot")).not.toBeNull();
+  act(() => root.unmount());
+});
+
+it.each([
+  ["allows them", "Turn on notifications", "granted"],
+  ["blocks them", "Turn on notifications", "denied"],
+  ["says maybe later", "Maybe later", "default"],
+] as const)(
+  "offers notifications before the first chat and moves on when the person %s",
+  async (_name, choice, answer) => {
+    const requestPermission = vi.fn(async () => answer);
+    vi.stubGlobal("Notification", { permission: "default", requestPermission });
+    vi.mocked(rpc.onboarding.firstBot).mockClear().mockResolvedValue({ botId: "chief-1" });
+    const host = document.body.appendChild(document.createElement("div"));
+    const root = createRoot(host);
+    let pathname = "";
+    function Location() {
+      pathname = useLocation().pathname;
+      return null;
+    }
+    await act(async () =>
+      root.render(
+        <MemoryRouter initialEntries={["/onboarding"]}>
+          <Routes>
+            <Route path="/onboarding/:step?" element={<OnboardingPage />} />
+            <Route path="/app/*" element={null} />
+          </Routes>
+          <Location />
+        </MemoryRouter>,
+      ),
+    );
+    await act(async () =>
+      account.resolve({
+        name: "Survey Person",
+        needsModel: false,
+        needsSignupSurvey: false,
+        billingEnabled: false,
+      }),
+    );
+    expect(host.querySelector("h1")?.textContent).toBe("Before you start");
+    expect(pathname).toBe("/onboarding/notifications");
+    expect(rpc.onboarding.firstBot).not.toHaveBeenCalled();
+
+    await act(async () => buttonNamed(choice)!.click());
+    await vi.waitFor(() => expect(pathname).toBe("/app/chief-1"));
+    expect(requestPermission).toHaveBeenCalledTimes(choice === "Maybe later" ? 0 : 1);
+    expect(rpc.onboarding.firstBot).toHaveBeenCalledOnce();
+    act(() => root.unmount());
+  },
+);
 
 it("recovers a failed discovery and searches a long custom endpoint list during onboarding", async () => {
   const probe = vi.mocked(rpc.models.probeOpenAiCompatible);
@@ -140,7 +230,12 @@ it("recovers a failed discovery and searches a long custom endpoint list during 
     ),
   );
   await act(async () =>
-    account.resolve({ needsModel: true, needsSignupSurvey: false, billingEnabled: false }),
+    account.resolve({
+      name: "Survey Person",
+      needsModel: true,
+      needsSignupSurvey: false,
+      billingEnabled: false,
+    }),
   );
   await act(async () => document.querySelector<HTMLElement>('[aria-label="Provider"]')!.click());
   await act(async () =>
@@ -188,7 +283,13 @@ it("recovers a failed discovery and searches a long custom endpoint list during 
 it.each([
   [
     "arrives",
-    () => account.resolve({ needsModel: true, needsSignupSurvey: false, billingEnabled: false }),
+    () =>
+      account.resolve({
+        name: "Survey Person",
+        needsModel: true,
+        needsSignupSurvey: false,
+        billingEnabled: false,
+      }),
   ],
   ["fails", () => account.reject(new Error("offline"))],
 ])("stays on the next page when the account read %s after leaving", async (_outcome, settle) => {
@@ -242,7 +343,12 @@ it.each([
     ),
   );
   await act(async () =>
-    account.resolve({ needsModel: false, needsSignupSurvey: false, billingEnabled: false }),
+    account.resolve({
+      name: "Survey Person",
+      needsModel: false,
+      needsSignupSurvey: false,
+      billingEnabled: false,
+    }),
   );
   await vi.waitFor(() => expect(pathname).toBe(path));
   expect(rpc.onboarding.firstBot).toHaveBeenCalledOnce();

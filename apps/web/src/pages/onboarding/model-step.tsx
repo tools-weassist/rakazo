@@ -12,6 +12,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@rakazo/ui-web";
+import { Check } from "lucide-react";
 import { DeviceCodeSignIn } from "../../components/models/DeviceCodeSignIn";
 import { FoundModelPicker } from "../../components/models/FoundModelPicker";
 import { ModelHeadersEditor } from "../../components/models/ModelHeadersEditor";
@@ -71,165 +72,181 @@ export function ModelStep({
   } = model;
 
   return (
-    <div>
-      <h1 className="text-display font-medium text-foreground">
-        <Trans>Connect a model</Trans>
+    <div className="wo-enter">
+      <h1 className="wo-question">
+        <Trans>Bring your own AI</Trans>
       </h1>
-      <p className="mt-2 text-body text-muted-foreground">
-        <Trans>
-          Choose the AI provider your bots will use, then sign in or add your API key. This is your
-          primary provider. You can add more later in Settings under Models.
-        </Trans>
+      <p className="wo-sub">
+        <Trans>Your bots think with the AI you already use.</Trans>
       </p>
-      <div className="mt-8 block text-body font-medium text-foreground">
-        <span>
-          <Trans>Provider</Trans>
-        </span>
-        <Select
-          value={providerValue}
-          onValueChange={(value) => {
-            if (typeof value !== "string" || !value) return;
-            chooseProvider(value);
-          }}
-          items={providerItems}
-        >
-          <SelectTrigger aria-label={t`Provider`} className="mt-2 w-full">
-            <SelectValue placeholder={t`Choose a provider`} />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectGroup>
-              {providerOptions.main.map((option) => (
-                <SelectItem key={option.value} value={option.value}>
-                  {option.label}
-                </SelectItem>
-              ))}
-            </SelectGroup>
-            {providerOptions.main.length && providerOptions.rest.length ? (
-              <SelectSeparator />
+      <section className="wo-plan">
+        <h2>
+          <Trans>Connect a model</Trans>
+        </h2>
+        <ul>
+          <li className="flex items-center gap-2">
+            <Check size={16} className="wo-teal" aria-hidden />
+            <Trans>Your key is stored encrypted</Trans>
+          </li>
+          <li className="flex items-center gap-2">
+            <Check size={16} className="wo-teal" aria-hidden />
+            <Trans>Add or switch models any time in Settings under Models</Trans>
+          </li>
+          <li className="flex items-center gap-2">
+            <Check size={16} className="wo-teal" aria-hidden />
+            <Trans>Every bot on your team uses it</Trans>
+          </li>
+        </ul>
+        <div className="mt-4 block text-body font-medium text-foreground">
+          <span>
+            <Trans>Provider</Trans>
+          </span>
+          <Select
+            value={providerValue}
+            onValueChange={(value) => {
+              if (typeof value !== "string" || !value) return;
+              chooseProvider(value);
+            }}
+            items={providerItems}
+          >
+            <SelectTrigger aria-label={t`Provider`} className="mt-2 w-full">
+              <SelectValue placeholder={t`Choose a provider`} />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectGroup>
+                {providerOptions.main.map((option) => (
+                  <SelectItem key={option.value} value={option.value}>
+                    {option.label}
+                  </SelectItem>
+                ))}
+              </SelectGroup>
+              {providerOptions.main.length && providerOptions.rest.length ? (
+                <SelectSeparator />
+              ) : null}
+              <SelectGroup>
+                {providerOptions.rest.map((option) => (
+                  <SelectItem key={option.value} value={option.value}>
+                    {option.label}
+                  </SelectItem>
+                ))}
+              </SelectGroup>
+            </SelectContent>
+          </Select>
+        </div>
+        {provider ? (
+          <>
+            {isOpenAiCompatible && !endpointPreset ? (
+              <CompatibleServerUrl model={model} fieldId={fieldId} />
             ) : null}
-            <SelectGroup>
-              {providerOptions.rest.map((option) => (
-                <SelectItem key={option.value} value={option.value}>
-                  {option.label}
-                </SelectItem>
-              ))}
-            </SelectGroup>
-          </SelectContent>
-        </Select>
-      </div>
-      {provider ? (
-        <>
-          {isOpenAiCompatible && !endpointPreset ? (
-            <CompatibleServerUrl model={model} fieldId={fieldId} />
-          ) : null}
-          {subscriptionSignIn ? <SubscriptionSignIn model={model} /> : null}
-          {needsRouting && acceptsKey ? (
-            <div className="mt-4 grid gap-4">
-              <label
-                htmlFor={`${fieldId}-account-id`}
-                className="block text-body font-medium text-foreground"
-              >
-                {needsProject ? <Trans>Project ID</Trans> : <Trans>Account ID</Trans>}
-                <Input
-                  id={`${fieldId}-account-id`}
-                  value={needsProject ? projectId : accountId}
-                  onChange={(event) =>
-                    (needsProject ? setProjectId : setAccountId)(event.target.value)
-                  }
-                  autoComplete="off"
-                  spellCheck={false}
-                  className="mt-2"
-                />
-              </label>
-              {needsGateway || needsProject ? (
+            {subscriptionSignIn ? <SubscriptionSignIn model={model} /> : null}
+            {needsRouting && acceptsKey ? (
+              <div className="mt-4 grid gap-4">
                 <label
-                  htmlFor={`${fieldId}-gateway-id`}
+                  htmlFor={`${fieldId}-account-id`}
                   className="block text-body font-medium text-foreground"
                 >
-                  {needsProject ? <Trans>Region</Trans> : <Trans>Gateway ID</Trans>}
+                  {needsProject ? <Trans>Project ID</Trans> : <Trans>Account ID</Trans>}
                   <Input
-                    id={`${fieldId}-gateway-id`}
-                    value={needsProject ? region : gatewayId}
+                    id={`${fieldId}-account-id`}
+                    value={needsProject ? projectId : accountId}
                     onChange={(event) =>
-                      (needsProject ? setRegion : setGatewayId)(event.target.value)
+                      (needsProject ? setProjectId : setAccountId)(event.target.value)
                     }
                     autoComplete="off"
                     spellCheck={false}
                     className="mt-2"
                   />
                 </label>
-              ) : null}
-            </div>
-          ) : null}
-          {acceptsKey ? (
-            isOpenAiCompatible ? (
-              <CompatibleKeyField
-                className="mt-4 block text-body text-muted-foreground"
-                keyRequired={compatibleKeyRequired}
-              >
-                <Input
-                  aria-label={t`API key`}
-                  value={apiKey}
-                  onChange={(e) => updateApiKey(e.target.value)}
-                  required={compatibleKeyRequired}
-                  placeholder={compatibleKeyRequired ? undefined : t`Optional`}
-                  type="password"
-                  autoComplete="new-password"
-                  className="mt-2"
-                />
-              </CompatibleKeyField>
-            ) : (
-              <label
-                htmlFor={`${fieldId}-api-key`}
-                className="mt-4 block text-body font-medium text-foreground"
-              >
-                {subscriptionSignIn ? <Trans>Or paste an API key</Trans> : <Trans>API key</Trans>}
-                <Input
-                  id={`${fieldId}-api-key`}
-                  value={apiKey}
-                  onChange={(e) => updateApiKey(e.target.value)}
-                  placeholder="sk-…"
-                  type="password"
-                  autoComplete="new-password"
-                  className="mt-2"
-                />
-              </label>
-            )
-          ) : null}
-          {isOpenAiCompatible ? <CompatibleModelSelection model={model} /> : null}
-          {!isOpenAiCompatible && acceptsKey && modelItems.length ? (
-            <div className="mt-6 block text-body text-foreground">
-              <span className="font-medium">
-                <Trans>Model</Trans>
-              </span>
-              <Select
-                value={selected?.id ?? modelId}
-                onValueChange={(value) => {
-                  if (typeof value !== "string" || !value) return;
-                  if (value === modelId) return;
-                  cancelOAuthAttempt();
-                  setModelId(value);
-                  setThinkingLevel(null);
-                }}
-                items={modelItems}
-              >
-                <SelectTrigger aria-label={t`Model`} className="mt-2 w-full">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectGroup>
-                    {modelsForProvider.map((entry) => (
-                      <SelectItem key={`${entry.provider}:${entry.id}`} value={entry.id}>
-                        {entry.label}
-                      </SelectItem>
-                    ))}
-                  </SelectGroup>
-                </SelectContent>
-              </Select>
-            </div>
-          ) : null}
-        </>
-      ) : null}
+                {needsGateway || needsProject ? (
+                  <label
+                    htmlFor={`${fieldId}-gateway-id`}
+                    className="block text-body font-medium text-foreground"
+                  >
+                    {needsProject ? <Trans>Region</Trans> : <Trans>Gateway ID</Trans>}
+                    <Input
+                      id={`${fieldId}-gateway-id`}
+                      value={needsProject ? region : gatewayId}
+                      onChange={(event) =>
+                        (needsProject ? setRegion : setGatewayId)(event.target.value)
+                      }
+                      autoComplete="off"
+                      spellCheck={false}
+                      className="mt-2"
+                    />
+                  </label>
+                ) : null}
+              </div>
+            ) : null}
+            {acceptsKey ? (
+              isOpenAiCompatible ? (
+                <CompatibleKeyField
+                  className="mt-4 block text-body text-muted-foreground"
+                  keyRequired={compatibleKeyRequired}
+                >
+                  <Input
+                    aria-label={t`API key`}
+                    value={apiKey}
+                    onChange={(e) => updateApiKey(e.target.value)}
+                    required={compatibleKeyRequired}
+                    placeholder={compatibleKeyRequired ? undefined : t`Optional`}
+                    type="password"
+                    autoComplete="new-password"
+                    className="mt-2"
+                  />
+                </CompatibleKeyField>
+              ) : (
+                <label
+                  htmlFor={`${fieldId}-api-key`}
+                  className="mt-4 block text-body font-medium text-foreground"
+                >
+                  {subscriptionSignIn ? <Trans>Or paste an API key</Trans> : <Trans>API key</Trans>}
+                  <Input
+                    id={`${fieldId}-api-key`}
+                    value={apiKey}
+                    onChange={(e) => updateApiKey(e.target.value)}
+                    placeholder="sk-…"
+                    type="password"
+                    autoComplete="new-password"
+                    className="mt-2"
+                  />
+                </label>
+              )
+            ) : null}
+            {isOpenAiCompatible ? <CompatibleModelSelection model={model} /> : null}
+            {!isOpenAiCompatible && acceptsKey && modelItems.length ? (
+              <div className="mt-6 block text-body text-foreground">
+                <span className="font-medium">
+                  <Trans>Model</Trans>
+                </span>
+                <Select
+                  value={selected?.id ?? modelId}
+                  onValueChange={(value) => {
+                    if (typeof value !== "string" || !value) return;
+                    if (value === modelId) return;
+                    cancelOAuthAttempt();
+                    setModelId(value);
+                    setThinkingLevel(null);
+                  }}
+                  items={modelItems}
+                >
+                  <SelectTrigger aria-label={t`Model`} className="mt-2 w-full">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectGroup>
+                      {modelsForProvider.map((entry) => (
+                        <SelectItem key={`${entry.provider}:${entry.id}`} value={entry.id}>
+                          {entry.label}
+                        </SelectItem>
+                      ))}
+                    </SelectGroup>
+                  </SelectContent>
+                </Select>
+              </div>
+            ) : null}
+          </>
+        ) : null}
+      </section>
       {notice ? (
         <p className="mt-3 text-body text-success" role="status">
           {notice}

@@ -4,7 +4,7 @@ import type { MessageBlock } from "@rakazo/contracts";
 import { appConnectedInput, appConnectLabel, waitForSignIn } from "@rakazo/core";
 import { Button, Dialog, DialogClose, DialogContent, DialogTitle } from "@rakazo/ui-web";
 import { X } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import { Suspense, useEffect, useRef, useState } from "react";
 import { BuiCard, SuccessPop } from "../../../components/ai/primitives";
 import { ErrorNotice } from "../../../components/ErrorNotice";
 import { OptionRow } from "../../../components/messages/OptionRow";
@@ -12,12 +12,17 @@ import { connectMcpOauth } from "../../../lib/integrations/mcp-connect";
 import type { ArtifactTarget } from "../../../lib/pages/artifact-open";
 import { chartViewport } from "../../../lib/pages/chart-viewport";
 import { useArtifactImage } from "../../../lib/pages/use-artifact-image";
-import { importChunk } from "../../../lib/platform/preload-recovery";
+import { importChunk, lazyComponent } from "../../../lib/platform/preload-recovery";
 import { useSave } from "../../../lib/query/query";
 import { rpc } from "../../../lib/query/rpc";
 import type { ErrorDetails } from "../../../lib/query/user-error";
 import { errorDetails, errorText } from "../../../lib/query/user-error";
 import { useEventListener } from "../../../lib/use-event-listener";
+
+// Chief's starter card loads with its bot faces only when a first chat shows one.
+const StarterCard = lazyComponent(() =>
+  import("./starter-card").then((module) => module.StarterCard),
+);
 
 export function ChoiceCard({
   botId,
@@ -55,6 +60,8 @@ export function ChoiceCard({
     : null;
 
   if (dismissed) return null;
+  // Wea's starter card (the server's `starter:` options) shows the bots it would set up.
+  const starter = block.options.some((option) => option.id.startsWith("starter:"));
 
   return (
     <div className="flex justify-start">
@@ -71,29 +78,41 @@ export function ChoiceCard({
             <X size={16} strokeWidth={1.8} />
           </Button>
         ) : null}
-        <div className="pe-8 text-body-lg text-foreground/90">
-          <OnboardingFocusQuestion question={block.question} />
-        </div>
-        {block.subtitle ? (
-          <div className="mt-0.5 text-body-sm text-foreground/75">{block.subtitle}</div>
-        ) : null}
-        <div className="mt-2.5 space-y-0.5">
-          {block.options.map((option) => (
-            <OptionRow
-              key={option.id}
-              letter={option.letter}
-              selected={block.answerId ? block.answerId === option.id : undefined}
-              disabled={Boolean(block.answerId) || pending}
-              onClick={() => answer.run({ optionId: option.id })}
-            >
-              <OnboardingFocusOptionLabel
-                id={option.id}
-                label={option.label}
-                question={block.question}
-              />
-            </OptionRow>
-          ))}
-        </div>
+        {starter ? (
+          <Suspense fallback={null}>
+            <StarterCard
+              block={block}
+              disabled={pending}
+              onChoose={(optionId) => answer.run({ optionId })}
+            />
+          </Suspense>
+        ) : (
+          <>
+            <div className="pe-8 text-body-lg text-foreground/90">
+              <OnboardingFocusQuestion question={block.question} />
+            </div>
+            {block.subtitle ? (
+              <div className="mt-0.5 text-body-sm text-foreground/75">{block.subtitle}</div>
+            ) : null}
+            <div className="mt-2.5 space-y-0.5">
+              {block.options.map((option) => (
+                <OptionRow
+                  key={option.id}
+                  letter={option.letter}
+                  selected={block.answerId ? block.answerId === option.id : undefined}
+                  disabled={Boolean(block.answerId) || pending}
+                  onClick={() => answer.run({ optionId: option.id })}
+                >
+                  <OnboardingFocusOptionLabel
+                    id={option.id}
+                    label={option.label}
+                    question={block.question}
+                  />
+                </OptionRow>
+              ))}
+            </div>
+          </>
+        )}
         {error ? <p className="mt-2 text-label text-destructive">{error}</p> : null}
       </BuiCard>
     </div>

@@ -14,7 +14,9 @@ import { BreathLine } from "./BreathLine";
 import { ConnectSections } from "./ConnectSections";
 import { DevicesShowcase } from "./DevicesShowcase";
 import { TeamPicker } from "./TeamPicker";
+import "./wea-fonts.css";
 import "./landing.css";
+import "./motion/wea-bots.css";
 import "./motion/wea-motion.css";
 
 const LANDING_TITLE = "Wea, breathe, the busywork is handled";
