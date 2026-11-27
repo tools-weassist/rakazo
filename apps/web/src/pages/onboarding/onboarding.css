@@ -92,7 +92,7 @@
   display: block;
   width: 100%;
   max-width: 260px;
-  margin: 0 auto;
+  margin-inline: auto;
   padding: 14px 20px;
   border-radius: 999px;
   border: 1.5px solid var(--wo-btn);
