@@ -13,6 +13,8 @@ describe("botTemplateCopy", () => {
         name: template.name,
         summary: template.summary,
         sample: template.sample,
+        whatItDoes: template.whatItDoes,
+        howItHelps: template.howItHelps,
       });
     }
   });

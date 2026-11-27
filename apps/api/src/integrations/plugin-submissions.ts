@@ -34,7 +34,7 @@ import type { RouterDeps } from "../router.js";
 import { assertMcpRemoteEndpoint } from "./mcp-servers.js";
 import { rethrowUnlessPluginSourceFailed } from "./plugin-installs.js";
 
-const PLUGIN_REGISTRY = "Rakazo";
+const PLUGIN_REGISTRY = "Wea";
 const MAX_BODY_BYTES = 32 * 1024;
 const HOUR_MS = 60 * 60_000;
 const SUBMISSIONS_PER_IP_PER_HOUR = 10;

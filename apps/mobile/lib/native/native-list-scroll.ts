@@ -4,7 +4,7 @@ import { Platform } from "react-native";
 const nativeScroll =
   Platform.OS === "ios"
     ? requireOptionalNativeModule<{ scrollToRow(viewTag: number, row: number): Promise<boolean> }>(
-        "RakazoListScroll",
+        "WeaListScroll",
       )
     : null;
 

@@ -6,7 +6,12 @@ import {
   PlanLayoutSchema,
 } from "../billing/billing.js";
 import { RUN_ERROR_KINDS, RunTriggerSchema } from "../runs/runs.js";
-import { SIGNUP_SURVEY_TEAM_SIZES, SIGNUP_SURVEY_USES } from "./me.js";
+import {
+  SIGNUP_SURVEY_BRAINS,
+  SIGNUP_SURVEY_ROLES,
+  SIGNUP_SURVEY_TEAM_SIZES,
+  SIGNUP_SURVEY_USES,
+} from "./me.js";
 import { SignupAttribution } from "./signup-attribution.js";
 
 // Explicitly validated fields only: this is also the final allowlist at the external boundary.
@@ -186,6 +191,8 @@ export const AnalyticsEvent = z.discriminatedUnion("name", [
       skipped: z.boolean(),
       use: z.enum(SIGNUP_SURVEY_USES).optional(),
       teamSize: z.enum(SIGNUP_SURVEY_TEAM_SIZES).optional(),
+      role: z.enum(SIGNUP_SURVEY_ROLES).optional(),
+      brain: z.enum(SIGNUP_SURVEY_BRAINS).optional(),
     })
     .strict(),
   z.object({ name: z.literal("checkout_opened"), ...planTerms }).strict(),

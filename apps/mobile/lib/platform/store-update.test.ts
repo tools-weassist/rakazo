@@ -68,7 +68,7 @@ it("opens the cached listing for the current branded bundle without refetching",
   );
 });
 
-it("does not fall back to Rakazo for an unlisted custom bundle", () => {
+it("does not fall back to Wea for an unlisted custom bundle", () => {
   state.bundleId = "com.example.app";
   state.openURL.mockClear();
   openStoreListing();

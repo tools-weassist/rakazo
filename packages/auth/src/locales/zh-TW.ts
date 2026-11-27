@@ -1,63 +1,63 @@
 export const ZH_TW_MESSAGES: Record<string, string> = {
   "Hi {name},": "{name}，你好：",
   "Hi there,": "你好：",
-  "Verify your Rakazo email": "驗證你的 Rakazo 電子郵件",
+  "Verify your Wea email": "驗證你的 Wea 電子郵件",
   "Verify email": "驗證電子郵件",
-  "Then return to Rakazo to sign in.": "接著返回 Rakazo 登入。",
+  "Then return to Wea to sign in.": "接著返回 Wea 登入。",
   "This link expires in one hour. If you did not register, ignore this email.":
     "此連結將在一小時後失效。如果你沒有註冊，請忽略這封郵件。",
-  "Your Rakazo sign-in code": "你的 Rakazo 登入驗證碼",
-  "Enter this code to sign in to Rakazo:": "輸入此驗證碼以登入 Rakazo：",
+  "Your Wea sign-in code": "你的 Wea 登入驗證碼",
+  "Enter this code to sign in to Wea:": "輸入此驗證碼以登入 Wea：",
   "This code expires in ten minutes. If you did not request it, ignore this email.":
     "此驗證碼將在十分鐘後失效。如果你沒有提出要求，請忽略這封郵件。",
-  "Reset your Rakazo password": "重設你的 Rakazo 密碼",
-  "Reset your Rakazo password:": "重設你的 Rakazo 密碼：",
+  "Reset your Wea password": "重設你的 Wea 密碼",
+  "Reset your Wea password:": "重設你的 Wea 密碼：",
   "Reset password": "重設密碼",
   "This link expires in one hour. If you did not request this, you can ignore this email.":
     "此連結將在一小時後失效。如果你沒有提出此要求，可以忽略這封郵件。",
-  "Confirm Rakazo account deletion": "確認刪除 Rakazo 帳號",
-  "Enter this code in Rakazo to delete your account:": "在 Rakazo 中輸入此驗證碼以刪除你的帳號：",
+  "Confirm Wea account deletion": "確認刪除 Wea 帳號",
+  "Enter this code in Wea to delete your account:": "在 Wea 中輸入此驗證碼以刪除你的帳號：",
   "This code expires in ten minutes. If you did not request deletion, ignore this email.":
     "此驗證碼將在十分鐘後失效。如果你沒有要求刪除，請忽略這封郵件。",
-  "Your Rakazo confirmation code": "你的 Rakazo 確認碼",
-  "Enter this code in Rakazo to confirm it's you:": "在 Rakazo 中輸入此驗證碼以確認是你本人：",
-  "Welcome to Rakazo": "歡迎使用 Rakazo",
-  "Welcome to Rakazo. The people who get the most out of it do three things:":
-    "歡迎使用 Rakazo。用得最好的人都會做三件事：",
+  "Your Wea confirmation code": "你的 Wea 確認碼",
+  "Enter this code in Wea to confirm it's you:": "在 Wea 中輸入此驗證碼以確認是你本人：",
+  "Welcome to Wea": "歡迎使用 Wea",
+  "Welcome to Wea. The people who get the most out of it do three things:":
+    "歡迎使用 Wea。用得最好的人都會做三件事：",
   "Get the apps": "下載應用程式",
-  "Rakazo runs on {platforms}, so your bots can reach you wherever you are.":
-    "Rakazo 支援 {platforms}，讓你的機器人隨時隨地都能聯絡到你。",
+  "Wea runs on {platforms}, so your bots can reach you wherever you are.":
+    "Wea 支援 {platforms}，讓你的機器人隨時隨地都能聯絡到你。",
   "Join the community": "加入社群",
   "See what others are building, get help fast, and tell us what to build next on {discord}.":
     "在 {discord} 上看看別人在打造什麼、快速獲得協助，並告訴我們接下來該做什麼。",
   "Star us on GitHub": "在 GitHub 上給我們星星",
-  "Rakazo is open source. {star} helps more people find it.":
-    "Rakazo 是開源的。{star}能幫助更多人發現它。",
+  "Wea is open source. {star} helps more people find it.":
+    "Wea 是開源的。{star}能幫助更多人發現它。",
   "A star on GitHub": "在 GitHub 上給星星",
   "Questions? Just reply. I read every one.": "有問題嗎？直接回覆即可。每封我都會看。",
   Unsubscribe: "取消訂閱",
   "Invite a friend": "邀請朋友",
-  "Invite a friend to Rakazo: they get {weeks} weeks free, and you earn a free month when they start a qualifying subscription with a new card.":
-    "邀請朋友加入 Rakazo：對方可免費使用 {weeks} 週；當對方用新卡開始符合條件的訂閱時，你將獲得一個月免費。",
-  "Open Rakazo": "開啟 Rakazo",
+  "Invite a friend to Wea: they get {weeks} weeks free, and you earn a free month when they start a qualifying subscription with a new card.":
+    "邀請朋友加入 Wea：對方可免費使用 {weeks} 週；當對方用新卡開始符合條件的訂閱時，你將獲得一個月免費。",
+  "Open Wea": "開啟 Wea",
   "and choose Invite friends for your link.": "並選擇「邀請朋友」取得你的連結。",
-  "We received your Rakazo plugin": "我們已收到你的 Rakazo 外掛",
-  "Thanks for submitting a plugin to the Rakazo marketplace.": "感謝你向 Rakazo 外掛市集提交外掛。",
+  "We received your Wea plugin": "我們已收到你的 Wea 外掛",
+  "Thanks for submitting a plugin to the Wea marketplace.": "感謝你向 Wea 外掛市集提交外掛。",
   "We review every submission and will email you when it's done.":
     "我們會審查每一份提交，完成後會寄電子郵件通知你。",
   "If you did not submit a plugin, ignore this email.": "如果你沒有提交外掛，請忽略這封郵件。",
-  "{name} is in the Rakazo marketplace": "{name} 已上架 Rakazo 外掛市集",
-  "Your Rakazo plugin submission: {name}": "你的 Rakazo 外掛提交：{name}",
-  "{name} is now listed in the Rakazo plugin marketplace.": "{name} 現已在 Rakazo 外掛市集上架。",
-  "We couldn't list {name} in the Rakazo plugin marketplace.":
-    "我們無法將 {name} 上架到 Rakazo 外掛市集。",
-  "Confirm your Rakazo page claim": "確認你在 Rakazo 的頁面認領",
+  "{name} is in the Wea marketplace": "{name} 已上架 Wea 外掛市集",
+  "Your Wea plugin submission: {name}": "你的 Wea 外掛提交：{name}",
+  "{name} is now listed in the Wea plugin marketplace.": "{name} 現已在 Wea 外掛市集上架。",
+  "We couldn't list {name} in the Wea plugin marketplace.":
+    "我們無法將 {name} 上架到 Wea 外掛市集。",
+  "Confirm your Wea page claim": "確認你在 Wea 的頁面認領",
   "Confirm claim": "確認認領",
   "We review every claim once it's confirmed and will email you when it's done.":
     "每項認領確認後我們都會審核，完成後會寄電子郵件通知你。",
   "This link expires in one day. If you did not claim a page, ignore this email.":
     "此連結將在一天後失效。如果你沒有認領頁面，請忽略這封電子郵件。",
-  "Your Rakazo page claim: {name}": "你在 Rakazo 的頁面認領：{name}",
+  "Your Wea page claim: {name}": "你在 Wea 的頁面認領：{name}",
   "Your changes to the {name} page are approved.": "你對 {name} 頁面的修改已獲核准。",
   "We couldn't approve your changes to the {name} page.": "我們無法核准你對 {name} 頁面的修改。",
   "Your saved computer files will be deleted": "你儲存的電腦檔案將被刪除",
@@ -65,27 +65,40 @@ export const ZH_TW_MESSAGES: Record<string, string> = {
     "除非你重新訂閱，否則你儲存的電腦檔案將於 {date} 被刪除。",
   "Your saved computer files will be deleted on {date} unless you choose a plan.":
     "除非你選擇一個方案，否則你儲存的電腦檔案將於 {date} 被刪除。",
-  "{inviter} invited you to {organization} on Rakazo":
-    "{inviter} 邀請你加入 Rakazo 上的 {organization}",
-  "{inviter} invited you to join {organization} on Rakazo.":
-    "{inviter} 邀請你加入 Rakazo 上的 {organization}。",
+  "{inviter} invited you to {organization} on Wea": "{inviter} 邀請你加入 Wea 上的 {organization}",
+  "{inviter} invited you to join {organization} on Wea.":
+    "{inviter} 邀請你加入 Wea 上的 {organization}。",
   "Join {organization}": "加入 {organization}",
   "This invitation expires in 7 days. Sign in with this email address to accept it.":
     "此邀請將在 7 天後過期。請使用此電子郵件地址登入以接受邀請。",
-  "{inviter} invited you to {space} on Rakazo": "{inviter} 邀請你加入 Rakazo 上的 {space}",
-  "{inviter} invited you to join {space} on Rakazo.": "{inviter} 邀請你加入 Rakazo 上的 {space}。",
+  "{inviter} invited you to {space} on Wea": "{inviter} 邀請你加入 Wea 上的 {space}",
+  "{inviter} invited you to join {space} on Wea.": "{inviter} 邀請你加入 Wea 上的 {space}。",
   "Join {space}": "加入 {space}",
   "This invitation expires in 7 days.": "此邀請將在 7 天後過期。",
-  "Connect a model to start using Rakazo": "連接模型即可開始使用 Rakazo",
-  "Your Rakazo plan has started, but your bots can't reply until a model is connected.":
-    "你的 Rakazo 方案已開始，但在連接模型之前，你的機器人無法回覆。",
+  "Connect a model to start using Wea": "連接模型即可開始使用 Wea",
+  "Your Wea plan has started, but your bots can't reply until a model is connected.":
+    "你的 Wea 方案已開始，但在連接模型之前，你的機器人無法回覆。",
   "Sign in with your {subscriptions} subscription, or paste an API key.":
     "使用你的 {subscriptions} 訂閱登入，或貼上 API 金鑰。",
   "Connect a model": "連接模型",
-  "Bring your old assistant to Rakazo": "把你原本的助理帶到 Rakazo",
-  "Already set up an assistant in {assistants}? Rakazo can bring over its instructions, memory, skills and routines as a new bot, so you don't start again.":
-    "已經在 {assistants} 裡設定過助理？Rakazo 可以把它的指示、記憶、技能和例行任務帶過來，成為一個新的機器人，你不必從頭開始。",
+  "Bring your old assistant to Wea": "把你原本的助理帶到 Wea",
+  "Already set up an assistant in {assistants}? Wea can bring over its instructions, memory, skills and routines as a new bot, so you don't start again.":
+    "已經在 {assistants} 裡設定過助理？Wea 可以把它的指示、記憶、技能和例行任務帶過來，成為一個新的機器人，你不必從頭開始。",
   "It works for any other assistant too: send it one prompt and paste its reply.":
     "其他任何助理也可以：傳一則提示詞給它，再貼上它的回覆。",
   "Import an agent": "匯入智慧代理",
+  "Welcome to Wea. Here's how to get started:": "歡迎使用 Wea。依照以下步驟開始：",
+  "Sign in at {web} from any browser. Your first bot is waiting there to help you set up.":
+    "在任何瀏覽器登入 {web}。你的第一個機器人正在那裡等你，協助你完成設定。",
+  "Desktop app": "桌面應用程式",
+  "Download the Wea app for {windows}. Mac and Linux are coming later.":
+    "下載適用於 {windows} 的 Wea 應用程式。Mac 與 Linux 版本稍後推出。",
+  "Android app": "Android 應用程式",
+  "The Wea app for Android is coming to Google Play soon. Until then, Wea works in your phone's browser too.":
+    "Wea Android 應用程式即將登上 Google Play。在此之前，你也可以在手機瀏覽器中使用 Wea。",
+  "Download the Wea app for {android}. Google Play is coming later. You can also use Wea in your phone's browser.":
+    "下載適用於 {android} 的 Wea 應用程式。Google Play 稍後推出。你也可以在手機瀏覽器中使用 Wea。",
+  "Questions? Reply to this email or write to {email}.":
+    "有問題嗎？直接回覆這封郵件，或寫信至 {email}。",
+  "The Wea team": "Wea 團隊",
 };

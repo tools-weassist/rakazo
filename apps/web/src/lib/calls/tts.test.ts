@@ -541,3 +541,58 @@ describe("Speaker", () => {
     expect(speaker.state.error).toBe("Voice request timed out.");
   });
 });
+
+describe("device voice", () => {
+  function stubSpeechSynthesis() {
+    const spoken: string[] = [];
+    let current: {
+      onend: (() => void) | null;
+      onerror: ((e: { error: string }) => void) | null;
+    } | null = null;
+    const synth = {
+      speaking: false,
+      speak: vi.fn((utterance: { text: string; onend: () => void }) => {
+        spoken.push(utterance.text);
+        current = utterance as never;
+      }),
+      cancel: vi.fn(() => current?.onerror?.({ error: "interrupted" })),
+    };
+    vi.stubGlobal("window", { speechSynthesis: synth });
+    vi.stubGlobal("document", { documentElement: { lang: "en" } });
+    vi.stubGlobal(
+      "SpeechSynthesisUtterance",
+      class {
+        lang = "";
+        onend: (() => void) | null = null;
+        onerror: ((e: { error: string }) => void) | null = null;
+        constructor(readonly text: string) {}
+      },
+    );
+    const fetch = vi.fn();
+    vi.stubGlobal("fetch", fetch);
+    return { spoken, synth, fetch, finish: () => current?.onend?.() };
+  }
+
+  it("speaks with the browser's own voice and never calls the voice provider", async () => {
+    const { spoken, fetch, finish } = stubSpeechSynthesis();
+    const speaker = new Speaker();
+    const done = speaker.speak("Hello there, this is Wea.", { device: true });
+    await vi.waitFor(() => expect(spoken).toEqual(["Hello there, this is Wea."]));
+    expect(speaker.state.status).toBe("speaking");
+    finish();
+    await expect(done).resolves.toBeUndefined();
+    expect(speaker.state.status).toBe("idle");
+    expect(fetch).not.toHaveBeenCalled();
+  });
+
+  it("stops the browser's speech when stopped", async () => {
+    const { spoken, synth } = stubSpeechSynthesis();
+    const speaker = new Speaker();
+    const done = speaker.speak("A long reply the user talks over.", { device: true });
+    await vi.waitFor(() => expect(spoken).toHaveLength(1));
+    speaker.stop();
+    await expect(done).resolves.toBeUndefined();
+    expect(synth.cancel).toHaveBeenCalled();
+    expect(speaker.state).toEqual({ status: "idle" });
+  });
+});

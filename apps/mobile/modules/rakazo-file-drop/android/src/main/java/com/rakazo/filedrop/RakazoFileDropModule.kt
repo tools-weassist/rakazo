@@ -24,7 +24,7 @@ class RakazoFileDropModule : Module() {
   private val dragListener = View.OnDragListener { _, event -> onDrag(event) }
 
   override fun definition() = ModuleDefinition {
-    Name("RakazoFileDrop")
+    Name("WeaFileDrop")
 
     Events("onFilesDropped", "onDropStarted")
 

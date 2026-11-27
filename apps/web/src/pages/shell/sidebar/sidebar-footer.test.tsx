@@ -34,6 +34,7 @@ async function render(
   onIntegrations = vi.fn(),
   onBoard?: () => void,
   logos?: Array<{ name: string; logo?: string }>,
+  onTemplates?: () => void,
 ) {
   const email = "account@rakazo.test";
   await act(async () =>
@@ -54,6 +55,7 @@ async function render(
           onOpenChange={() => {}}
           onIntegrations={onIntegrations}
           onSkills={vi.fn()}
+          onTemplates={onTemplates}
           onBoard={onBoard}
           onArtifacts={() => {}}
           onSettings={() => {}}
@@ -145,12 +147,23 @@ it("opens integrations and keeps the existing account actions and links", async 
     "Artifacts",
     "Board",
     "Get the mobile app",
-    "Docs",
+    "Support",
     "Log out",
   ]);
   expect(host.querySelector('[data-testid="user-menu-trigger"]')?.getAttribute("aria-label")).toBe(
     "Account menu for Demo User",
   );
+});
+it("lists Templates after Skills and opens them", async () => {
+  const onTemplates = vi.fn();
+  await render("Demo User", undefined, vi.fn(), undefined, undefined, onTemplates);
+  const menu = document.querySelector('[data-slot="popover-content"]')!;
+  const rows = [...menu.querySelectorAll("button, a")].map((row) => row.textContent);
+  expect(rows.indexOf("Templates")).toBe(rows.indexOf("Skills") + 1);
+  await act(async () =>
+    document.querySelector<HTMLButtonElement>('[data-testid="account-menu-templates"]')?.click(),
+  );
+  expect(onTemplates).toHaveBeenCalledOnce();
 });
 it("omits Board when unavailable", async () => {
   await render();
@@ -159,13 +172,14 @@ it("omits Board when unavailable", async () => {
   );
 });
 
-it("offers Google Play on Android", async () => {
+it("opens the Wea download page for the mobile app, including on Android", async () => {
   vi.spyOn(navigator, "userAgent", "get").mockReturnValue("Android");
   await render();
   const mobile = [...document.querySelectorAll("a")].find(
     (link) => link.textContent === "Get the mobile app",
   )!;
-  expect(mobile.href).toBe("https://play.google.com/store/apps/details?id=com.rakazo.app");
+  expect(mobile.getAttribute("href")).toBe("/download");
+  expect(mobile.href).not.toMatch(/play\.google\.com|apps\.apple\.com|com\.rakazo\.app/);
 });
 
 it("falls back when app artwork fails and accepts replacement artwork", async () => {

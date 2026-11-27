@@ -67,16 +67,22 @@ vi.mock("@rakazo/ui-web", async (importOriginal) => {
     Switch: ({
       onCheckedChange,
       checked,
+      disabled,
       ...props
     }: ComponentProps<"button"> & {
       checked?: boolean;
+      disabled?: boolean;
       onCheckedChange?: (checked: boolean) => void;
     }) => (
       <button
         type="button"
         role="switch"
         aria-checked={checked}
-        onClick={() => onCheckedChange?.(!checked)}
+        disabled={disabled}
+        onClick={() => {
+          if (disabled) return;
+          onCheckedChange?.(!checked);
+        }}
         {...props}
       />
     ),
@@ -487,12 +493,50 @@ describe("BotSettings model autosave", () => {
   it("saves Own computer at once and puts back a refused change", async () => {
     await render();
     const toggle = () => container.querySelector<HTMLButtonElement>('button[id$="-own-computer"]')!;
+    const setting = () => container.querySelector('[data-testid="own-computer-setting"]')!;
     await act(async () => toggle().click());
     expect(onSave.mock.lastCall?.[0]).toMatchObject({ computerMode: "dedicated" });
     onSave.mockRejectedValueOnce(new Error("offline"));
     await act(async () => toggle().click());
     expect(onSave.mock.lastCall?.[0]).toMatchObject({ computerMode: "team" });
     expect(toggle().getAttribute("aria-checked")).toBe("true");
+    expect(setting().textContent).toContain("offline");
+    const offline = [...container.querySelectorAll("p")].filter(
+      (node) => node.textContent === "offline",
+    );
+    expect(offline).toHaveLength(1);
+    expect(setting().contains(offline[0]!)).toBe(true);
+  });
+
+  it.each(["running", "queued", "waiting_input"] as const)(
+    "disables Own computer while the bot is %s and explains why",
+    async (status) => {
+      await render("Billing", { status });
+      const toggle = container.querySelector<HTMLButtonElement>('button[id$="-own-computer"]')!;
+      const setting = container.querySelector('[data-testid="own-computer-setting"]')!;
+      expect(toggle.disabled).toBe(true);
+      expect(setting.textContent).toContain("Stop the bot's current run to switch computers.");
+      await act(async () => toggle.click());
+      expect(onSave).not.toHaveBeenCalled();
+    },
+  );
+
+  it("clears an Own computer error when the bot's run stops", async () => {
+    await render();
+    const toggle = () => container.querySelector<HTMLButtonElement>('button[id$="-own-computer"]')!;
+    onSave.mockRejectedValueOnce(new Error("Stop the bot first"));
+    await act(async () => toggle().click());
+    expect(container.querySelector('[data-testid="own-computer-setting"]')?.textContent).toContain(
+      "Stop the bot first",
+    );
+    await render("Billing", { status: "running" });
+    expect(container.querySelector('[data-testid="own-computer-setting"]')?.textContent).toContain(
+      "Stop the bot's current run to switch computers.",
+    );
+    await render("Billing", { status: "idle" });
+    expect(
+      container.querySelector('[data-testid="own-computer-setting"]')?.textContent,
+    ).not.toContain("Stop the bot first");
   });
 });
 

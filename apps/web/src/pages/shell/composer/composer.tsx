@@ -27,6 +27,7 @@ import {
   useSyncExternalStore,
 } from "react";
 import { createPortal } from "react-dom";
+import { SHOW_UPSTREAM_STAR_PROMPT } from "../../../lib/brand/wea";
 import { useCallSession } from "../../../lib/calls/call-session";
 import { attachmentPickerAccept } from "../../../lib/composer/attachment-picker-accept";
 import {
@@ -499,7 +500,7 @@ const ComposerBody = memo(function Composer({
           : onSend(text, mentions, clientNonce))) !== false;
       settleComposerDraftSubmission(draftKey, submission, accepted);
       if (accepted) {
-        recordMessageSent();
+        if (SHOW_UPSTREAM_STAR_PROMPT) recordMessageSent();
         return;
       }
     } catch {

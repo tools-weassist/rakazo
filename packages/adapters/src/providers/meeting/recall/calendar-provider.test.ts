@@ -44,7 +44,7 @@ function schedule(emulator: RecallCalendarEmulator, event: MeetingCalendarEvent,
     event.startsAt,
     {
       sessionId: "fixture-session",
-      botName: "Atlas · Rakazo",
+      botName: "Atlas · Wea",
       meetingUrl: event.meetingUrl,
       platform,
       expiresAt: event.endsAt,

@@ -22,7 +22,7 @@ import { ErrorBoundary } from "./components/ErrorBoundary";
 import { MarkdownLinkPrompt } from "./components/messages/markdown-link-prompt";
 import { PageLoading } from "./components/PageLoading";
 import { authClient } from "./lib/auth/auth";
-import { hasSignedInBefore, rememberSignedIn } from "./lib/auth/returning-user";
+import { rememberSignedIn } from "./lib/auth/returning-user";
 import {
   holdAnonymousGate,
   holdUnreachableGate,
@@ -68,6 +68,12 @@ const OnboardingPage = lazyComponent(() =>
 );
 const NotFoundPage = lazyComponent(() =>
   import("./pages/NotFound").then((module) => module.NotFoundPage),
+);
+const DownloadPage = lazyComponent(() =>
+  import("./pages/DownloadPage").then((module) => module.DownloadPage),
+);
+const RootHome = lazyComponent(() =>
+  import("./pages/landing/RootHome").then((module) => module.RootHome),
 );
 const ArtifactsPage = lazyComponent(() =>
   import("./pages/space/Artifacts").then((module) => module.ArtifactsPage),
@@ -192,15 +198,7 @@ function SessionApp() {
         <div className="h-full" data-rakazo-app-state="ready">
           <Suspense fallback={<PageLoading />}>
             <Routes>
-              <Route
-                path="/"
-                element={
-                  <Navigate
-                    to={user ? "/app" : hasSignedInBefore() ? "/sign-in" : "/sign-up"}
-                    replace
-                  />
-                }
-              />
+              <Route path="/" element={<RootHome user={user} />} />
               {["/sign-in", "/sign-in/email"].map((path) => (
                 <Route
                   key={path}
@@ -234,6 +232,7 @@ function SessionApp() {
                 }
               />
               <Route path="/reset-password" element={<PasswordResetPage />} />
+              <Route path="/download" element={<DownloadPage />} />
               <Route path="/p/:slugToken" element={<SharedPagePage />} />
               <Route
                 path="/review/:pageId?"

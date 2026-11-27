@@ -44,7 +44,7 @@ jobs:
           iconutil -c iconset apps/desktop/out/mac-arm64/Rakazo.app/Contents/Resources/icon.icns -o "$RUNNER_TEMP/fallback.iconset"
           sips -s format png "$RUNNER_TEMP/fallback.iconset/icon_128x128@2x.png" --out "$RUNNER_TEMP/fallback-decoded.png"
           test -s "$RUNNER_TEMP/fallback-decoded.png"
-          test "$(/usr/libexec/PlistBuddy -c 'Print :CFBundleIconName' apps/desktop/out/mac-arm64/Rakazo.app/Contents/Info.plist)" = Icon
+          test "$(/usr/libexec/PlistBuddy -c 'Print :CFBundleIconName' apps/desktop/out/mac-arm64/Wea.app/Contents/Info.plist)" = Icon
         env:
           RAKAZO_ALLOW_DEV_SECRETS: "1"
       - name: Capture packaged macOS setup window and Dock
@@ -53,7 +53,7 @@ jobs:
         run: >-
           pnpm --filter @rakazo/desktop exec playwright test
           --config e2e/playwright.config.ts setup.spec.ts
-          --grep "setup offers Rakazo Cloud first, with local and existing instances"
+          --grep "setup offers Wea Cloud first, with local and existing instances"
       - name: Upload native macOS setup screenshot
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4

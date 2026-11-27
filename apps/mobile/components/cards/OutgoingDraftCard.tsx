@@ -104,6 +104,13 @@ export function OutgoingDraftCard({
             <Text style={[styles.recipientValue, ...body]}>{shown.to}</Text>
           )}
         </View>
+        {draft.thread ? (
+          <Text style={caption}>
+            {draft.thread.broadcast
+              ? t`Replying in thread ${draft.thread.ts}, also posting to the channel`
+              : t`Replying in thread ${draft.thread.ts}`}
+          </Text>
+        ) : null}
         {open ? (
           <TextInput
             accessibilityLabel={t`Message`}

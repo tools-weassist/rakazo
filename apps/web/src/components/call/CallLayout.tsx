@@ -1,5 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { Outlet, useNavigate } from "react-router-dom";
+import { callVoice } from "../../lib/calls/call-voice";
 import { useSpaceQueries } from "../../lib/query/query";
 import { CallCard, CallReturnBar } from "./CallCard";
 import { IncomingCall } from "./IncomingCall";
@@ -29,6 +30,7 @@ export function CallLayout() {
       <IncomingCall
         bots={calls}
         transcribe={voiceStatus ? Boolean(voiceStatus.transcribe) : undefined}
+        device={voiceStatus ? callVoice(voiceStatus.ready) === "device" : false}
         onAnswered={(botId) => navigate(`/app/${botId}`)}
       />
     </div>

@@ -13,6 +13,7 @@ const outgoingDrafts: Readonly<Record<string, OutgoingDraftDescriptor>> = {
     kind: "message",
     source: "Slack",
     keys: { to: "channel", body: "text" },
+    threadKeys: { ts: "thread_ts", broadcast: "reply_broadcast" },
   },
 };
 

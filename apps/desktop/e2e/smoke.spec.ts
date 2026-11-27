@@ -69,7 +69,7 @@ test("launches with a narrow preload bridge and an isolated renderer", async () 
 
   const page = await shownWindow(app);
   await expect(page.getByText("Desktop fixture ready")).toBeVisible();
-  await expect(page).toHaveTitle("Rakazo desktop smoke");
+  await expect(page).toHaveTitle("Wea desktop smoke");
 
   const renderer = await page.evaluate(async () => {
     const desktop = (window as typeof window & { rakazoDesktop?: RakazoDesktop }).rakazoDesktop;

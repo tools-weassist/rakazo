@@ -75,6 +75,66 @@ describe("buildApprovalAskBlock", () => {
     ).not.toHaveProperty("outgoingDraft");
   });
 
+  it("keeps the Slack draft card for a thread reply, and falls back when an extra argument appears", () => {
+    const args = { channel: "#general", text: "Review the report" };
+    const options = {
+      allowOutgoingDraft: true,
+      outgoingDraft: {
+        kind: "message" as const,
+        source: "Slack",
+        keys: { to: "channel", body: "text" },
+        threadKeys: { ts: "thread_ts", broadcast: "reply_broadcast" },
+      },
+    };
+    expect(
+      buildApprovalAskBlock(
+        "effect",
+        "SLACK_SEND_MESSAGE",
+        { ...args, thread_ts: "1710000000.123456" },
+        [],
+        options,
+      ),
+    ).toMatchObject({
+      outgoingDraft: {
+        values: { kind: "message", to: "#general", body: "Review the report" },
+        thread: { ts: "1710000000.123456" },
+      },
+      actions: [
+        { id: "allow", label: "Send" },
+        { id: "deny", label: "Discard" },
+      ],
+    });
+    expect(
+      buildApprovalAskBlock(
+        "effect",
+        "SLACK_SEND_MESSAGE",
+        { ...args, thread_ts: "1710000000.123456", reply_broadcast: true },
+        [],
+        options,
+      ),
+    ).toMatchObject({
+      outgoingDraft: { thread: { ts: "1710000000.123456", broadcast: true } },
+    });
+    expect(
+      buildApprovalAskBlock(
+        "effect",
+        "SLACK_SEND_MESSAGE",
+        { ...args, thread_ts: "1710000000.123456", attachment: "example-file" },
+        [],
+        options,
+      ),
+    ).not.toHaveProperty("outgoingDraft");
+    expect(
+      buildApprovalAskBlock(
+        "effect",
+        "SLACK_SEND_MESSAGE",
+        { ...args, reply_broadcast: true },
+        [],
+        options,
+      ),
+    ).not.toHaveProperty("outgoingDraft");
+  });
+
   it("keeps the redacted checker warning on the draft card", () => {
     const block = buildApprovalAskBlock(
       "effect",

@@ -27,3 +27,11 @@ Nous Research, used under the MIT License:
   LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
   OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
   SOFTWARE.
+
+Wea
+---
+Wea is based on Rakazo by elie222 (https://github.com/elie222/rakazo), used
+under the Apache License, Version 2.0. WeAssist modified the original files to
+rebrand the web app as Wea for an internal pilot; see WEA-PILOT.md for the list
+of changes. Rakazo is a name of its original authors; Wea is not affiliated with
+or endorsed by them.

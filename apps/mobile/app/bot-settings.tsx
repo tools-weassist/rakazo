@@ -1,6 +1,6 @@
 import { ph } from "@lingui/core/macro";
 import { useLingui } from "@lingui/react/macro";
-import type { Bot, BotAvatarSet, ComputerMode, ThinkingLevel } from "@rakazo/contracts";
+import type { Bot, BotAvatarSet, ComputerMode, RunStatus, ThinkingLevel } from "@rakazo/contracts";
 import {
   BOT_DESCRIPTION_MAX_LENGTH,
   BOT_INSTRUCTIONS_MAX_LENGTH,
@@ -11,6 +11,7 @@ import {
   botLookState,
   credentialForModel,
   DEFAULT_BOT_AVATAR_COLOR,
+  isActive,
   MODEL_SEARCH_THRESHOLD,
   modelOptionKey,
   modelThinkingLevels,
@@ -106,6 +107,7 @@ export default function BotSettingsScreen() {
   const [modelMetaReady, setModelMetaReady] = useState(false);
   const [modelMetaError, setModelMetaError] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [computerError, setComputerError] = useState<string | null>(null);
   const computerMaintenanceRows = useComputerMaintenanceRows(botId);
   const computerHomeVersionRows = useComputerHomeVersionRows(botId);
   const [deviceVoiceEnabled, setDeviceVoiceEnabled] = useState(false);
@@ -116,6 +118,15 @@ export default function BotSettingsScreen() {
   const [voiceError, setVoiceError] = useState<string | null>(null);
   const [pending, setPending] = useState(false);
   const pendingRef = useRef(false);
+  const runActive = isActive((bot?.status ?? "idle") as RunStatus);
+  const runWasActive = useRef(runActive);
+  useEffect(() => {
+    if (runWasActive.current && !runActive) setComputerError(null);
+    runWasActive.current = runActive;
+  }, [runActive]);
+  useEffect(() => {
+    setComputerError(null);
+  }, [botId]);
 
   const crossSpaceSave = useMemo(
     () =>
@@ -406,6 +417,7 @@ export default function BotSettingsScreen() {
     pendingRef.current = true;
     setPending(true);
     setError(null);
+    let computerWrite = false;
     try {
       const profile = { description: description.trim() };
       const selected = selectedModel;
@@ -444,12 +456,16 @@ export default function BotSettingsScreen() {
           : null;
       }
       if (autoSpeak !== bot.autoSpeak) input.autoSpeak = autoSpeak;
-      if (computerMode !== bot.computerMode) {
+      const computerChanged = computerMode !== bot.computerMode;
+      if (computerChanged) {
+        setComputerError(null);
+        computerWrite = true;
         await rpc(
           "bots/setComputer",
           { botId, mode: computerMode },
           { timeoutMs: COMPUTER_LIFECYCLE_TIMEOUT_MS },
         );
+        computerWrite = false;
         setBot((prev) => (prev ? { ...prev, computerMode } : prev));
       }
       // Use key presence so clearing description to "" still persists.
@@ -469,7 +485,9 @@ export default function BotSettingsScreen() {
       ]);
       router.back();
     } catch (err) {
-      setError(errorText(err, t`Could not save bot`));
+      const message = errorText(err, t`Could not save bot`);
+      if (computerWrite) setComputerError(message);
+      else setError(message);
     } finally {
       pendingRef.current = false;
       setPending(false);
@@ -651,11 +669,32 @@ export default function BotSettingsScreen() {
               ) : null}
             </SettingsGroup>
             <SettingsGroup>
-              <SettingsSwitch
-                label={t`Own computer`}
-                value={computerMode === "dedicated"}
-                onChange={(value) => setComputerMode(value ? "dedicated" : "team")}
-              />
+              <View>
+                <SettingsSwitch
+                  label={t`Own computer`}
+                  value={computerMode === "dedicated"}
+                  disabled={runActive}
+                  detail={
+                    runActive ? t`Stop the bot's current run to switch computers.` : undefined
+                  }
+                  onChange={(value) => {
+                    setComputerError(null);
+                    setComputerMode(value ? "dedicated" : "team");
+                  }}
+                />
+                {computerError && !runActive ? (
+                  <Text
+                    style={{
+                      color: tokens.destructive,
+                      paddingHorizontal: 16,
+                      paddingBottom: 12,
+                      ...typeScale.caption,
+                    }}
+                  >
+                    {computerError}
+                  </Text>
+                ) : null}
+              </View>
               {computerMaintenanceRows}
               {computerHomeVersionRows}
             </SettingsGroup>
@@ -883,7 +922,7 @@ export default function BotSettingsScreen() {
               label={t`Icon set`}
               choices={[
                 { key: "organic", label: t`Original` },
-                { key: "rakazo", label: t`Rakazo` },
+                { key: "rakazo", label: t`Wea` },
               ]}
               value={avatarSet}
               onChange={(next) => {

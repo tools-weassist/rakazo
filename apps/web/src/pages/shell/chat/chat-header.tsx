@@ -47,7 +47,14 @@ export function ChatHeader({
   const [inviteOpen, setInviteOpen] = useState(false);
   const macChrome = windowChromeKind(desktopBridge()) === "darwin";
   return (
-    <div className="pointer-events-none absolute inset-x-0 top-0 z-10 grid grid-cols-[1fr_minmax(0,auto)_1fr] items-center gap-2 px-3 py-3 md:px-[22px] [&_button]:pointer-events-auto">
+    <div className="pointer-events-none absolute inset-x-0 top-0 z-10">
+      {/* Keeps scrolled messages from running through the floating name chip. */}
+      <div
+        aria-hidden="true"
+        data-testid="chat-header-fade"
+        className="pointer-events-none absolute inset-x-0 top-0 h-16 bg-gradient-to-b from-background via-background/85 to-transparent md:h-[76px]"
+      />
+      <div className="relative grid grid-cols-[1fr_minmax(0,auto)_1fr] items-center gap-2 px-3 py-3 md:px-[22px] [&_button]:pointer-events-auto">
       <div className="flex items-center">
         {macChrome ? <WindowChrome className="md:hidden" /> : null}
         <Button
@@ -68,7 +75,7 @@ export function ChatHeader({
           data-testid="bot-settings-trigger"
           aria-expanded={panelOpen}
           onClick={onTogglePanel}
-          className="app-no-drag h-auto min-w-0 gap-2 py-1 ps-1 pe-3.5"
+          className="relative z-10 app-no-drag h-auto min-w-0 gap-2 py-1 ps-1 pe-3.5"
         >
           {inGroup ? (
             <GroupAvatar
@@ -95,7 +102,7 @@ export function ChatHeader({
       ) : (
         <div />
       )}
-      <div className="flex items-center justify-self-end gap-2">
+      <div className="relative flex items-center justify-self-end gap-2">
         {phoneCallsEnabled && !inGroup && active ? (
           <IconTooltip label={inCall ? t`Open call` : t`Call`}>
             <Button
@@ -132,6 +139,7 @@ export function ChatHeader({
       {referral ? (
         <InviteDialog referral={referral} open={inviteOpen} onOpenChange={setInviteOpen} />
       ) : null}
+      </div>
     </div>
   );
 }

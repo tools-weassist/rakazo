@@ -18,6 +18,12 @@ import { isVitestRuntime } from "@rakazo/core/node/test-runtime";
 import { getLogger } from "@rakazo/logging";
 import { collectPages, filterCatalog } from "../../../integrations/connector-catalog.js";
 import { connectedCalendarProvider } from "./calendar.js";
+import type { ComposioAccountRef } from "./composio-accounts.js";
+import {
+  composioAccountList,
+  composioAccountsHint,
+  resolveCallAccounts,
+} from "./composio-accounts.js";
 import {
   COMPOSIO_MULTI_EXECUTE_TOOL,
   composioOutgoingDraft,
@@ -517,14 +523,17 @@ export class ComposioConnector implements ComposioProvider {
     session?: ComposioSession;
     reconnect: string[];
     connectedAccounts: Record<string, string[]>;
+    accounts: ComposioAccountRef[];
   }> {
     const requested = await this.canonicalizeToolkits(
       connections.map((connection) => connection.externalId),
     );
     const canonicalByKey = new Map(requested.map((toolkit) => [composioSlugKey(toolkit), toolkit]));
-    const liveAccountIds = await this.listActiveAccountIds(userId, requested);
+    const liveAccounts = await this.listActiveAccounts(userId, requested);
+    const liveAccountIds = liveAccounts ? new Set(liveAccounts.keys()) : null;
     const pinnedToolkits = new Set<string>();
     const accountIdsByToolkit = new Map<string, Set<string>>();
+    const refsById = new Map<string, ComposioAccountRef>();
     for (const connection of connections) {
       const accountId = connection.providerRef?.trim();
       if (!accountId) continue;
@@ -540,6 +549,18 @@ export class ComposioConnector implements ComposioProvider {
       const ids = accountIdsByToolkit.get(toolkit) ?? new Set<string>();
       ids.add(accountId);
       accountIdsByToolkit.set(toolkit, ids);
+      // Every name the model may use for this account, so a call can name it either way.
+      const live = liveAccounts?.get(accountId);
+      const ref = refsById.get(accountId) ?? {
+        toolkit,
+        id: accountId,
+        ...(live?.wordId ? { wordId: live.wordId } : {}),
+        ...(live?.alias ? { alias: live.alias } : {}),
+        names: [],
+      };
+      const name = connection.displayName?.trim();
+      if (name && !ref.names.includes(name)) ref.names.push(name);
+      refsById.set(accountId, ref);
     }
     const reconnect = [...pinnedToolkits].filter((toolkit) => !accountIdsByToolkit.has(toolkit));
     const toolkits = requested.filter((toolkit) => !reconnect.includes(toolkit));
@@ -547,13 +568,17 @@ export class ComposioConnector implements ComposioProvider {
     for (const [toolkit, ids] of accountIdsByToolkit) {
       connectedAccounts[toolkit] = [...ids].sort();
     }
-    if (toolkits.length === 0) return { reconnect, connectedAccounts };
+    if (toolkits.length === 0) return { reconnect, connectedAccounts, accounts: [] };
     let accounts = connectedAccounts;
     let remaining = toolkits;
     let stale = reconnect;
     for (;;) {
       try {
-        return await this.executeSession(userId, remaining, stale, accounts);
+        const pinned = new Set(Object.values(accounts).flat());
+        return {
+          ...(await this.executeSession(userId, remaining, stale, accounts)),
+          accounts: [...refsById.values()].filter((ref) => pinned.has(ref.id)),
+        };
       } catch (error) {
         if (!isStaleConnectedAccountError(error) || Object.keys(accounts).length === 0) throw error;
         // The account list was unavailable, so a deleted account slipped through. Drop the
@@ -576,7 +601,9 @@ export class ComposioConnector implements ComposioProvider {
         accounts = kept;
         remaining = remaining.filter((toolkit) => !dropped.includes(toolkit));
         stale = [...stale, ...dropped];
-        if (remaining.length === 0) return { reconnect: stale, connectedAccounts: {} };
+        if (remaining.length === 0) {
+          return { reconnect: stale, connectedAccounts: {}, accounts: [] };
+        }
       }
     }
   }
@@ -606,8 +633,9 @@ export class ComposioConnector implements ComposioProvider {
       }
     }
     // Non-multi-account sessions cap connectedAccounts at one id per toolkit.
-    // requireExplicitSelection would also break single-account / no-auth
-    // execute paths that do not pass an account parameter.
+    // Explicit selection stays off: a call that names no account runs on the
+    // toolkit's default account (Composio's is_default) instead of being refused,
+    // and calls that do name one are resolved to a pinned account id first.
     const needsMultiAccount = Object.values(connectedAccounts).some((ids) => ids.length >= 2);
     const session = await composio.create(userId, {
       manageConnections: false,
@@ -619,7 +647,7 @@ export class ComposioConnector implements ComposioProvider {
             multiAccount: {
               enable: true,
               maxAccountsPerToolkit: 10,
-              requireExplicitSelection: true,
+              requireExplicitSelection: false,
             },
           }
         : {}),
@@ -762,9 +790,16 @@ export class ComposioConnector implements ComposioProvider {
     const connections = connectedComposioConnections(context);
     if (connections.length === 0) return [];
     try {
-      const { session } = await this.sessionForExecute(context.userId, connections);
+      const { session, accounts } = await this.sessionForExecute(context.userId, connections);
       if (!session) return [];
-      return asConnectorTools(await session.tools());
+      const tools = asConnectorTools(await session.tools());
+      const hint = composioAccountsHint(accounts);
+      if (!hint) return tools;
+      return tools.map((tool) =>
+        tool.name === COMPOSIO_MULTI_EXECUTE_TOOL
+          ? { ...tool, description: `${tool.description ?? ""}\n\n${hint}`.trim() }
+          : tool,
+      );
     } catch (error) {
       // An outage or a cancelled request hides the tools for this turn only.
       if (!isComposioOutage(error)) throw error;
@@ -779,7 +814,7 @@ export class ComposioConnector implements ComposioProvider {
     const executed = [];
     try {
       const connections = connectedComposioConnections(context);
-      const { session, reconnect, connectedAccounts } = await this.sessionForExecute(
+      const { session, reconnect, connectedAccounts, accounts } = await this.sessionForExecute(
         context.userId,
         connections,
       );
@@ -799,7 +834,19 @@ export class ComposioConnector implements ComposioProvider {
         yield { type: "error", message: "No active Composio connection for this tool." };
         return;
       }
-      const planned = expandComposioMultiExecute(call.tool, call.args ?? {});
+      const planned: ComposioExecutionCall[] = [];
+      for (const item of expandComposioMultiExecute(call.tool, call.args ?? {})) {
+        const resolved = resolveCallAccounts(item.tool, item.args, item.account, accounts);
+        if ("error" in resolved) {
+          yield { type: "error", message: resolved.error };
+          return;
+        }
+        planned.push({
+          tool: item.tool,
+          args: resolved.args,
+          ...(resolved.account ? { account: resolved.account } : {}),
+        });
+      }
       const unpinned = planned.find(
         (item) => item.account && !accountIsPinned(connectedAccounts, item.tool, item.account),
       );
@@ -821,10 +868,13 @@ export class ComposioConnector implements ComposioProvider {
           const logIds = collectLogIds(executed);
           yield {
             type: "error",
-            message: withSharedAccessHint(
-              sanitizeIntegrationError(
-                composioResultError(result.error || `${item.tool} failed`, result.data),
+            message: withAccountHint(
+              withSharedAccessHint(
+                sanitizeIntegrationError(
+                  composioResultError(result.error || `${item.tool} failed`, result.data),
+                ),
               ),
+              accounts,
             ),
             ...(logIds.length > 0 ? { logIds } : {}),
           };
@@ -945,14 +995,23 @@ export class ComposioConnector implements ComposioProvider {
     return ids[0];
   }
 
-  private async listActiveAccountIds(
+  private async listActiveAccounts(
     userId: string,
     toolkits: string[],
-  ): Promise<Set<string> | null> {
+  ): Promise<Map<string, { wordId?: string; alias?: string }> | null> {
     try {
       // A successful list is the allowlist, including empty. Only a thrown
       // lookup leaves filtering skipped so an outage does not strip every pin.
-      return new Set(await this.accountIds(userId, toolkits, ["ACTIVE"]));
+      const items = await this.listAccounts(userId, toolkits, ["ACTIVE"]);
+      const accounts = new Map<string, { wordId?: string; alias?: string }>();
+      for (const item of items) {
+        if (!item.id) continue;
+        accounts.set(item.id, {
+          ...(item.wordId ? { wordId: item.wordId } : {}),
+          ...(item.alias ? { alias: item.alias } : {}),
+        });
+      }
+      return accounts;
     } catch {
       return null;
     }
@@ -992,7 +1051,17 @@ export class ComposioConnector implements ComposioProvider {
     statuses: ConnectedAccountStatus[],
     requestOptions?: { signal?: AbortSignal },
   ): Promise<string[]> {
-    const accounts = await collectPages(async (cursor) => {
+    const accounts = await this.listAccounts(userId, toolkits, statuses, requestOptions);
+    return accounts.map((item) => item.id).filter((id): id is string => Boolean(id));
+  }
+
+  private async listAccounts(
+    userId: string,
+    toolkits: string[],
+    statuses: ConnectedAccountStatus[],
+    requestOptions?: { signal?: AbortSignal },
+  ): Promise<Array<{ id?: string; wordId?: string | null; alias?: string | null }>> {
+    return collectPages(async (cursor) => {
       const { connectedAccounts } = await this.sdk();
       const page = await connectedAccounts.list(
         {
@@ -1005,7 +1074,6 @@ export class ComposioConnector implements ComposioProvider {
       );
       return { items: page.items ?? [], cursor: page.nextCursor ?? undefined };
     }, MAX_ACCOUNT_PAGES);
-    return accounts.map((item) => item.id).filter((id): id is string => Boolean(id));
   }
 
   /**
@@ -1172,6 +1240,13 @@ export function withSharedAccessHint(message: string): string {
   let end = message.length;
   while (end > 0 && (message[end - 1] === "." || message[end - 1]?.trim() === "")) end--;
   return `${message.slice(0, end)}. This call needs the ${scope} permission; reconnect if the connection was made before it was added.`;
+}
+
+/** An account refusal lists the names this workspace knows the accounts by. */
+export function withAccountHint(message: string, accounts: ComposioAccountRef[]): string {
+  if (!/\baccounts?\b/i.test(message) || accounts.length < 2) return message;
+  if (!/no account found|multiple .* accounts|specify which/i.test(message)) return message;
+  return `${message} Connected accounts: ${composioAccountList(accounts)}.`;
 }
 
 export function sanitizeIntegrationError(error: unknown): string {

@@ -24,7 +24,7 @@ import {
   workingRoutineName,
 } from "@rakazo/core";
 import type { GroupAvatarMember } from "@rakazo/ui-web";
-import { Button } from "@rakazo/ui-web";
+import { Button, toast } from "@rakazo/ui-web";
 import { useIsMobile } from "@rakazo/ui-web/hooks/use-mobile";
 import { useQuery } from "@tanstack/react-query";
 import { Plus } from "lucide-react";
@@ -46,6 +46,7 @@ import { PageViewHost } from "../components/pages/PageViewHost";
 import { authClient } from "../lib/auth/auth";
 import { peekBootstrapSeed } from "../lib/bootstrap";
 import { setCallMinimized, startCall, useCallSession } from "../lib/calls/call-session";
+import { callVoice } from "../lib/calls/call-voice";
 import { toolActivityPreference } from "../lib/chat/tool-activity-preference";
 import { composerEnterToSendPreference } from "../lib/composer/composer-enter-to-send-pref";
 import { computersAreUnavailable } from "../lib/computers/computer-sandbox";
@@ -245,10 +246,17 @@ function SpaceShell() {
         ? null
         : undefined;
   const call = useCallSession();
-  /** Calls a bot, or opens voice settings first when no voice is connected. */
+  /**
+   * Calls a bot with the connected voice, or free with the browser's own voice when none is
+   * connected. A browser that can do neither opens voice settings.
+   */
   const callBot = (bot: Bot) => {
     if (!bootstrapMe?.phoneCallsEnabled) return;
-    if (!voiceStatus?.ready) {
+    const voice = callVoice(voiceStatus?.ready);
+    if (voice === "unsupported") {
+      toast(
+        t`This browser can't talk on calls by itself. Use Chrome, Edge or Safari, or connect a voice provider in Voice settings.`,
+      );
       openSettings("voice");
       return;
     }
@@ -258,6 +266,7 @@ function SpaceShell() {
       botColor: bot.color,
       botAvatarSet: bot.avatarSet,
       transcribe: voiceStatus ? Boolean(voiceStatus.transcribe) : undefined,
+      device: voice === "device",
     });
   };
   const voiceStatus: VoiceStatus | null =
@@ -1123,6 +1132,7 @@ function SpaceShell() {
         openSettings={openSettings}
         openIntegrations={() => setOverlay({ kind: "integrations" })}
         openSkills={() => setOverlay({ kind: "skills" })}
+        openTemplates={() => setOverlay({ kind: "templates" })}
         openSpaceChat={openSpaceChat}
       />
 
@@ -1334,6 +1344,7 @@ function SpaceShell() {
       <IncomingCall
         bots={bootstrapMe?.phoneCallsEnabled ? bots : []}
         transcribe={voiceStatus ? Boolean(voiceStatus.transcribe) : undefined}
+        device={voiceStatus ? callVoice(voiceStatus.ready) === "device" : false}
         onAnswered={(botId) => navigate(`/app/${botId}`)}
       />
 
@@ -1486,6 +1497,15 @@ function SpaceShell() {
           onOpenBot={(bot) => {
             openCreatedBot(bot);
             // As after any new bot: the Space's sections and counts come from the server.
+            void refreshBots().catch(() => undefined);
+          }}
+          onOpenGroup={(group) => {
+            setGroups((current) =>
+              current.some((item) => item.id === group.id) ? current : [group, ...current],
+            );
+            navigate(`/app/g/${group.id}`);
+            setPanel(null);
+            // A team adds bots too.
             void refreshBots().catch(() => undefined);
           }}
         />

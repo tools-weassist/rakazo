@@ -19,6 +19,7 @@ import {
   isSecretAskBlock,
   lastingWriteKind,
   outboundSiteGate,
+  outgoingSendRequiresHumanApproval,
   outsideRunToolRequiresApproval,
   ownComputerActionNeedsReview,
   planActionGate,
@@ -545,6 +546,11 @@ describe("planActionGate", () => {
     expect(gate("never", { mandatory: true, steerable: true })).toBe("deny");
   });
 
+  it("holds a mandatory Slack or email send in Auto even when a reviewer is set up", () => {
+    expect(gate("auto", { mandatory: true, checkerConfigured: true })).toBe("ask");
+    expect(gate("auto", { checkerConfigured: true })).toBe("judge");
+  });
+
   it("only lets the approval model check a read outside content may have chosen", () => {
     const read = { consequential: false, reviewOnly: true };
     expect(gate("auto", read)).toBe("judge");
@@ -558,6 +564,44 @@ describe("planActionGate", () => {
     expect(gate("auto", { newDestination: true, checkerConfigured: false })).toBe("ask");
     expect(gate("ask", { resolved: allowed, newDestination: true })).toBe("ask");
     expect(gate("never", { newDestination: true })).toBe("allow");
+  });
+});
+
+describe("outgoingSendRequiresHumanApproval", () => {
+  it("covers built-in email and Composio Slack, Gmail, and Outlook send, reply, and post tools", () => {
+    for (const name of [
+      "send_email",
+      "SLACK_SEND_MESSAGE",
+      "SLACK_SEND_CHANNEL_MESSAGE",
+      "SLACK_CHAT_POST_MESSAGE",
+      "SLACK_POST_MESSAGE",
+      "SLACK_REPLY_TO_THREAD",
+      "SLACK_SEND_EPHEMERAL_MESSAGE",
+      "GMAIL_SEND_EMAIL",
+      "GMAIL_REPLY_TO_THREAD",
+      "GMAIL_FORWARD_EMAIL",
+      "OUTLOOK_SEND_EMAIL",
+      "OUTLOOK_REPLY_EMAIL",
+    ]) {
+      expect(outgoingSendRequiresHumanApproval(name)).toBe(true);
+    }
+  });
+
+  it("leaves Slack reads, reactions, and other app writes to the usual Auto review", () => {
+    for (const name of [
+      "SLACK_LIST_CHANNELS",
+      "SLACK_FETCH_CONVERSATION_HISTORY",
+      "SLACK_ADD_REACTION",
+      "SLACK_POST_REACTION",
+      "GMAIL_LIST_MESSAGES",
+      "GMAIL_CREATE_DRAFT",
+      "OUTLOOK_GET_EMAIL",
+      "NOTION_CREATE_PAGE",
+      "GITHUB_CREATE_ISSUE",
+      "create_calendar_event",
+    ]) {
+      expect(outgoingSendRequiresHumanApproval(name)).toBe(false);
+    }
   });
 });
 

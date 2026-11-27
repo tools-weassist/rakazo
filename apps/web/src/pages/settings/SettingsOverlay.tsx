@@ -12,6 +12,7 @@ import {
 import { useQuery } from "@tanstack/react-query";
 import { ChevronLeft, ChevronRight, XIcon } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
+import { OpenSourceLicensesLink } from "../../components/account/open-source-licenses-dialog";
 import { PlanUsage } from "../../components/billing/PlanUsage";
 import {
   CloudComputerSizes,
@@ -446,6 +447,7 @@ export function SettingsOverlay({
                           ))}
                         </SettingsGroup>
                       ) : null}
+                      <OpenSourceLicensesLink />
                     </div>
                   ) : null}
                   {section === "space" && space ? (

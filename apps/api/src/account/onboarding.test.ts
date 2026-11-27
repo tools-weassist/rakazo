@@ -1,7 +1,14 @@
 import type * as db from "@rakazo/db";
 import { appendEventInTransaction } from "@rakazo/db";
 import { describe, expect, it, vi } from "vitest";
-import { chooseFocus, dismissFocus, markAppConnected, promptFocus } from "./onboarding.js";
+import {
+  chooseFocus,
+  chooseStarter,
+  dismissFocus,
+  markAppConnected,
+  postStarter,
+  promptFocus,
+} from "./onboarding.js";
 
 const posted = vi.hoisted(() => [] as Array<{ blocks: unknown[]; markUnread?: boolean }>);
 vi.mock("@rakazo/db", async (original) => ({
@@ -273,5 +280,129 @@ it("updates the authorized card's own message even outside the bounded scan", as
   expect(tx.message.update).toHaveBeenCalledWith({
     where: { id: "middle" },
     data: { blocks: [{ ...card, status: "connected" }] },
+  });
+});
+
+describe("Wea starter pick", () => {
+  function starterFixture(survey: Record<string, unknown> | null, catalog: unknown[] = []) {
+    const { deps, actor, tx } = fixture(catalog);
+    Object.assign(deps.prisma, {
+      signupSurvey: { findUnique: vi.fn(async () => survey) },
+      bot: {
+        findFirst: vi.fn(async () => ({ id: "bot", name: "Chief", thread: { id: "thread" } })),
+      },
+    });
+    return { deps, actor, tx };
+  }
+  const answered = (blocks: unknown[]) => [{ id: "starter", blocks }];
+  const blocks = () =>
+    posted.flatMap((message) => message.blocks) as Array<Record<string, unknown>>;
+
+  it("keeps today's opening when the questions were skipped", async () => {
+    const { deps, actor } = starterFixture({
+      role: null,
+      roleDetail: null,
+      brain: null,
+      needs: [],
+    });
+    await expect(postStarter(deps, actor, "bot")).resolves.toBe(false);
+    expect(posted).toEqual([]);
+  });
+
+  it("offers the one recommended team on an empty thread", async () => {
+    const { deps, actor, tx } = starterFixture({
+      role: "va",
+      roleDetail: "many_clients",
+      brain: "none",
+      needs: [],
+    });
+    tx.message.findMany = vi.fn(async () => []) as never;
+    await expect(postStarter(deps, actor, "bot")).resolves.toBe(true);
+    expect(blocks()).toContainEqual(
+      expect.objectContaining({
+        kind: "choice",
+        question: "Start with VA back office?",
+        subtitle: expect.stringContaining("Team of 5 bots"),
+        options: [
+          expect.objectContaining({ id: "starter:team:va-back-office", label: "Set it up" }),
+          expect.objectContaining({ id: "starter:browse" }),
+          expect.objectContaining({ id: "starter:chat" }),
+        ],
+      }),
+    );
+  });
+
+  it("sets up the pick once, then offers to connect the Drive brain", async () => {
+    const { deps, actor, tx } = starterFixture({ brain: "drive" }, [
+      { connectorId: "composio", slug: "googledrive", name: "Google Drive", connected: false },
+    ]);
+    tx.message.findMany = vi.fn(async () =>
+      answered([{ kind: "choice", options: [{ id: "starter:bot:ai-brain-keeper" }] }]),
+    ) as never;
+    const start = vi.fn(async () => undefined);
+    await chooseStarter(deps, actor, "bot", "starter:bot:ai-brain-keeper", {
+      webOrigin: "https://wea.weassist.io",
+      start,
+    });
+    expect(start).toHaveBeenCalledWith({ kind: "bot", id: "ai-brain-keeper" }, expect.any(Number));
+    expect(blocks()).toContainEqual(
+      expect.objectContaining({ kind: "app_connect", provider: "googledrive" }),
+    );
+    // An already answered card is not set up twice.
+    tx.message.findMany = vi.fn(async () => []) as never;
+    await chooseStarter(deps, actor, "bot", "starter:bot:ai-brain-keeper", {
+      webOrigin: "https://wea.weassist.io",
+      start,
+    });
+    expect(start).toHaveBeenCalledTimes(1);
+  });
+
+  it("offers to connect the GitHub brain from the catalog", async () => {
+    const { deps, actor, tx } = starterFixture({ brain: "github" }, [
+      { connectorId: "composio", slug: "github", name: "GitHub", connected: false },
+    ]);
+    tx.message.findMany = vi.fn(async () =>
+      answered([{ kind: "choice", options: [{ id: "starter:chat" }] }]),
+    ) as never;
+    await chooseStarter(deps, actor, "bot", "starter:chat", {
+      webOrigin: "https://wea.weassist.io",
+      start: vi.fn(),
+    });
+    expect(blocks()).toContainEqual(
+      expect.objectContaining({ kind: "app_connect", provider: "github" }),
+    );
+    expect(
+      blocks()
+        .map((block) => block.text)
+        .join("\n"),
+    ).toContain("You said your AI brain lives in GitHub.");
+  });
+
+  it("points an assistant's brain to Import an agent, finished on the web from a phone", async () => {
+    const { deps, actor, tx } = starterFixture({ brain: "assistant" });
+    tx.message.findMany = vi.fn(async () =>
+      answered([{ kind: "choice", options: [{ id: "starter:chat" }] }]),
+    ) as never;
+    const start = vi.fn();
+    await chooseStarter(deps, actor, "bot", "starter:chat", {
+      webOrigin: "https://wea.weassist.io",
+      start,
+    });
+    expect(start).not.toHaveBeenCalled();
+    const text = blocks()
+      .map((block) => block.text)
+      .join("\n");
+    expect(text).toContain("[Import an agent](https://wea.weassist.io/app?import)");
+    expect(text).toContain("Finish on the web");
+  });
+
+  it("refuses a pick that is no template", async () => {
+    const { deps, actor } = starterFixture(null);
+    await expect(
+      chooseStarter(deps, actor, "bot", "starter:bot:inbox-nope", {
+        webOrigin: "https://wea.weassist.io",
+        start: vi.fn(),
+      }),
+    ).rejects.toThrow();
   });
 });

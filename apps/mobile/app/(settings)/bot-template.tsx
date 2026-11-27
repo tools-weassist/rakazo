@@ -10,6 +10,7 @@ import type { ReactNode } from "react";
 import { useState } from "react";
 import { ActivityIndicator, Alert, ScrollView, StyleSheet, Text, View } from "react-native";
 import { BotTemplateIcon } from "../../components/bots/bot-template-icon";
+import { TemplateKindBadge } from "../../components/bots/template-kind-badge";
 import { ConnectorIcon } from "../../components/integrations/connector-icon";
 import { SkillSymbol } from "../../components/integrations/skill-symbol";
 import { NativeActionButton } from "../../components/native/native-action-button";
@@ -84,7 +85,7 @@ function TemplateDetail({
   const colorScheme = useResolvedAppearance();
   const { t } = useLingui();
   const locale = useUiLocale();
-  const { name, summary, sample } = botTemplateCopy(template);
+  const { name, summary, whatItDoes, howItHelps } = botTemplateCopy(template);
   const { botId } = template;
   const [expanded, setExpanded] = useState<string | null>(null);
   const catalog = useQuery(
@@ -163,6 +164,7 @@ function TemplateDetail({
           <Text accessibilityRole="header" style={styles.name}>
             {name}
           </Text>
+          <TemplateKindBadge />
           <Text style={styles.secondary}>{summary}</Text>
         </View>
       </View>
@@ -171,11 +173,16 @@ function TemplateDetail({
         busy={open.pending}
         onPress={() => open.run({ existingId: botId, askedIn: searchInboxSession() })}
       />
-      <View style={styles.sample}>
-        <ChatMarkdown palette={tokens} colorScheme={colorScheme}>
-          {sample}
-        </ChatMarkdown>
-      </View>
+      <SettingsGroup label={t`What it does`}>
+        {whatItDoes.map((text) => (
+          <SettingsRow key={text} title={text} />
+        ))}
+      </SettingsGroup>
+      <SettingsGroup label={t`How it helps you`}>
+        {howItHelps.map((text) => (
+          <SettingsRow key={text} title={text} />
+        ))}
+      </SettingsGroup>
       <SettingsGroup label={t`Adds`}>
         {rows.flatMap((row) => {
           const open = expanded === row.key;
@@ -224,7 +231,11 @@ function TemplateDetail({
             />
           ))}
         </SettingsGroup>
-      ) : null}
+      ) : (
+        <SettingsGroup label={t`Works with`}>
+          <SettingsRow title={t`No apps to connect. It works in chat and can search the web.`} />
+        </SettingsGroup>
+      )}
     </>
   );
 }
@@ -232,19 +243,12 @@ function TemplateDetail({
 function createStyles() {
   return StyleSheet.create({
     screen: { flex: 1, backgroundColor: native.groupedPage },
-    content: { padding: 20, gap: 20 },
+    content: { padding: 20, paddingBottom: 40, gap: 20 },
     failure: { gap: 10 },
     header: { flexDirection: "row", alignItems: "center", gap: 14 },
     grow: { flex: 1, gap: 2, minWidth: 0 },
     name: { color: native.label, fontSize: 22, fontWeight: "600" },
     secondary: { color: native.secondaryLabel, fontSize: 15 },
-    sample: {
-      paddingHorizontal: 16,
-      paddingVertical: 12,
-      borderRadius: 16,
-      borderCurve: "continuous",
-      backgroundColor: native.groupedCell,
-    },
     body: { paddingHorizontal: 16, paddingBottom: 14, paddingTop: 10 },
   });
 }

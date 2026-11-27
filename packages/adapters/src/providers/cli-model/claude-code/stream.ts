@@ -45,7 +45,7 @@ const TOOL_PREFIX = `mcp__${TOOL_SERVER}__`;
 /**
  * A stdio MCP server that only lists Rakazo's tools to the CLI. It never runs one: the CLI runs
  * in `dontAsk` mode with nothing allowed and stops after one turn, so a tool call comes back to
- * Rakazo, which runs it with its own approvals.
+ * Wea, which runs it with its own approvals.
  */
 const INVENTORY_SERVER = `import { readFileSync } from "node:fs";
 import { createInterface } from "node:readline";
@@ -65,7 +65,7 @@ for await (const line of createInterface({ input: process.stdin })) {
   } else if (method === "tools/list") {
     send({ id, result: { tools } });
   } else if (method === "tools/call") {
-    send({ id, result: { isError: true, content: [{ type: "text", text: "Rakazo runs its tools itself." }] } });
+    send({ id, result: { isError: true, content: [{ type: "text", text: "Wea runs its tools itself." }] } });
   } else if (method === "ping") {
     send({ id, result: {} });
   } else {
@@ -318,7 +318,7 @@ async function exitError(child: ClaudeCodeProcess, during: string): Promise<Erro
   );
 }
 
-/** Read-only helpers the CLI adds for any MCP server; Rakazo's server offers no resources. */
+/** Read-only helpers the CLI adds for any MCP server; Wea's server offers no resources. */
 const MCP_RESOURCE_TOOLS = new Set(["ListMcpResourcesTool", "ReadMcpResourceTool"]);
 
 /**
@@ -339,7 +339,7 @@ function checkInit(event: Record<string, unknown>, expectTools: boolean): void {
     (entry) => entry && typeof entry === "object" && entry.name === TOOL_SERVER,
   ) as { status?: unknown } | undefined;
   if (expectTools && server?.status !== "connected") {
-    throw new Error("Claude Code could not load Rakazo's tools.");
+    throw new Error("Claude Code could not load Wea's tools.");
   }
 }
 
@@ -350,7 +350,7 @@ interface OpenBlock {
 
 /**
  * Streams one model turn through the operator's signed-in Claude Code CLI. The CLI is only the
- * model: Rakazo keeps the conversation, runs every tool, and replays the history each turn.
+ * model: Wea keeps the conversation, runs every tool, and replays the history each turn.
  */
 export function streamClaudeCode(
   model: Model<Api>,

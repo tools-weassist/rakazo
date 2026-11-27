@@ -7,6 +7,7 @@ import {
   openModelConnection,
   openUserSettings,
   signup,
+  skipSignupSurvey,
 } from "../helpers/helpers";
 
 const probePath = "**/rpc/models/probeOpenAiCompatible";
@@ -43,6 +44,7 @@ for (const surface of ["settings", "onboarding"] as const) {
         await openUserSettings(page, "models");
         await openModelConnection(page, "OpenAI-compatible");
       } else {
+        await skipSignupSurvey(page);
         await page.getByRole("combobox", { name: "Provider", exact: true }).click();
         await page.getByRole("option", { name: "OpenAI-compatible", exact: true }).click();
       }

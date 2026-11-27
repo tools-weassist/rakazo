@@ -15,6 +15,7 @@ import {
   withModelRoles,
 } from "../router-test-support.js";
 import { handleRpcError } from "../rpc-errors.js";
+import { templateIntroPrompt } from "./hidden-turns.prompt.js";
 
 afterEach(() => {
   delete process.env.SANDBOX_MAX_COMPUTERS_PER_USER;
@@ -104,6 +105,21 @@ describe("bot intro run", () => {
     expect(deps.prisma.$transaction).toHaveBeenCalledWith(expect.any(Function), {
       timeout: 20_000,
     });
+  });
+
+  it("opens a template bot with its first setup question instead of asking what it is for", async () => {
+    const { create, enqueue, deps } = introDeps();
+
+    await enqueueBotIntroRun(deps, actor, bot, { fromTemplate: true });
+
+    const [taskCall, runCall] = create.mock.calls as Array<
+      [{ data: { prompt?: string; trigger?: string } }]
+    >;
+    expect(taskCall?.[0].data.prompt).toBe(
+      templateIntroPrompt({ userName: "Ada Lovelace", disabledBuiltinTools: [] }),
+    );
+    expect(runCall?.[0].data.trigger).toBe("created");
+    expect(enqueue).toHaveBeenCalledOnce();
   });
 
   it("leaves a placeholder account name out of the intro", async () => {

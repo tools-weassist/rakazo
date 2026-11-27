@@ -426,7 +426,7 @@ export default function Account() {
               <SettingsRow
                 accessibilityRole="button"
                 leading={icon({ ios: "heart", android: "heart-outline" })}
-                title={t`Support Rakazo`}
+                title={t`Support Wea`}
                 onPress={showSelfHostedSupport}
               />
             ) : null}
@@ -434,7 +434,7 @@ export default function Account() {
               <SettingsRow
                 accessibilityRole="button"
                 leading={icon({ ios: "star", android: "star-outline" })}
-                title={t`Rate Rakazo`}
+                title={t`Rate Wea`}
                 onPress={openWriteReview}
               />
             ) : null}
@@ -458,6 +458,16 @@ export default function Account() {
 
         <View style={styles.about}>
           <AppMark />
+          <Text style={styles.credit}>
+            {t`Wea is built on Rakazo, open-source under the Apache License, Version 2.0.`}
+          </Text>
+          <NativeActionButton
+            fill={false}
+            label={t`Open-source licenses`}
+            onPress={() => router.push("/open-source-licenses")}
+            prominence="quiet"
+            size="compact"
+          />
           {versionInfo.nativeLabel || updateLabel ? (
             <View
               accessibilityLabel={versionAccessibility}
@@ -499,6 +509,13 @@ function createAccountStyles() {
     },
     updateButton: {
       alignSelf: "center",
+    },
+    credit: {
+      color: native.secondaryLabel,
+      fontSize: 13,
+      lineHeight: 18,
+      textAlign: "center",
+      paddingHorizontal: 16,
     },
     versionLine: {
       color: native.secondaryLabel,

@@ -34,6 +34,7 @@ const mocks = vi.hoisted(() => ({
   setVoiceForBot: vi.fn(),
   rpc: vi.fn(),
   loadBot: vi.fn(),
+  status: "idle" as string,
   back: vi.fn(),
   push: vi.fn(),
   stopVoicePlayback: vi.fn(),
@@ -96,6 +97,7 @@ vi.mock("../api/api", () => ({
         avatarSet: mocks.avatarSet,
         autoSpeak: mocks.autoSpeak,
         computerMode: "team",
+        status: mocks.status,
         dailyCheckIns: mocks.dailyCheckIns,
         fleetManagement: mocks.fleetManagement,
         crossSpaceCommunication: mocks.crossSpaceCommunication,
@@ -302,7 +304,10 @@ vi.mock("../../components/native/native-switch", () => ({
       role: "switch",
       "aria-checked": value,
       disabled,
-      onClick: () => onValueChange(!value),
+      onClick: () => {
+        if (disabled) return;
+        onValueChange(!value);
+      },
     }),
 }));
 vi.mock("../../components/native/native-symbol", () => ({
@@ -349,6 +354,7 @@ describe("bot settings device voice menu", () => {
     queryClient.clear();
     mocks.crossSpaceCommunication = false;
     mocks.autoSpeak = false;
+    mocks.status = "idle";
     mocks.dailyCheckIns = undefined;
     mocks.fleetManagement = false;
     mocks.avatarSet = undefined;
@@ -643,7 +649,7 @@ describe("bot settings device voice menu", () => {
       )!;
     expect(option("Original").dataset.state).toBe("on");
     expect(mocks.rpc).not.toHaveBeenCalled();
-    await act(async () => option("Rakazo").click());
+    await act(async () => option("Wea").click());
     mocks.rpc.mockResolvedValueOnce({ avatarSet: "rakazo" });
     await act(async () =>
       [...container.querySelectorAll<HTMLButtonElement>("button")]
@@ -661,7 +667,7 @@ describe("bot settings device voice menu", () => {
     await act(async () =>
       container.querySelector<HTMLButtonElement>('[aria-label="Edit avatar"]')!.click(),
     );
-    expect(option("Rakazo").dataset.state).toBe("on");
+    expect(option("Wea").dataset.state).toBe("on");
     await act(async () => option("Original").click());
     mocks.rpc.mockResolvedValueOnce({ avatarSet: "organic" });
     await act(async () =>
@@ -1071,6 +1077,35 @@ describe("bot settings device voice menu", () => {
       "bots/update",
       expect.objectContaining({ botId: "bot-fixture", autoSpeak: false }),
     );
+  });
+
+  it("disables Own computer while the bot is running and explains why", async () => {
+    mocks.status = "running";
+    await render();
+    const toggle = container.querySelector<HTMLButtonElement>('[aria-label="Own computer"]')!;
+    expect(toggle.disabled).toBe(true);
+    expect(container.textContent).toContain("Stop the bot's current run to switch computers.");
+    await act(async () => toggle.click());
+    const save = [...container.querySelectorAll("button")].find(
+      (button) => button.textContent === "Save",
+    );
+    expect(save).toBeUndefined();
+  });
+
+  it("shows a setComputer error under Own computer, not as the general save error", async () => {
+    mocks.rpc.mockImplementation(async (procedure: string) => {
+      if (procedure === "bots/setComputer") throw new Error("Stop the bot first");
+    });
+    await render();
+    await act(async () =>
+      container.querySelector<HTMLButtonElement>('[aria-label="Own computer"]')!.click(),
+    );
+    await act(async () =>
+      [...container.querySelectorAll("button")]
+        .find((button) => button.textContent === "Save")!
+        .click(),
+    );
+    expect(container.textContent).toContain("Stop the bot first");
   });
 
   it("persists bot management toggles immediately without adding them to unrelated saves", async () => {

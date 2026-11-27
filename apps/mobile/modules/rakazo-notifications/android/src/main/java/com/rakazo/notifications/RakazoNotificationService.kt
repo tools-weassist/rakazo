@@ -412,7 +412,7 @@ class RakazoNotificationService : Service() {
     private var openThreadId: String? = null
 
     fun start(context: Context, resetToken: Boolean = true, action: String? = null, mutedBotId: String? = null) {
-      val intent = Intent(context, RakazoNotificationService::class.java)
+      val intent = Intent(context, WeaNotificationService::class.java)
         .putExtra(EXTRA_RESET_TOKEN, resetToken)
       if (action != null) intent.action = action
       if (mutedBotId != null) intent.putExtra(EXTRA_MUTED_BOT_ID, mutedBotId)
@@ -421,7 +421,7 @@ class RakazoNotificationService : Service() {
     }
 
     fun stop(context: Context) {
-      context.stopService(Intent(context, RakazoNotificationService::class.java))
+      context.stopService(Intent(context, WeaNotificationService::class.java))
     }
 
     fun isOpenThread(botId: String, threadId: String): Boolean = synchronized(sessionLock) {

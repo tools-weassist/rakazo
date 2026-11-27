@@ -49,7 +49,7 @@ describe("self-hosted support offer", () => {
     expect(native.alert).toHaveBeenCalledTimes(1);
 
     buttons()[1]?.onPress?.();
-    expect(native.openUrl).toHaveBeenCalledWith("https://rakazo.com/priority-support");
+    expect(native.openUrl).toHaveBeenCalledWith("mailto:tools@weassist.io");
 
     resetSelfHostedSupportForTests();
     await offerSelfHostedSupportOnce(() => true);

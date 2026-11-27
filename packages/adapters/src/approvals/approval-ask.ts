@@ -529,17 +529,24 @@ function previewOutgoingDraft(
   args: Record<string, unknown>,
   secrets: string[],
 ) {
-  const { kind, source, defaults = {}, recipientAlias } = descriptor;
+  const { kind, source, defaults = {}, recipientAlias, threadKeys } = descriptor;
   const keys =
     recipientAlias && !Object.hasOwn(args, descriptor.keys.to)
       ? { ...descriptor.keys, to: recipientAlias }
       : descriptor.keys;
   const editable = new Set(Object.values(keys));
+  const threadKeyNames = new Set(
+    [threadKeys?.ts, threadKeys?.broadcast].filter((key): key is string => Boolean(key)),
+  );
+  const thread = threadContext(threadKeys, args);
+  if (thread === false) return undefined;
   // Attachments, extra recipients, formatting and other options stay on the full approval card.
   if (
     Object.entries(args).some(
       ([key, value]) =>
-        !editable.has(key) && (!Object.hasOwn(defaults, key) || value !== defaults[key]),
+        !editable.has(key) &&
+        !threadKeyNames.has(key) &&
+        (!Object.hasOwn(defaults, key) || value !== defaults[key]),
     )
   )
     return undefined;
@@ -556,5 +563,26 @@ function previewOutgoingDraft(
     )
   )
     return undefined;
-  return OutgoingDraft.safeParse({ source, keys, values }).data;
+  return OutgoingDraft.safeParse({ source, keys, values, thread }).data;
+}
+
+/** Known Slack thread fields keep the draft card; a surprising type falls back to the generic card. */
+function threadContext(
+  threadKeys: NonNullable<ConnectorTool["outgoingDraft"]>["threadKeys"],
+  args: Record<string, unknown>,
+) {
+  if (!threadKeys) return undefined;
+  const rawTs = Object.hasOwn(args, threadKeys.ts) ? args[threadKeys.ts] : undefined;
+  const rawBroadcast =
+    threadKeys.broadcast && Object.hasOwn(args, threadKeys.broadcast)
+      ? args[threadKeys.broadcast]
+      : undefined;
+  if (rawTs !== undefined && (typeof rawTs !== "string" || rawTs.trim() === "")) return false;
+  if (rawBroadcast !== undefined && typeof rawBroadcast !== "boolean") return false;
+  if (typeof rawTs !== "string") {
+    return rawBroadcast === undefined ? undefined : false;
+  }
+  return rawBroadcast === undefined
+    ? { ts: rawTs.trim() }
+    : { ts: rawTs.trim(), broadcast: rawBroadcast };
 }

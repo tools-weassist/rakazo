@@ -658,6 +658,17 @@ describe("account preferences", () => {
 describe("billing", () => {
   const surveyCreatedAt = new Date("2026-10-23T12:00:00Z");
   const upsertSignupSurvey = vi.fn().mockResolvedValue({ createdAt: surveyCreatedAt });
+  const memoryCommit = vi.fn().mockResolvedValue({ revision: 2 });
+  const blank = {
+    reason: null,
+    use: null,
+    teamSize: null,
+    source: null,
+    role: null,
+    roleDetail: null,
+    brain: null,
+    needs: [],
+  };
 
   function billingDeps(
     isDeploymentOwner: boolean,
@@ -676,6 +687,9 @@ describe("billing", () => {
         }),
       },
       signupSurvey: { upsert: upsertSignupSurvey },
+      memoryDocument: {
+        findFirst: vi.fn().mockResolvedValue({ content: "# Memory\n", revision: 1 }),
+      },
       userModelPreference: { findFirst: vi.fn().mockResolvedValue(null) },
       deploymentSettings: { findUnique: vi.fn().mockResolvedValue(null) },
     } as unknown as PrismaClient;
@@ -683,6 +697,7 @@ describe("billing", () => {
       prisma,
       billing,
       analytics,
+      memory: { commit: memoryCommit },
       env: {
         defaultProvider: "fake",
         defaultModel: "fake-model",
@@ -727,9 +742,9 @@ describe("billing", () => {
     });
   });
 
-  it("asks hosted users the signup survey until they answer or skip it", async () => {
+  it("asks every new account the signup survey until they answer or skip it, billing or not", async () => {
     const billing = { status: vi.fn() } as unknown as RouterDeps["billing"];
-    await expect(billingDeps(false).me()).resolves.toMatchObject({ needsSignupSurvey: false });
+    await expect(billingDeps(false).me()).resolves.toMatchObject({ needsSignupSurvey: true });
     await expect(billingDeps(false, billing).me()).resolves.toMatchObject({
       needsSignupSurvey: true,
     });
@@ -762,8 +777,47 @@ describe("billing", () => {
     await billingDeps(false).onboarding.signupSurvey({});
     expect(upsertSignupSurvey).toHaveBeenLastCalledWith({
       where: { userId: "user-1" },
-      create: { userId: "user-1", reason: null, use: null, teamSize: null, source: null },
-      update: { reason: null, use: null, teamSize: null, source: null },
+      create: { userId: "user-1", ...blank },
+      update: blank,
+    });
+  });
+
+  it("keeps the persona answers, without repeats, and shares them with every bot", async () => {
+    const capture = vi.fn();
+    const client = billingDeps(false, undefined, null, { capture, flush: async () => undefined });
+    await client.onboarding.signupSurvey({
+      role: "va",
+      roleDetail: "one_client",
+      brain: "drive",
+      needs: ["eod", "eod"],
+    });
+    expect(upsertSignupSurvey).toHaveBeenLastCalledWith(
+      expect.objectContaining({
+        update: { ...blank, role: "va", roleDetail: "one_client", brain: "drive", needs: ["eod"] },
+      }),
+    );
+    expect(capture).toHaveBeenLastCalledWith(
+      "user-1",
+      { name: "signup_survey_answered", skipped: false, role: "va", brain: "drive" },
+      expect.anything(),
+    );
+    expect(memoryCommit).toHaveBeenLastCalledWith(
+      expect.objectContaining({
+        scope: "user",
+        path: "MEMORY.md",
+        content: expect.stringContaining("- Role: Virtual assistant or outsourced professional, works for one client."),
+      }),
+      expect.anything(),
+    );
+  });
+
+  it("refuses a follow-up or need from another role", async () => {
+    const client = billingDeps(false);
+    await expect(
+      client.onboarding.signupSurvey({ role: "va", roleDetail: "has_va" }),
+    ).rejects.toMatchObject({ code: "BAD_REQUEST" });
+    await expect(client.onboarding.signupSurvey({ needs: ["eod"] })).rejects.toMatchObject({
+      code: "BAD_REQUEST",
     });
   });
 
@@ -779,25 +833,24 @@ describe("billing", () => {
       where: { userId: "user-1" },
       create: {
         userId: "user-1",
+        ...blank,
         reason: "Run my inbox",
         use: "personal",
-        teamSize: null,
-        source: null,
       },
-      update: { reason: "Run my inbox", use: "personal", teamSize: null, source: null },
+      update: { ...blank, reason: "Run my inbox", use: "personal" },
     });
 
     await client.onboarding.signupSurvey({ use: "work", teamSize: "11-50" });
     expect(upsertSignupSurvey).toHaveBeenLastCalledWith(
       expect.objectContaining({
-        update: { reason: null, use: "work", teamSize: "11-50", source: null },
+        update: { ...blank, use: "work", teamSize: "11-50" },
       }),
     );
 
     await client.onboarding.signupSurvey({ use: "both", teamSize: "2-10" });
     expect(upsertSignupSurvey).toHaveBeenLastCalledWith(
       expect.objectContaining({
-        update: { reason: null, use: "both", teamSize: "2-10", source: null },
+        update: { ...blank, use: "both", teamSize: "2-10" },
       }),
     );
   });
