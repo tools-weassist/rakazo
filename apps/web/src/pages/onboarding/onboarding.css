@@ -1,0 +1,511 @@
+/* Wea onboarding: one question per screen, hosted by Chief. Brand tokens match the landing page. */
+.wea-onboarding {
+  --wo-ink: #142134;
+  --wo-slate: #4a5a70;
+  --wo-line: #d9e1e8;
+  --wo-mist: #f1f5f9;
+  --wo-teal: #0698b2;
+  --wo-teal-text: #067a8f;
+  --wo-btn: #067a8f;
+  --wo-btn-hover: #05616f;
+  --wo-tint: #e6f5f7;
+  --wo-glow: #07c2e4;
+  --wo-land: cubic-bezier(0.22, 1, 0.36, 1);
+  font-family: "Wea League Spartan", Arial, sans-serif;
+  color: var(--wo-ink);
+}
+
+.wo-question {
+  font-family: "Wea Fraunces", Georgia, serif;
+  font-weight: 600;
+  font-size: 26px;
+  line-height: 32px;
+  letter-spacing: -0.01em;
+  text-align: center;
+  color: var(--wo-ink);
+  outline: none;
+}
+.wo-question-xl {
+  font-size: 34px;
+  line-height: 40px;
+}
+.wo-sub {
+  margin-top: 10px;
+  font-size: 16px;
+  line-height: 24px;
+  text-align: center;
+  color: var(--wo-slate);
+}
+.wo-teal {
+  color: var(--wo-teal-text);
+}
+
+/* Progress bar and the back and skip controls above each question */
+.wo-top {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 28px;
+}
+.wo-progress {
+  flex: 1;
+  height: 4px;
+  border-radius: 4px;
+  background: var(--wo-line);
+  overflow: hidden;
+}
+.wo-progress > i {
+  display: block;
+  height: 100%;
+  border-radius: 4px;
+  background: var(--wo-teal);
+  transition: width 0.5s var(--wo-land);
+}
+.wo-quiet {
+  font-size: 15px;
+  color: var(--wo-slate);
+  padding: 4px 2px;
+}
+.wo-quiet:hover {
+  color: var(--wo-ink);
+}
+
+/* Buttons */
+.wo-go {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: var(--wo-btn);
+  color: #fff;
+  display: grid;
+  place-items: center;
+  box-shadow: 0 10px 24px rgba(6, 122, 143, 0.35);
+  transition:
+    transform 0.2s var(--wo-land),
+    background 0.2s;
+}
+.wo-go:hover {
+  background: var(--wo-btn-hover);
+  transform: translateY(-2px);
+}
+.wo-cta {
+  display: block;
+  width: 100%;
+  max-width: 260px;
+  margin: 0 auto;
+  padding: 14px 20px;
+  border-radius: 999px;
+  border: 1.5px solid var(--wo-btn);
+  color: var(--wo-btn);
+  background: #fff;
+  font-weight: 600;
+  font-size: 16px;
+  transition: background 0.2s;
+}
+.wo-cta:hover {
+  background: var(--wo-tint);
+}
+.wo-cta:disabled {
+  border-color: var(--wo-line);
+  color: #9aa8b8;
+  background: #fff;
+  cursor: default;
+}
+.wo-link {
+  display: block;
+  margin: 14px auto 0;
+  font-size: 15px;
+  color: var(--wo-slate);
+}
+.wea-onboarding :focus-visible {
+  outline: 3px solid var(--wo-glow);
+  outline-offset: 2px;
+}
+
+/* Chief on a soft teal halo (splash and hello) */
+.wo-splash {
+  background: radial-gradient(120% 80% at 50% 40%, #e6f5f7 0%, #fff 70%);
+}
+.wo-halo {
+  position: relative;
+  display: grid;
+  place-items: center;
+}
+.wo-halo::before {
+  content: "";
+  position: absolute;
+  width: 150%;
+  height: 150%;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(7, 194, 228, 0.22), transparent 65%);
+  animation: wo-halo 3.2s ease-in-out infinite;
+}
+@keyframes wo-halo {
+  50% {
+    transform: scale(1.12);
+    opacity: 0.6;
+  }
+}
+
+/* Name field with Chief peeking over it */
+.wo-peek {
+  position: absolute;
+  left: 22px;
+  top: -40px;
+  width: 56px;
+  height: 40px;
+  overflow: hidden;
+}
+.wo-field {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--wo-mist);
+  border-radius: 999px;
+  padding: 6px 6px 6px 20px;
+  border: 1.5px solid transparent;
+}
+.wo-field:focus-within {
+  border-color: var(--wo-teal);
+  background: #fff;
+}
+.wo-field input {
+  flex: 1;
+  min-width: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  font-size: 17px;
+  color: var(--wo-ink);
+  outline: none;
+  padding: 10px 0;
+}
+.wo-field .wo-go {
+  width: 44px;
+  height: 44px;
+  box-shadow: none;
+}
+
+/* Stacked option cards (role, how you heard about Wea) */
+.wo-stack {
+  display: grid;
+  gap: 12px;
+  margin-top: 28px;
+}
+.wo-option {
+  width: 100%;
+  padding: 16px 18px;
+  border-radius: 14px;
+  background: #fff;
+  border: 1.5px solid var(--wo-line);
+  box-shadow: 0 2px 6px rgba(20, 33, 52, 0.06);
+  font-size: 16px;
+  font-weight: 500;
+  text-align: start;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  color: var(--wo-ink);
+  transition:
+    border-color 0.2s,
+    transform 0.2s var(--wo-land);
+}
+.wo-option:hover {
+  border-color: var(--wo-teal);
+  transform: translateY(-1px);
+}
+.wo-option[aria-pressed="true"] {
+  border-color: var(--wo-teal);
+  background: var(--wo-tint);
+}
+.wo-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  display: grid;
+  place-items: center;
+  flex: none;
+  font-size: 18px;
+}
+.wo-check {
+  margin-inline-start: auto;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 1.5px solid var(--wo-line);
+  display: grid;
+  place-items: center;
+  flex: none;
+  color: transparent;
+}
+[aria-pressed="true"] > .wo-check {
+  background: var(--wo-teal);
+  border-color: var(--wo-teal);
+  color: #fff;
+}
+
+/* Colored follow-up pills */
+.wo-pills {
+  display: grid;
+  gap: 14px;
+  margin: 40px 0;
+}
+.wo-pill {
+  position: relative;
+  overflow: hidden;
+  padding: 20px;
+  border-radius: 16px;
+  font-size: 16px;
+  font-weight: 500;
+  text-align: center;
+  color: var(--wo-ink);
+  transition: box-shadow 0.2s;
+}
+.wo-pill:nth-child(4n + 1) {
+  background: #bfeaf2;
+}
+.wo-pill:nth-child(4n + 2) {
+  background: #c4efe0;
+}
+.wo-pill:nth-child(4n + 3) {
+  background: #d9e4ff;
+}
+.wo-pill:nth-child(4n + 4) {
+  background: #ffe3c7;
+}
+
+/* Pastel bot tiles (build your team) and style cards (AI brain) */
+.wo-tiles {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-top: 22px;
+}
+.wo-tile {
+  position: relative;
+  min-height: 96px;
+  border-radius: 16px;
+  padding: 14px 12px 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  font-size: 14px;
+  line-height: 18px;
+  font-weight: 500;
+  text-align: center;
+  color: var(--wo-ink);
+  transition:
+    transform 0.2s var(--wo-land),
+    box-shadow 0.2s;
+}
+.wo-tile:hover,
+.wo-card:hover {
+  transform: translateY(-2px);
+}
+.wo-pill[aria-pressed="true"],
+.wo-tile[aria-pressed="true"],
+.wo-card[aria-pressed="true"] {
+  box-shadow: 0 0 0 2.5px var(--wo-teal) inset;
+}
+.wo-tick {
+  position: absolute;
+  right: 10px;
+  top: 10px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--wo-teal);
+  color: #fff;
+  display: none;
+  place-items: center;
+}
+[aria-pressed="true"] > .wo-tick {
+  display: grid;
+}
+.wo-cards {
+  display: grid;
+  gap: 14px;
+  margin-top: 22px;
+}
+.wo-card {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 18px;
+  border-radius: 18px;
+  text-align: start;
+  min-height: 88px;
+  color: var(--wo-ink);
+  transition:
+    transform 0.2s var(--wo-land),
+    box-shadow 0.2s;
+}
+.wo-card b {
+  display: block;
+  font-family: "Wea Fraunces", Georgia, serif;
+  font-weight: 600;
+  font-size: 19px;
+  line-height: 24px;
+}
+.wo-card small {
+  font-size: 14px;
+  line-height: 20px;
+  color: var(--wo-slate);
+}
+.wo-art {
+  margin-inline-start: auto;
+  width: 56px;
+  height: 56px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.7);
+  display: grid;
+  place-items: center;
+  font-size: 26px;
+  flex: none;
+}
+.wo-explain {
+  margin-top: 12px;
+  padding: 16px;
+  border-radius: 14px;
+  background: var(--wo-mist);
+  font-size: 15px;
+  line-height: 22px;
+  color: var(--wo-slate);
+}
+.wo-tone-magenta {
+  background: #ffe8f4;
+}
+.wo-tone-green {
+  background: #e0f8ec;
+}
+.wo-tone-blue {
+  background: #e3f0ff;
+}
+.wo-tone-yellow {
+  background: #fff3dc;
+}
+.wo-tone-orange {
+  background: #ffeadb;
+}
+.wo-tone-violet {
+  background: #f0e9ff;
+}
+.wo-tone-cyan {
+  background: #ddf6f3;
+}
+.wo-tone-brown {
+  background: #f3ebe3;
+}
+.wo-tone-gray {
+  background: #eef1f5;
+}
+.wo-tone-mist {
+  background: var(--wo-mist);
+}
+
+/* Bring your own AI */
+.wo-plan {
+  margin-top: 22px;
+  border: 1.5px solid var(--wo-teal);
+  border-radius: 20px;
+  padding: 20px;
+}
+.wo-plan h2 {
+  font-family: "Wea Fraunces", Georgia, serif;
+  font-weight: 600;
+  font-size: 20px;
+  line-height: 26px;
+}
+.wo-plan ul {
+  list-style: none;
+  padding: 0;
+  margin: 12px 0 4px;
+  display: grid;
+  gap: 8px;
+  font-size: 15px;
+  line-height: 21px;
+  color: var(--wo-slate);
+}
+
+/* Notifications: a calm pulsing bell */
+.wo-pulse {
+  position: relative;
+  width: 220px;
+  height: 220px;
+  margin: 40px auto;
+  display: grid;
+  place-items: center;
+}
+.wo-pulse > i {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  border: 1.5px dashed rgba(6, 152, 178, 0.35);
+  animation: wo-ring 3s linear infinite;
+}
+.wo-pulse > i:nth-child(2) {
+  inset: 28px;
+  animation-direction: reverse;
+  animation-duration: 4s;
+}
+.wo-pulse > i:nth-child(3) {
+  inset: 56px;
+  border-style: solid;
+  border-color: rgba(7, 194, 228, 0.25);
+}
+@keyframes wo-ring {
+  to {
+    transform: rotate(360deg);
+  }
+}
+.wo-bell {
+  width: 88px;
+  height: 88px;
+  border-radius: 50%;
+  background: var(--wo-teal);
+  color: #fff;
+  display: grid;
+  place-items: center;
+  box-shadow:
+    0 0 0 10px rgba(7, 194, 228, 0.18),
+    0 0 0 22px rgba(7, 194, 228, 0.08);
+  animation: wo-bell 2.4s var(--wo-land) infinite;
+}
+@keyframes wo-bell {
+  0%,
+  70%,
+  100% {
+    transform: rotate(0);
+  }
+  75% {
+    transform: rotate(-12deg);
+  }
+  85% {
+    transform: rotate(10deg);
+  }
+  92% {
+    transform: rotate(-5deg);
+  }
+}
+
+.wo-enter {
+  animation: wo-enter 0.45s var(--wo-land) both;
+}
+@keyframes wo-enter {
+  from {
+    opacity: 0;
+    transform: translateX(24px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wea-onboarding .wo-halo::before,
+  .wea-onboarding .wo-pulse > i,
+  .wea-onboarding .wo-bell,
+  .wea-onboarding .wo-enter {
+    animation: none;
+  }
+}

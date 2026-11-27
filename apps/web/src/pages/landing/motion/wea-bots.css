@@ -1,0 +1,74 @@
+/* Wea animated bot faces (animated-bot.js), shared by the landing page and onboarding. */
+.wbot {
+  display: block;
+  overflow: visible;
+}
+.wbot-body,
+.wbot-face,
+.wbot-eyes,
+.wbot-happy,
+.wbot-smile {
+  transform-box: fill-box;
+}
+.wbot-body {
+  transform-origin: 50% 100%;
+  animation: wbot-breathe var(--wm-breath, 4.8s) var(--wm-gentle, cubic-bezier(0.4, 0, 0.2, 1))
+    infinite;
+  animation-delay: var(--wbot-delay, 0s);
+}
+@keyframes wbot-breathe {
+  0%,
+  100% {
+    transform: translateY(0) scale(1, 1);
+  }
+  50% {
+    transform: translateY(-3.5%) scale(1.012, 1.022);
+  }
+}
+.wbot-face {
+  transform: translate(var(--lx, 0), var(--ly, 0));
+  transition: transform 0.45s var(--wm-land, cubic-bezier(0.22, 1, 0.36, 1));
+}
+.wbot-eyes {
+  transform-origin: 50% 50%;
+  transition:
+    transform 0.07s ease-out,
+    opacity 0.12s;
+}
+.wbot.is-blink .wbot-eyes {
+  transform: scaleY(0.12);
+}
+.wbot-happy {
+  opacity: 0;
+  transform: translateY(2px);
+  transition:
+    opacity 0.16s,
+    transform 0.3s var(--wm-land, cubic-bezier(0.22, 1, 0.36, 1));
+}
+.wbot-smile {
+  transform-origin: 50% 0;
+  transition: transform 0.3s var(--wm-land, cubic-bezier(0.22, 1, 0.36, 1));
+}
+.wbot[data-mood="working"] .wbot-eyes {
+  transform: scaleY(0.62);
+}
+.wbot[data-mood="working"] .wbot-face {
+  --lx: -2.5px;
+  --ly: 2px;
+}
+.wbot[data-mood="waiting"] .wbot-face {
+  --lx: 3px;
+  --ly: -1px;
+}
+.wbot[data-mood="happy"] .wbot-eyes {
+  opacity: 0;
+}
+.wbot[data-mood="happy"] .wbot-happy {
+  opacity: 1;
+  transform: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  .wbot-body {
+    animation: none;
+  }
+}

@@ -10,23 +10,6 @@
   --wm-breath:4.8s;                      /* one Wea breath, used by bots and the breath line */
 }
 
-/* ---------------- bots ---------------- */
-.wbot{display:block;overflow:visible}
-.wbot-body,.wbot-face,.wbot-eyes,.wbot-happy,.wbot-smile{transform-box:fill-box}
-.wbot-body{transform-origin:50% 100%;animation:wbot-breathe var(--wm-breath) var(--wm-gentle) infinite;animation-delay:var(--wbot-delay,0s)}
-@keyframes wbot-breathe{0%,100%{transform:translateY(0) scale(1,1)}50%{transform:translateY(-3.5%) scale(1.012,1.022)}}
-.wbot-face{transform:translate(var(--lx,0),var(--ly,0));transition:transform .45s var(--wm-land)}
-.wbot-eyes{transform-origin:50% 50%;transition:transform .07s ease-out,opacity .12s}
-.wbot.is-blink .wbot-eyes{transform:scaleY(.12)}
-.wbot-happy{opacity:0;transform:translateY(2px);transition:opacity .16s,transform .3s var(--wm-land)}
-.wbot-smile{transform-origin:50% 0;transition:transform .3s var(--wm-land)}
-.wbot[data-mood="working"] .wbot-eyes{transform:scaleY(.62)}
-.wbot[data-mood="working"] .wbot-face{--lx:-2.5px;--ly:2px}
-.wbot[data-mood="waiting"] .wbot-face{--lx:3px;--ly:-1px}
-.wbot[data-mood="happy"] .wbot-eyes{opacity:0}
-.wbot[data-mood="happy"] .wbot-happy{opacity:1;transform:none}
-
-
 /* ---------------- hero entrance ---------------- */
 .wm-js [data-hero-in]{opacity:0;translate:0 14px}
 .wm-js.wm-hero-go [data-hero-in]{opacity:1;translate:none;transition:opacity .5s var(--wm-ui) var(--hd),translate .7s var(--wm-land) var(--hd),scale 1s var(--wm-land) var(--hd),transform .2s var(--wm-land),background .15s ease;--hd:calc(var(--i,0) * 80ms + 60ms)}

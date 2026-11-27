@@ -1,4 +1,6 @@
 // @vitest-environment jsdom
+
+import type { MessageBlock } from "@rakazo/contracts";
 import { deferred } from "@rakazo/core/test-async";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import type { ReactNode } from "react";
@@ -41,6 +43,8 @@ vi.mock("@lingui/react/macro", () => ({
 
 import { connectMcpOauth } from "../../../lib/integrations/mcp-connect";
 import { AppConnectCard, ChoiceCard, McpApprovalCard } from "./message-cards";
+// Loaded up front, so the lazy starter card renders within the first act.
+import "./starter-card";
 
 function popupFlow({ focused }: { focused: boolean }) {
   const channels: FakeChannel[] = [];
@@ -218,7 +222,16 @@ it("rejects OAuth callback failures and clears its timers", async () => {
 
 describe("the onboarding choice card", () => {
   const onBotChanged = vi.fn<() => Promise<void>>();
-  async function renderChoice() {
+  async function renderChoice(
+    block: Extract<MessageBlock, { kind: "choice" }> = {
+      kind: "choice",
+      question: "Which city?",
+      options: [
+        { id: "paris", letter: "A", label: "Paris" },
+        { id: "rome", letter: "B", label: "Rome" },
+      ],
+    },
+  ) {
     vi.stubGlobal("IS_REACT_ACT_ENVIRONMENT", true);
     calls.choose.mockReset();
     calls.dismissFocus.mockReset();
@@ -229,18 +242,7 @@ describe("the onboarding choice card", () => {
     await act(async () =>
       root.render(
         <QueryClientProvider client={new QueryClient()}>
-          <ChoiceCard
-            botId="bot"
-            block={{
-              kind: "choice",
-              question: "Which city?",
-              options: [
-                { id: "paris", letter: "A", label: "Paris" },
-                { id: "rome", letter: "B", label: "Rome" },
-              ],
-            }}
-            onBotChanged={onBotChanged}
-          />
+          <ChoiceCard botId="bot" block={block} onBotChanged={onBotChanged} />
         </QueryClientProvider>,
       ),
     );
@@ -312,6 +314,56 @@ describe("the onboarding choice card", () => {
       expect(calls.dismissFocus.mock.calls).toEqual([[{ botId: "bot" }]]);
       expect(onBotChanged).toHaveBeenCalledOnce();
       expect(card.host.textContent).toBe("");
+    } finally {
+      await card.cleanup();
+    }
+  });
+
+  const starter = (answerId?: string): Extract<MessageBlock, { kind: "choice" }> => ({
+    kind: "choice",
+    question: "Start with VA back office?",
+    subtitle: "Team of 5 bots · A shared brain plus SOPs",
+    options: [
+      { id: "starter:team:va-back-office", letter: "A", label: "Set it up" },
+      { id: "starter:browse", letter: "B", label: "Show me other templates" },
+      { id: "starter:chat", letter: "C", label: "Not now, just chat" },
+    ],
+    ...(answerId ? { answerId } : {}),
+  });
+
+  it("types first, then shows Chief's starter team with quick replies that answer once", async () => {
+    vi.useFakeTimers();
+    const card = await renderChoice(starter());
+    try {
+      expect(card.host.textContent).not.toContain("Set it up");
+      await act(async () => vi.advanceTimersByTime(900));
+      expect(card.host.textContent).toContain("AI brain keeper");
+      expect(card.host.textContent).toContain("Start with VA back office?");
+      expect(card.host.textContent).toContain(
+        "Builds and maintains the shared brain for a client and their VAs",
+      );
+      expect(card.host.querySelectorAll("li svg.wbot").length).toBeGreaterThan(1);
+      calls.choose.mockResolvedValue({ ok: true });
+      await act(async () => {
+        card.option("Set it up").click();
+        card.option("Not now, just chat").click();
+      });
+      expect(calls.choose.mock.calls).toEqual([
+        [{ botId: "bot", optionId: "starter:team:va-back-office" }],
+      ]);
+    } finally {
+      await card.cleanup();
+    }
+  });
+
+  it("shows an answered starter card at once with every reply settled", async () => {
+    const card = await renderChoice(starter("starter:chat"));
+    try {
+      const replies = ["Set it up", "Show me other templates", "Not now, just chat"].map(
+        card.option,
+      );
+      expect(replies.every((reply) => reply.disabled)).toBe(true);
+      expect(card.dismiss()).toBeNull();
     } finally {
       await card.cleanup();
     }

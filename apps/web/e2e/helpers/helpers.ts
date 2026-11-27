@@ -35,10 +35,12 @@ export async function rpc<T>(page: Page, procedure: string, body: unknown): Prom
 
 /** Skips Wea's onboarding questions, waiting for the save so a reload does not ask again. */
 export async function skipSignupSurvey(page: Page) {
-  await expect(page.getByRole("heading", { name: "Welcome to Wea" })).toBeVisible();
+  const hello = page.getByRole("heading", { name: "Hi, I'm Chief" });
+  await expect(hello).toBeVisible();
   const saved = page.waitForResponse("**/rpc/onboarding/signupSurvey");
   await page.getByRole("button", { name: "Skip for now", exact: true }).click();
   await saved;
+  await expect(hello).toHaveCount(0);
 }
 
 export async function completeOnboarding(page: Page, testInfo?: TestInfo) {
@@ -48,10 +50,16 @@ export async function completeOnboarding(page: Page, testInfo?: TestInfo) {
   const integrations = page.getByRole("heading", { name: "Server integrations", exact: true });
   const chief = page.getByText("Chief").first();
   // Every new account is asked Wea's onboarding questions; skipping keeps the usual first chat.
-  const survey = page.getByRole("heading", { name: "Welcome to Wea" });
+  const survey = page.getByRole("heading", { name: "Hi, I'm Chief" });
+  // Browsers that can still ask for notifications offer them before the first chat.
+  const notifications = page.getByRole("heading", { name: "Before you start" });
   await integrations.or(chief).or(survey).waitFor({ timeout: 20_000 });
   if (await survey.isVisible().catch(() => false)) {
     await skipSignupSurvey(page);
+    await integrations.or(chief).or(notifications).waitFor({ timeout: 20_000 });
+  }
+  if (await notifications.isVisible().catch(() => false)) {
+    await page.getByRole("button", { name: "Maybe later", exact: true }).click();
     await integrations.or(chief).waitFor({ timeout: 20_000 });
   }
   if ((await chief.isVisible().catch(() => false)) && page.url().includes("/app")) {
