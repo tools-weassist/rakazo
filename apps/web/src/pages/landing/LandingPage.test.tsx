@@ -51,6 +51,9 @@ it("renders Brandi's landing copy, real bot names, and the download links", asyn
   expect(host.textContent).toMatch(
     /Wea gives business owners, outsourced professionals or virtual assistants teams of AI\sbots/,
   );
+  expect(host.textContent).toContain(
+    "They help you set up and manage your AI brain, draft, schedule and follow up, then wait for your yes.",
+  );
   expect(host.textContent).toContain("Work with Wea like a calm, capable team");
   expect(host.textContent).toContain("Hire the team your work needs");
   expect(host.textContent).toContain("3 teams,");

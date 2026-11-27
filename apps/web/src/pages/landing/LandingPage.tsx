@@ -277,7 +277,8 @@ export function LandingPage() {
             <p className="wea-lead" data-hero-in="">
               <Trans>
                 Wea gives business owners, outsourced professionals or virtual assistants teams of
-                AI{"\u00A0"}bots. They draft, schedule and follow up, then wait for your yes.
+                AI{"\u00A0"}bots. They help you set up and manage your AI brain, draft, schedule and
+                follow up, then wait for your yes.
               </Trans>
             </p>
             <div className="wea-ctas" data-hero-in="">
