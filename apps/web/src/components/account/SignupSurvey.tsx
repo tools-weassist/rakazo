@@ -343,7 +343,7 @@ export function SignupSurvey({
           >
             <div className="relative">
               <span className="wo-peek" aria-hidden>
-                <WeaBotFace kind="chief" size={56} className="translate-y-2.5" />
+                <WeaBotFace kind="chief" size={56} />
               </span>
               <div className="wo-field">
                 <input
