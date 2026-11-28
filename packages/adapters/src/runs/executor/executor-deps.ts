@@ -72,7 +72,19 @@ export interface ExecutorDeps {
    * keyed hash that names an invited address, the same as the Members screen uses. Absent, the
    * tool is not offered.
    */
-  invitations?: { webOrigin: string; recipientKey: (email: string) => string };
+  invitations?: {
+    webOrigin: string;
+    recipientKey: (email: string) => string;
+    /**
+     * Emails an invite the same way the Members screen does; false when it did not go out.
+     * Absent when this server sends no email, and the owner shares the link by hand.
+     */
+    email?: (input: {
+      inviterId: string;
+      invitation: { email: string; organizationName: string; inviterName: string };
+      url: string;
+    }) => Promise<boolean>;
+  };
   phoneCallCooldownMinutes?: number;
   phoneCallRingSeconds?: number;
   /** Messaging surface; absent means zero identity queries and no chat prompts. */

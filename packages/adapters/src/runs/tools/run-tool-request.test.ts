@@ -654,3 +654,73 @@ describe("the user's computer after a routine or webhook joined the run", () => 
     await expect(prepareToolRequest(ctx as never, request)).resolves.toBeUndefined();
   });
 });
+
+describe("prepareToolRequest: invite_member", () => {
+  function inviteCall(options: { role?: string; pending?: boolean; replay?: boolean } = {}) {
+    const invitationFindFirst = vi.fn(async () => (options.pending ? { id: "inv-0" } : null));
+    const ctx = {
+      deps: {
+        prisma: {
+          space: { findUniqueOrThrow: async () => ({ organizationId: "org-1" }) },
+          member: { findFirst: async () => ({ role: options.role ?? "owner" }) },
+          invitation: { findFirst: invitationFindFirst },
+        },
+      },
+      run: { trigger: "user", userId: "user-1", spaceId: "space-1", threadId: "thread-1" },
+      bot: { id: "bot-1" },
+      source: {},
+      secrets: [],
+    };
+    const request = (args: Record<string, unknown>) =>
+      ({
+        name: "invite_member",
+        args,
+        executionId: JSON.stringify(["pi-tool", "main", "call-1"]),
+        nextApprovedTool: options.replay ? "invite_member" : undefined,
+      }) as ToolRequest;
+    return { ctx, request, invitationFindFirst };
+  }
+
+  it("stores the normalized address the card shows and the replay creates", async () => {
+    const { ctx, request } = inviteCall();
+    const prepared = request({ email: " Ana@Example.com ", replaces_pending_invite: true });
+    await expect(prepareToolRequest(ctx as never, prepared)).resolves.toBeUndefined();
+    expect(prepared.args).toEqual({ email: "ana@example.com" });
+    expect(prepared.effectRequest).toEqual({ email: "ana@example.com" });
+  });
+
+  it("marks the request when approving it cancels a pending invite", async () => {
+    const { ctx, request } = inviteCall({ pending: true });
+    const prepared = request({ email: "ana@example.com" });
+    await expect(prepareToolRequest(ctx as never, prepared)).resolves.toBeUndefined();
+    expect(prepared.effectRequest).toEqual({
+      email: "ana@example.com",
+      replaces_pending_invite: true,
+    });
+    const card = buildApprovalAskBlock("effect-1", "invite_member", prepared.args, []);
+    if (card.kind !== "ask") throw new Error("expected ask block");
+    expect(card.detail).toContain("Approving cancels that earlier link.");
+  });
+
+  it("refuses an invalid address before any card", async () => {
+    const { ctx, request } = inviteCall();
+    await expect(prepareToolRequest(ctx as never, request({ email: "nope" }))).resolves.toEqual({
+      error: "That is not a valid email address.",
+    });
+  });
+
+  it("refuses a member who may not invite before any card, and says nothing pending", async () => {
+    const { ctx, request, invitationFindFirst } = inviteCall({ role: "member", pending: true });
+    await expect(
+      prepareToolRequest(ctx as never, request({ email: "ana@example.com" })),
+    ).resolves.toEqual({ error: "Only the organization's owner or an admin can invite people." });
+    expect(invitationFindFirst).not.toHaveBeenCalled();
+  });
+
+  it("does not look again when the approved request replays", async () => {
+    const { ctx, request, invitationFindFirst } = inviteCall({ replay: true });
+    const replay = request({ email: "ana@example.com" });
+    await expect(prepareToolRequest(ctx as never, replay)).resolves.toBeUndefined();
+    expect(invitationFindFirst).not.toHaveBeenCalled();
+  });
+});

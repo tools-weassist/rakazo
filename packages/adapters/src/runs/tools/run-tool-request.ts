@@ -58,6 +58,7 @@ import {
 import { fleetPrepareDeps } from "../turn/run-model.js";
 import { refusal } from "../turn/tool-refusal.js";
 import { BUILTIN_AGENT_TOOL_NAMES, FLEET_WRITE_TOOL_NAMES_SET } from "./run-tool-selection.js";
+import { INVITE_ADMIN_ERROR, inviteEmail, pendingInvitation } from "./run-tools-fleet.js";
 import { holdSharedPageSave } from "./run-tools-pages.js";
 import { scheduleCreateRefusal } from "./run-tools-tasks.js";
 import { USER_COMPUTER_TOOLS } from "./run-tools-user-computer.js";
@@ -479,6 +480,15 @@ export async function prepareToolRequest(
     if (refused) return refused;
     args = request.args;
   }
+  if (name === "invite_member" && nextApprovedTool !== name) {
+    // The card warns before approval when creating this invite cancels a pending one.
+    const email = inviteEmail(args.email);
+    if (!email) return refusal("invite_email_invalid", "That is not a valid email address.");
+    const { manager, pending } = await pendingInvitation(deps.prisma, run, email);
+    // The create checks this again; refusing now keeps a card from asking for nothing.
+    if (!manager) return refusal("invite_admin_required", INVITE_ADMIN_ERROR);
+    args = pending ? { email, replaces_pending_invite: true } : { email };
+  }
   if (isFleetApprovalTool(name) && nextApprovedTool !== name) {
     // Resolve names, members, model and schedule now; an approved replay runs the stored
     // request above and never resolves them again.
@@ -622,6 +632,7 @@ export async function prepareToolRequest(
     name === "update_bot" ||
     name === "schedule_create" ||
     name === "schedule_update" ||
+    name === "invite_member" ||
     isFleetApprovalTool(name)
   )
     request.effectRequest = args;

@@ -10,7 +10,7 @@ export function invitationRecipientKey(deps: RouterDeps) {
 
 /** Whether the email went out; when it did not, the inviter shares the link by hand. */
 export async function sendInvitationEmail(
-  deps: RouterDeps,
+  deps: Pick<RouterDeps, "prisma" | "email" | "onEmailError">,
   inviterId: string,
   to: string,
   build: (locale: string) => Promise<TransactionalEmail>,

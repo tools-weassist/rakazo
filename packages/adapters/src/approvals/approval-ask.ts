@@ -337,7 +337,9 @@ function formatApprovalDetail(
     );
   }
   if (toolName === "invite_member") {
-    lines.push("Creates an invite link for you to send. No email is sent.");
+    lines.push("Creates an invite link. It is also emailed when this server sends email.");
+    if (args.replaces_pending_invite === true)
+      lines.push("This address already has a pending invite. Approving cancels that earlier link.");
   }
   // A fetch carries data in its path and query, so the card shows the whole URL.
   const shown = (values: Record<string, unknown>) =>
@@ -385,7 +387,8 @@ function formatApprovalDetail(
     }
     lines.push(...later);
   } else {
-    const { first, last } = shown(args);
+    // invite_member's pending flag is said in words above, not listed as an argument.
+    const { first, last } = shown(toolName === "invite_member" ? { email: args.email } : args);
     lines.push(...first, ...last);
   }
   if (lines.length === 0) return undefined;

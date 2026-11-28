@@ -87,10 +87,18 @@ describe("create_space", () => {
   });
 });
 
-function fakeInviteRun(options: { pending?: boolean; invitations?: boolean } = {}) {
+function fakeInviteRun(
+  options: {
+    pending?: boolean;
+    invitations?: boolean;
+    role?: string;
+    email?: (input: unknown) => Promise<boolean>;
+  } = {},
+) {
   const publishOrganizationChange = vi.fn(async () => undefined);
   const prisma = {
     space: { findUniqueOrThrow: vi.fn(async () => ({ organizationId: "org-1" })) },
+    member: { findFirst: vi.fn(async () => ({ role: options.role ?? "owner" })) },
     invitation: {
       findFirst: vi.fn(async () => (options.pending ? { id: "inv-0" } : null)),
     },
@@ -105,6 +113,7 @@ function fakeInviteRun(options: { pending?: boolean; invitations?: boolean } = {
             invitations: {
               webOrigin: "https://app.example.test",
               recipientKey: (email: string) => `key:${email}`,
+              ...(options.email ? { email: options.email } : {}),
             },
           }),
     },
@@ -127,16 +136,28 @@ function fakeInviteRun(options: { pending?: boolean; invitations?: boolean } = {
         finish: async (result: unknown) => result,
       } as never,
     );
-  return { publishOrganizationChange, call };
+  return { publishOrganizationChange, call, prisma };
+}
+
+function sentInvitation(created: boolean, send: boolean, id = "inv-1") {
+  return async (_prisma: unknown, input: { email: string }) => ({
+    id,
+    email: input.email,
+    organizationName: "Acme",
+    inviterName: "Owner",
+    created,
+    send,
+  });
 }
 
 describe("invite_member", () => {
-  it("creates the invite without email, records the bot as actor and returns the link", async () => {
+  it("creates the invite without email when this server sends none, and returns the link", async () => {
     const { publishOrganizationChange, call } = fakeInviteRun();
     await expect(call({ email: " Ana@Example.com " })).resolves.toEqual({
       ok: true,
       email: "ana@example.com",
       url: "https://app.example.test/join/inv-1",
+      emailed: false,
       note: "No email was sent. Give this link to the person you invited.",
     });
     expect(createOrganizationInvitation).toHaveBeenCalledExactlyOnceWith(
@@ -159,6 +180,54 @@ describe("invite_member", () => {
     expect(publishOrganizationChange).toHaveBeenCalledExactlyOnceWith("org-1");
   });
 
+  it("emails the invite through the Members screen's path when this server sends email", async () => {
+    const email = vi.fn(async (_input: unknown) => true);
+    vi.mocked(createOrganizationInvitation).mockImplementationOnce(sentInvitation(true, true));
+    const { call } = fakeInviteRun({ email });
+    await expect(call({ email: "ana@example.com" })).resolves.toMatchObject({
+      ok: true,
+      url: "https://app.example.test/join/inv-1",
+      emailed: true,
+      note: "The invite was emailed to ana@example.com. You can also send them this link.",
+    });
+    expect(createOrganizationInvitation).toHaveBeenCalledWith(
+      expect.anything(),
+      expect.objectContaining({ sendsEmail: true }),
+    );
+    expect(email).toHaveBeenCalledExactlyOnceWith({
+      inviterId: "user-1",
+      invitation: expect.objectContaining({ email: "ana@example.com", organizationName: "Acme" }),
+      url: "https://app.example.test/join/inv-1",
+    });
+  });
+
+  it("returns the link without emailing once the address hit its daily limit", async () => {
+    const email = vi.fn(async (_input: unknown) => true);
+    vi.mocked(createOrganizationInvitation).mockImplementationOnce(
+      sentInvitation(false, false, "inv-0"),
+    );
+    const { call } = fakeInviteRun({ email, pending: true });
+    await expect(call({ email: "ana@example.com" })).resolves.toEqual({
+      ok: true,
+      email: "ana@example.com",
+      url: "https://app.example.test/join/inv-0",
+      emailed: false,
+      note: "No email was sent. Give this link to the person you invited.",
+    });
+    expect(email).not.toHaveBeenCalled();
+    expect(recordAuditEvent).not.toHaveBeenCalled();
+  });
+
+  it("still returns the link when the email did not go out", async () => {
+    vi.mocked(createOrganizationInvitation).mockImplementationOnce(sentInvitation(true, true));
+    const { call } = fakeInviteRun({ email: async () => false });
+    await expect(call({ email: "ana@example.com" })).resolves.toMatchObject({
+      ok: true,
+      url: "https://app.example.test/join/inv-1",
+      emailed: false,
+    });
+  });
+
   it.each([[""], ["not-an-email"], ["a@"], [undefined]])(
     "refuses %j and creates nothing",
     async (email) => {
@@ -172,13 +241,18 @@ describe("invite_member", () => {
   );
 
   it("tells a member who is not an owner or admin that they cannot invite", async () => {
-    const { publishOrganizationChange, call } = fakeInviteRun();
+    const { publishOrganizationChange, call, prisma } = fakeInviteRun({
+      role: "member",
+      pending: true,
+    });
     vi.mocked(createOrganizationInvitation).mockRejectedValueOnce(
       new OrganizationAdminRequiredError(),
     );
     await expect(call({ email: "ana@example.com" })).resolves.toEqual({
       error: "Only the organization's owner or an admin can invite people.",
     });
+    // A member never learns whether an invite is pending.
+    expect(prisma.invitation.findFirst).not.toHaveBeenCalled();
     expect(recordAuditEvent).not.toHaveBeenCalled();
     expect(publishOrganizationChange).not.toHaveBeenCalled();
   });
@@ -200,6 +274,7 @@ describe("invite_member", () => {
       ok: true,
       email: "ana@example.com",
       url: "https://app.example.test/join/inv-1",
+      emailed: false,
       note: "No email was sent. Give this link to the person you invited. The earlier invite link for this address no longer works.",
       replacedPending: true,
     });
