@@ -9154,6 +9154,10 @@ msgstr "Left"
 msgid "Let bots use this computer"
 msgstr "Let bots use this computer"
 
+#: apps/web/src/components/account/SignupSurvey.tsx
+msgid "Let's go!"
+msgstr "Let's go!"
+
 #: apps/mobile/app/(settings)/general.tsx
 #: apps/web/src/pages/settings/AccountSettingsOverlay.tsx
 #: apps/web/src/pages/shell/use-palette-actions.ts
