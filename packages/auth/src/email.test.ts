@@ -42,6 +42,8 @@ describe("account email templates", () => {
     expect(message.to).toBe("user@example.test");
     expect(message.text).toContain(url);
     expect(message.html).toContain(`href="${url.replaceAll("&", "&amp;")}"`);
+    expect(message.html).toMatch(/>\s*Wea\s*</);
+    expect(message.html).not.toMatch(/>\s*rakazo\s*</i);
   });
 
   it.each([signInCodeEmail, accountDeletionEmail])(
