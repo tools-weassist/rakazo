@@ -249,6 +249,27 @@ describe("buildApprovalAskBlock", () => {
     if (block.kind !== "ask") throw new Error("expected ask block");
     expect(block.detail).toContain("stay separate from other spaces");
   });
+
+  it("asks to create an invite with only create or cancel, and says no email is sent", () => {
+    const block = buildApprovalAskBlock(
+      "effect-1",
+      "invite_member",
+      { email: "ana@example.com" },
+      [],
+    );
+
+    expect(block).toMatchObject({
+      kind: "ask",
+      text: "Invite ana@example.com to your organization?",
+      actions: [
+        { id: "allow", label: "Create invite", outcome: "created" },
+        { id: "deny", label: "Cancel", outcome: "cancelled" },
+      ],
+    });
+    if (block.kind !== "ask") throw new Error("expected ask block");
+    expect(block.actions?.map((action) => action.id)).not.toContain("always");
+    expect(block.detail).toContain("Creates an invite link for you to send. No email is sent.");
+  });
 });
 
 it("shows the instruction change as a line diff with Apply and Dismiss", () => {

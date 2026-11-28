@@ -158,6 +158,8 @@ export function selectBuiltinToolsForRun(options: {
   emailClaimable?: boolean;
   /** The inbox may be read and this server can send email. */
   emailSend?: boolean;
+  /** This server can make organization invite links (see ExecutorDeps.invitations). */
+  invitesEnabled?: boolean;
 }) {
   const disabled = disabledBuiltinToolSet(options.disabledBuiltinTools);
   const ownerStartedRun = isOwnerStartedRun(
@@ -214,6 +216,9 @@ export function selectBuiltinToolsForRun(options: {
       (emailMailbox || !EMAIL_INBOX_TOOL_NAMES.has(tool.name)) &&
       ((emailMailbox && options.emailSend) || tool.name !== "send_email") &&
       (emailClaimOffered || tool.name !== "claim_email_address") &&
+      // Only the owner's own chat: text someone else wrote must not pick who joins the organization.
+      ((options.invitesEnabled && ownerStartedRun && !options.groupId) ||
+        tool.name !== "invite_member") &&
       (options.userComputer || tool.name !== "user_computer_shell") &&
       (options.userComputer || options.userComputerScreen || tool.name !== "user_computer_list") &&
       (options.userComputerScreen || !USER_COMPUTER_SCREEN_TOOLS.has(tool.name)) &&

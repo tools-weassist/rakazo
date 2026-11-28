@@ -1,5 +1,9 @@
 import { describe, expect, it } from "vitest";
-import { BUILTIN_AGENT_TOOL_NAMES, unavailableBuiltinToolReasons } from "./run-tool-selection.js";
+import {
+  BUILTIN_AGENT_TOOL_NAMES,
+  selectBuiltinToolsForRun,
+  unavailableBuiltinToolReasons,
+} from "./run-tool-selection.js";
 
 const none: { name: string }[] = [];
 
@@ -79,5 +83,30 @@ describe("unavailableBuiltinToolReasons", () => {
 
     expect(reasons).not.toHaveProperty("not_a_tool");
     for (const name of Object.keys(reasons)) expect(BUILTIN_AGENT_TOOL_NAMES.has(name)).toBe(true);
+  });
+});
+
+describe("invite_member", () => {
+  const offered = (options: {
+    invitesEnabled?: boolean;
+    trigger?: string;
+    groupId?: string | null;
+  }) =>
+    selectBuiltinToolsForRun({
+      graphicalToolsAllowed: false,
+      groupId: options.groupId ?? null,
+      trigger: options.trigger ?? "user",
+      semanticMemoryEnabled: false,
+      messagingChannelRun: false,
+      invitesEnabled: options.invitesEnabled,
+    } as never)
+      .map((tool) => tool.name)
+      .includes("invite_member");
+
+  it("is offered only in the owner's own chat on a server that can make invite links", () => {
+    expect(offered({ invitesEnabled: true })).toBe(true);
+    expect(offered({})).toBe(false);
+    expect(offered({ invitesEnabled: true, trigger: "webhook" })).toBe(false);
+    expect(offered({ invitesEnabled: true, groupId: "g" })).toBe(false);
   });
 });

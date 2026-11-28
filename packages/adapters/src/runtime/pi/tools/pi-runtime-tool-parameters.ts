@@ -175,6 +175,9 @@ function builtinParameters(tool: ConnectorTool) {
   if (tool.name === "create_space") {
     return Type.Object({ name: Type.String({ minLength: 1, maxLength: 60 }) });
   }
+  if (tool.name === "invite_member") {
+    return Type.Object({ email: Type.String({ minLength: 3, maxLength: 254 }) });
+  }
   if (tool.name === "archive_bot") {
     return Type.Object({
       confirm_name: Type.String(),

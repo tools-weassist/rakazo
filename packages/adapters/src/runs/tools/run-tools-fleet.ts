@@ -1,11 +1,18 @@
 import { BotSettingsValuesSchema } from "@rakazo/contracts";
 import {
+  AlreadyOrganizationMemberError,
   appendEventInTransaction,
   commitBotUpdate,
+  createOrganizationInvitation,
   createSpaceForMember,
   InstructionConflictError,
   InvalidSpaceNameError,
+  IsolationError,
   isRecordNotFound,
+  normalizeEmail,
+  OrganizationAdminRequiredError,
+  OrganizationInvitationLimitError,
+  OrganizationInvitationRateError,
   recordAuditEvent,
   runAsSystem,
   SpaceLimitError,
@@ -13,6 +20,7 @@ import {
   writeBotInstructions,
 } from "@rakazo/db";
 import { bestEffort, getLogger } from "@rakazo/logging";
+import { z } from "zod";
 import { uncertainEffectResult } from "../../approvals/approval-effect.js";
 import { archiveSpawnedBot, spawnBot } from "../../bots/child-bots.js";
 import {
@@ -141,6 +149,9 @@ async function commitOwnInstructions(
   return { ok: true };
 }
 
+/** The address rule rpc.organizations.invitations.create accepts. */
+const INVITE_EMAIL = z.email().max(254);
+
 /** This bot's own settings, Spaces and the bots this bot manages. */
 export const fleetTools: ToolHandlers = {
   async create_space(ctx, call) {
@@ -174,6 +185,75 @@ export const fleetTools: ToolHandlers = {
       if (error instanceof SpaceLimitError || error instanceof InvalidSpaceNameError) {
         return call.finish({ error: error.message });
       }
+      throw error;
+    }
+  },
+  async invite_member(ctx, call) {
+    const { deps, run, bot } = ctx;
+    const raw = String(call.args.email ?? "").trim();
+    // The same check as the Members screen's invite: rpc.organizations.invitations.create.
+    if (!INVITE_EMAIL.safeParse(raw).success)
+      return call.finish({ error: "That is not a valid email address." });
+    if (!deps.invitations) return call.finish({ error: "Invites are not available here." });
+    const { webOrigin, recipientKey } = deps.invitations;
+    const email = normalizeEmail(raw);
+    try {
+      // Members and invitations sit outside the run's tenant, as for the Members screen.
+      const result = await runAsSystem("invite someone to an organization for a bot", async () => {
+        const { organizationId } = await deps.prisma.space.findUniqueOrThrow({
+          where: { id: run.spaceId },
+          select: { organizationId: true },
+        });
+        const pending = await deps.prisma.invitation.findFirst({
+          where: { organizationId, email, status: "pending", expiresAt: { gt: new Date() } },
+          select: { id: true },
+        });
+        // Owner and admins only, checked in the same transaction that creates the invite.
+        const invitation = await createOrganizationInvitation(deps.prisma, {
+          organizationId,
+          userId: run.userId,
+          email,
+          sendsEmail: false,
+          recipientKey,
+        });
+        return { organizationId, invitation, replacedPending: Boolean(pending) };
+      });
+      const { organizationId, invitation, replacedPending } = result;
+      if (invitation.created) {
+        await recordAuditEvent({
+          action: "organization.invitation.created",
+          actor: { type: "bot", id: bot.id, label: bot.name },
+          organizationId,
+          target: { type: "invitation", id: invitation.id },
+          runId: run.id,
+          threadId: run.threadId,
+        });
+        await bestEffort(
+          "announce an invitation a bot created",
+          deps.events.publishOrganizationChange?.(organizationId),
+        );
+      }
+      return call.finish({
+        ok: true,
+        email: invitation.email,
+        url: new URL(`/join/${invitation.id}`, webOrigin).toString(),
+        note: replacedPending
+          ? "No email was sent. Give this link to the person you invited. The earlier invite link for this address no longer works."
+          : "No email was sent. Give this link to the person you invited.",
+        ...(replacedPending ? { replacedPending: true } : {}),
+      });
+    } catch (error) {
+      if (error instanceof OrganizationAdminRequiredError || error instanceof IsolationError)
+        return call.finish({
+          error: "Only the organization's owner or an admin can invite people.",
+        });
+      if (error instanceof AlreadyOrganizationMemberError)
+        return call.finish({ error: `${email} is already a member of this organization.` });
+      if (
+        error instanceof OrganizationInvitationLimitError ||
+        error instanceof OrganizationInvitationRateError
+      )
+        return call.finish({ error: error.message });
       throw error;
     }
   },

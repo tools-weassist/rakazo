@@ -1,12 +1,11 @@
-import { createHmac } from "node:crypto";
 import type { TransactionalEmail } from "@rakazo/adapter-kit";
+import { invitationLinks } from "@rakazo/adapters";
 import { emailLocale } from "@rakazo/auth";
 import type { RouterDeps } from "../router.js";
 
 /** Names an invited address in the security log, so its daily limit outlives any deletion. */
 export function invitationRecipientKey(deps: RouterDeps) {
-  return (email: string) =>
-    createHmac("sha256", deps.env.invitationRecipientKey).update(email).digest("hex");
+  return invitationLinks(deps.env.invitationRecipientKey, deps.env.webOrigin).recipientKey;
 }
 
 /** Whether the email went out; when it did not, the inviter shares the link by hand. */

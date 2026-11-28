@@ -67,6 +67,12 @@ export interface ExecutorDeps {
   inboundEmailDomain?: string;
   /** Sends a bot's email from its own address; absent when this server sends no email. */
   email?: TransactionalEmailProvider;
+  /**
+   * What invite_member needs to make organization invite links: the web app's origin and the
+   * keyed hash that names an invited address, the same as the Members screen uses. Absent, the
+   * tool is not offered.
+   */
+  invitations?: { webOrigin: string; recipientKey: (email: string) => string };
   phoneCallCooldownMinutes?: number;
   phoneCallRingSeconds?: number;
   /** Messaging surface; absent means zero identity queries and no chat prompts. */

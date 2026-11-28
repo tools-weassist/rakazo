@@ -1335,3 +1335,8 @@ describe("unattendedApprovalExpireAfterMs", () => {
     }
   });
 });
+
+it("always asks the owner before inviting someone to the organization", () => {
+  expect(toolRequiresExplicitApproval("invite_member")).toBe(true);
+  expect(toolRequiresApproval("invite_member", false)).toBe(true);
+});

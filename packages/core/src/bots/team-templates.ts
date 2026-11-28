@@ -317,7 +317,7 @@ export const TEAM_TEMPLATES: readonly TeamTemplate[] = [
   },
   {
     id: "client-delegation-team",
-    version: 2,
+    version: 3,
     name: "Client delegation team",
     summary: "Helps a business owner hand work to a VA with clear briefs and real SOPs",
     sample: [
@@ -399,7 +399,7 @@ export const TEAM_TEMPLATES: readonly TeamTemplate[] = [
       },
       {
         name: "The VA",
-        detail: "The VA's name, start date, time zone, hours and skills.",
+        detail: "The VA's name, email address, start date, time zone, hours and skills.",
       },
       {
         name: "Approval limits",
@@ -418,7 +418,7 @@ export const TEAM_TEMPLATES: readonly TeamTemplate[] = [
   },
   {
     id: "client-va-pair",
-    version: 2,
+    version: 3,
     name: "Client and VA pair team",
     summary: "One shared brain, SOPs and priority list for a client and their VA",
     sample: [
@@ -495,7 +495,8 @@ export const TEAM_TEMPLATES: readonly TeamTemplate[] = [
     setupInputs: [
       {
         name: "Who's who",
-        detail: "The client's and VA's names, the business, and which of them is setting this up.",
+        detail:
+          "The client's and VA's names, the VA's email address, the business, and which of them is setting this up.",
       },
       {
         name: "Time zones and shift",
@@ -904,7 +905,7 @@ export const TEAM_TEMPLATES: readonly TeamTemplate[] = [
   },
   {
     id: "va-agency-team",
-    version: 2,
+    version: 3,
     name: "VA agency team",
     summary:
       "For agency owners running several VAs and clients: coverage, SOPs, reports and billing",
@@ -992,7 +993,7 @@ export const TEAM_TEMPLATES: readonly TeamTemplate[] = [
       {
         name: "VA roster",
         detail:
-          "Each VA's name, skills, shift, time zone and the most hours a week they should work.",
+          "Each VA's name, email address, skills, shift, time zone and the most hours a week they should work.",
       },
       {
         name: "Risk rules",

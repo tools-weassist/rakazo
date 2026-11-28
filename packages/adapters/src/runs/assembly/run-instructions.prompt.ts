@@ -457,6 +457,11 @@ export function userTurnInstructions(parts: {
       "create_space",
       "create_space proposes a new privacy boundary inside the current organization. Use it when the user asks to create a space or separate data between teams or projects. Never claim the space exists before the tool succeeds.",
     ),
+    offeredBuiltinClause(
+      parts.disabledBuiltinTools,
+      "invite_member",
+      "invite_member invites someone to the user's organization by email; the user approves each invite on a card first. The app sends no email, so give the user the returned link to send. Never claim the invite exists before the tool succeeds.",
+    ),
     spawnBotClause(parts.disabledBuiltinTools),
     offeredBuiltinClause(
       parts.disabledBuiltinTools,

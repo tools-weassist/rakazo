@@ -44,6 +44,8 @@ import {
   homeStorageSweeper,
   InMemoryJobQueue,
   installedMessaging,
+  invitationLinks,
+  invitationRecipientSecret,
   isMessagingSurfaceEnabled,
   MeetingCalendarService,
   MeetingService,
@@ -104,6 +106,17 @@ import { MarkdownMemoryStore } from "@rakazo/memory";
 
 const logger = await createRootLogger(SERVICE_NAMES.worker);
 
+/**
+ * invite_member links, keyed as the API keys them. Without the auth secret and web origin the
+ * worker offers no invites rather than make links the API cannot match.
+ */
+function workerInvitationLinks() {
+  // Untrimmed, as resolveAuthSecret hands it to the API.
+  const authSecret = process.env.BETTER_AUTH_SECRET;
+  const webOrigin = process.env.WEB_ORIGIN?.trim();
+  if (!authSecret?.trim() || !webOrigin) return undefined;
+  return invitationLinks(invitationRecipientSecret(authSecret), webOrigin);
+}
 async function main() {
   const stopStallWatch = watchEventLoopStalls("worker.event_loop_stalled");
   const databaseUrl = process.env.DATABASE_URL;
@@ -317,6 +330,7 @@ async function main() {
     onTicketChange: ticketChanges,
     // Bots use a separate sending connection from account email.
     email,
+    invitations: workerInvitationLinks(),
     lifecycleEmail,
     messaging,
     isMessagingInstallationActive: messagingInstallations

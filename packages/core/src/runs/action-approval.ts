@@ -96,6 +96,8 @@ const APPROVAL_REQUIRED_BUILTIN_TOOLS = new Set([
 const EXPLICIT_APPROVAL_BUILTIN_TOOLS = new Set([
   // Permanent: the owner sees the exact address before it is theirs for good.
   "claim_email_address",
+  // Creates an invite link to the organization; the owner checks the address every time.
+  "invite_member",
   "respond_agent_connection",
   "set_child_instructions",
 ]);

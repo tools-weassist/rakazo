@@ -211,6 +211,7 @@ export * from "./runs/assembly/current-time.prompt.js";
 export * from "./runs/assembly/run-runtime.js";
 export { createRunTrustLoaders } from "./runs/assembly/run-trust.js";
 export * from "./runs/executor/executor.js";
+export * from "./runs/executor/invitation-links.js";
 export * from "./runs/labs-env.js";
 export { notifyMemberMessage } from "./runs/lifecycle/run-notifications.js";
 export { loadRunOrigin } from "./runs/lifecycle/run-origin.js";
