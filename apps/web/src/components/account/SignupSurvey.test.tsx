@@ -73,7 +73,7 @@ async function type(input: HTMLInputElement, value: string) {
 }
 /** From Chief's hello past the name screen to the first question. */
 async function toQuestions() {
-  await click("Continue");
+  await click("Let's go!");
   await click("Continue");
 }
 
@@ -82,7 +82,7 @@ it("asks one question per screen by name and sends the retained answers once", a
   expect(heading()).toBe("Hi, I'm Chief");
   expect(container.textContent).not.toContain("Rakazo");
   expect(container.textContent).not.toContain("WeAssist");
-  await click("Continue");
+  await click("Let's go!");
   expect(
     container.querySelector<HTMLInputElement>('input[aria-label="Your first name"]')?.value,
   ).toBe("Eric");

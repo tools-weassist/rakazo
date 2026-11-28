@@ -6,7 +6,7 @@ import {
   SIGNUP_SURVEY_ROLE_DETAILS,
 } from "@rakazo/contracts";
 import { bestEffort } from "@rakazo/logging/best-effort";
-import { ArrowDown, ArrowRight, Check, ChevronLeft } from "lucide-react";
+import { ArrowRight, Check, ChevronLeft } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { rpc } from "../../lib/query/rpc";
 import { WeaBotFace, weaBotLook } from "../wea-bot/wea-bot";
@@ -305,16 +305,12 @@ export function SignupSurvey({
               </Trans>
             </p>
           </div>
-          <div className="mt-8 flex flex-col items-center">
-            <button
-              type="button"
-              className="wo-go"
-              aria-label={t`Continue`}
-              onClick={() => advance()}
-            >
-              <ArrowDown size={22} aria-hidden />
-            </button>
-            <button type="button" className="wo-link" onClick={() => submit({})}>
+          <button type="button" className="wo-start mx-auto" onClick={() => advance()}>
+            <Trans>Let's go!</Trans>
+            <ArrowRight size={18} aria-hidden />
+          </button>
+          <div className="mt-20 flex flex-col items-center">
+            <button type="button" className="wo-link wo-skip" onClick={() => submit({})}>
               <Trans>Skip for now</Trans>
             </button>
           </div>

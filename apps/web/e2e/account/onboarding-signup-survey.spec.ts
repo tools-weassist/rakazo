@@ -16,7 +16,7 @@ test("new users answer Wea's onboarding questions before their first chat", asyn
   await expect(page.getByRole("heading", { name: "Hi, I'm Chief" })).toBeVisible();
   await expect(page).toHaveURL(/\/onboarding\/survey$/);
   await captureScreenshot(page, testInfo, "01-signup-survey");
-  await page.getByRole("button", { name: "Continue", exact: true }).click();
+  await page.getByRole("button", { name: "Let's go!", exact: true }).click();
   // The name only personalizes the questions; it comes from the account and is never saved.
   await expect(page.getByLabel("Your first name")).toHaveValue("Survey");
   await page.getByRole("button", { name: "Continue", exact: true }).click();
