@@ -18,6 +18,8 @@ import {
   userComputerAppName,
 } from "../computers/host/user-computer-tools.js";
 
+/** Cards whose title names the action itself, so it reads as a question without "Allow". */
+const NAMED_ACTION_TOOLS = new Set(["create_space", "invite_member"]);
 export const MAX_APPROVAL_SUMMARY_LENGTH = 500;
 export const MAX_APPROVAL_DETAIL_LENGTH = 4_000;
 /** Longer fetch URLs are refused, so an approval card always shows the whole URL it sends. */
@@ -223,7 +225,10 @@ export function buildApprovalAskBlock(
     kind: "ask",
     approvalEffectId: effectId,
     text: truncate(
-      redactSecrets(toolName === "create_space" ? `${summary}?` : `Allow ${summary}?`, secrets),
+      redactSecrets(
+        NAMED_ACTION_TOOLS.has(toolName) ? `${summary}?` : `Allow ${summary}?`,
+        secrets,
+      ),
       MAX_APPROVAL_SUMMARY_LENGTH,
     ),
     detail: safeDetail ? truncate(safeDetail, MAX_APPROVAL_DETAIL_LENGTH) : undefined,
@@ -235,19 +240,24 @@ export function buildApprovalAskBlock(
             { id: "allow", label: "Create space", outcome: "created" },
             { id: "deny", label: "Cancel", outcome: "cancelled" },
           ]
-        : onceOnly
+        : toolName === "invite_member"
           ? [
-              { id: "allow", label: "Allow once" },
-              { id: "deny", label: "Deny" },
+              { id: "allow", label: "Create invite", outcome: "created" },
+              { id: "deny", label: "Cancel", outcome: "cancelled" },
             ]
-          : [
-              { id: "allow", label: "Allow once" },
-              {
-                id: "always",
-                label: fetchSite ? `Always allow ${fetchSite}` : "Always allow this tool",
-              },
-              { id: "deny", label: "Deny" },
-            ],
+          : onceOnly
+            ? [
+                { id: "allow", label: "Allow once" },
+                { id: "deny", label: "Deny" },
+              ]
+            : [
+                { id: "allow", label: "Allow once" },
+                {
+                  id: "always",
+                  label: fetchSite ? `Always allow ${fetchSite}` : "Always allow this tool",
+                },
+                { id: "deny", label: "Deny" },
+              ],
   };
 }
 
@@ -302,6 +312,9 @@ function describeApprovalAction(
     const name = args.name ? String(args.name) : "Untitled";
     return `Create space “${name}”`;
   }
+  if (toolName === "invite_member") {
+    return `Invite ${String(args.email ?? "")} to your organization`;
+  }
   const target = webFetchSite(toolName, args) ?? pickScopeLabel(args);
   const action = readableToolName(redactSecrets(toolName, secrets));
   return target ? `${action} → ${target}` : action;
@@ -322,6 +335,15 @@ function formatApprovalDetail(
     lines.push(
       "Bots, groups, chats, files, memory, and integrations in this space stay separate from other spaces.",
     );
+  }
+  if (toolName === "invite_member") {
+    lines.push(
+      `Sends ${String(args.email ?? "")} an invite by email when email is on. Otherwise you get a link to send.`,
+    );
+    if (args.replaces_pending_invite === true)
+      lines.push(
+        "This address already has a pending invite. Approving cancels the earlier invite link for this address.",
+      );
   }
   // A fetch carries data in its path and query, so the card shows the whole URL.
   const shown = (values: Record<string, unknown>) =>
@@ -369,7 +391,8 @@ function formatApprovalDetail(
     }
     lines.push(...later);
   } else {
-    const { first, last } = shown(args);
+    // invite_member's pending flag is said in words above, not listed as an argument.
+    const { first, last } = shown(toolName === "invite_member" ? { email: args.email } : args);
     lines.push(...first, ...last);
   }
   if (lines.length === 0) return undefined;

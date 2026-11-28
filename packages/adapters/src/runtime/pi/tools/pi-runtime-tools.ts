@@ -273,6 +273,7 @@ export function describeToolActivity(
   if (toolName === "computer_act") return "Operating the computer";
   if (toolName === "run_subagent") return `Delegating to helper: ${detail(record.name)}`;
   if (toolName === "create_space") return `Creating space: ${detail(record.name)}`;
+  if (toolName === "invite_member") return `Inviting: ${detail(record.email)}`;
   if (toolName === "list_fleet") return "Checking your bots";
   if (toolName === "create_group") return `Creating group: ${detail(record.name)}`;
   if (toolName === "update_group")
@@ -502,6 +503,9 @@ function toAgentTool(
       }
       if (tool.name === "create_space") {
         return { name: String(raw.name ?? "") };
+      }
+      if (tool.name === "invite_member") {
+        return { email: String(raw.email ?? "").trim() };
       }
       if (tool.name === "archive_bot") {
         return {

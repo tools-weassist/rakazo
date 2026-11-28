@@ -151,6 +151,23 @@ export const fleetTools: ConnectorTool[] = [
     },
   },
   {
+    name: "invite_member",
+    description:
+      "Invite a person to the user's organization by email address, for example the VA the user just named. Nothing is created until the user approves the invite on a card. The invite is emailed when this server sends email; otherwise give the user the returned link to send them.",
+    inputSchema: {
+      type: "object",
+      properties: {
+        email: {
+          type: "string",
+          format: "email",
+          maxLength: 254,
+          description: "The person's email address, exactly as the user gave it.",
+        },
+      },
+      required: ["email"],
+    },
+  },
+  {
     name: "spawn_bot",
     description:
       "Create a full, regular bot — the same kind the user creates from the + button. It gets its own thread, computer, and memory, and appears as a peer in the bot list. Do not also call run_subagent. To give the new bot more than instructions (skills, routines, memories, apps to connect) or a task the user wants started, put it in prompt; the bot sets itself up from it. Otherwise creating the bot is the whole action.",

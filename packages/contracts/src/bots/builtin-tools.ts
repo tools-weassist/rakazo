@@ -104,6 +104,7 @@ export const BUILTIN_TOOL_NAMES = [
   "skill_delete",
   "run_subagent",
   "create_space",
+  "invite_member",
   "spawn_bot",
   "update_bot",
   ...FLEET_TOOL_NAMES,

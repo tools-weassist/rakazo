@@ -162,3 +162,15 @@ describe("team templates", () => {
     expect(withTeamNote("", "finance-team", note)).toBe(note);
   });
 });
+
+describe("VA invite setup input", () => {
+  it.each(["client-delegation-team", "client-va-pair", "va-agency-team"])(
+    "%s asks for the VA's email address in plain Wea copy",
+    (id) => {
+      const details = findTeamTemplate(id)?.setupInputs.map((input) => input.detail) ?? [];
+      const detail = details.find((text) => /email address/.test(text)) ?? "";
+      expect(detail, id).toMatch(/name.*email address/);
+      expect(detail, id).not.toMatch(/[\u2013\u2014]| - |!|WeAssist/);
+    },
+  );
+});

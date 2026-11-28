@@ -1,5 +1,4 @@
 import { AsyncLocalStorage } from "node:async_hooks";
-import { createHmac } from "node:crypto";
 import { onError } from "@orpc/server";
 import { RPCHandler } from "@orpc/server/fetch";
 import type {
@@ -59,6 +58,8 @@ import {
   InMemoryJobQueue,
   InMemoryRealtimeFanout,
   installedMessaging,
+  invitationLinks,
+  invitationRecipientSecret,
   isMessagingSurfaceEnabled,
   MeetingCalendarService,
   MeetingService,
@@ -99,6 +100,7 @@ import {
   createAuth,
   createDirectory,
   isBlockedAuthPath,
+  organizationInvitationSender,
   publicSignInProviders,
 } from "@rakazo/auth";
 import type { Actor, AuthCapabilities, ModelCredential } from "@rakazo/contracts";
@@ -733,6 +735,12 @@ async function buildApp(overrides: CreateAppOverrides): Promise<AppHandles> {
       artifacts,
       secretStore: secrets,
       secretHttp: remoteConnectors,
+      invitations: (() => {
+        const links = invitationLinks(invitationRecipientSecret(env.authSecret), env.webOrigin);
+        // The Members screen's email path, so a bot's approved invite is emailed the same way.
+        const send = organizationInvitationSender({ prisma, email, onEmailError });
+        return send ? { ...links, email: send } : links;
+      })(),
       notifications,
       jobs,
       events,
@@ -936,9 +944,7 @@ async function buildApp(overrides: CreateAppOverrides): Promise<AppHandles> {
       webOrigin: env.webOrigin,
       privacyPolicyUrl: env.privacyPolicyUrl,
       screenProxySecret: env.screenProxySecret,
-      invitationRecipientKey: createHmac("sha256", env.authSecret)
-        .update("organization-invitation-recipient")
-        .digest("hex"),
+      invitationRecipientKey: invitationRecipientSecret(env.authSecret),
       sandboxProvider: env.sandboxProvider,
       gitSha: env.gitSha,
       integrationsCatalogUrl: env.integrationsCatalogUrl,

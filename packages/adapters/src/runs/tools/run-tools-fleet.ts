@@ -1,11 +1,19 @@
 import { BotSettingsValuesSchema } from "@rakazo/contracts";
 import {
+  AlreadyOrganizationMemberError,
   appendEventInTransaction,
   commitBotUpdate,
+  createOrganizationInvitation,
   createSpaceForMember,
   InstructionConflictError,
   InvalidSpaceNameError,
+  IsolationError,
+  isOrganizationManager,
   isRecordNotFound,
+  normalizeEmail,
+  OrganizationAdminRequiredError,
+  OrganizationInvitationLimitError,
+  OrganizationInvitationRateError,
   recordAuditEvent,
   runAsSystem,
   SpaceLimitError,
@@ -13,6 +21,7 @@ import {
   writeBotInstructions,
 } from "@rakazo/db";
 import { bestEffort, getLogger } from "@rakazo/logging";
+import { z } from "zod";
 import { uncertainEffectResult } from "../../approvals/approval-effect.js";
 import { archiveSpawnedBot, spawnBot } from "../../bots/child-bots.js";
 import {
@@ -141,6 +150,45 @@ async function commitOwnInstructions(
   return { ok: true };
 }
 
+/** The address rule rpc.organizations.invitations.create accepts. */
+const INVITE_EMAIL = z.email().max(254);
+
+/** The invite address as invite_member stores it, or undefined when it is not a valid one. */
+export function inviteEmail(value: unknown): string | undefined {
+  const raw = String(value ?? "").trim();
+  return INVITE_EMAIL.safeParse(raw).success ? normalizeEmail(raw) : undefined;
+}
+
+/**
+ * The run's organization, whether this user may invite there, and whether a live invite to this
+ * address is waiting. Only an owner or admin learns about pending invites.
+ */
+export function pendingInvitation(
+  prisma: RunContext["deps"]["prisma"],
+  run: { spaceId: string; userId: string },
+  email: string,
+): Promise<{ organizationId: string; manager: boolean; pending: boolean }> {
+  // Members and invitations sit outside the run's tenant, as for the Members screen.
+  return runAsSystem("look up a pending invite for a bot", async () => {
+    const { organizationId } = await prisma.space.findUniqueOrThrow({
+      where: { id: run.spaceId },
+      select: { organizationId: true },
+    });
+    const manager = await isOrganizationManager(prisma, organizationId, run.userId);
+    const pending =
+      manager &&
+      Boolean(
+        await prisma.invitation.findFirst({
+          where: { organizationId, email, status: "pending", expiresAt: { gt: new Date() } },
+          select: { id: true },
+        }),
+      );
+    return { organizationId, manager, pending };
+  });
+}
+
+export const INVITE_ADMIN_ERROR = "Only the organization's owner or an admin can invite people.";
+
 /** This bot's own settings, Spaces and the bots this bot manages. */
 export const fleetTools: ToolHandlers = {
   async create_space(ctx, call) {
@@ -174,6 +222,73 @@ export const fleetTools: ToolHandlers = {
       if (error instanceof SpaceLimitError || error instanceof InvalidSpaceNameError) {
         return call.finish({ error: error.message });
       }
+      throw error;
+    }
+  },
+  async invite_member(ctx, call) {
+    const { deps, run, bot } = ctx;
+    // The same check as the Members screen's invite: rpc.organizations.invitations.create.
+    const email = inviteEmail(call.args.email);
+    if (!email) return call.finish({ error: "That is not a valid email address." });
+    if (!deps.invitations) return call.finish({ error: "Invites are not available here." });
+    const { webOrigin, recipientKey, email: sendEmail } = deps.invitations;
+    try {
+      const { organizationId, pending } = await pendingInvitation(deps.prisma, run, email);
+      // Owner and admins only, checked in the same transaction that creates the invite; the
+      // daily limit per address applies as on the Members screen.
+      const invitation = await runAsSystem("invite someone to an organization for a bot", () =>
+        createOrganizationInvitation(deps.prisma, {
+          organizationId,
+          userId: run.userId,
+          email,
+          sendsEmail: Boolean(sendEmail),
+          recipientKey,
+        }),
+      );
+      if (invitation.created) {
+        await recordAuditEvent({
+          action: "organization.invitation.created",
+          actor: { type: "bot", id: bot.id, label: bot.name },
+          organizationId,
+          target: { type: "invitation", id: invitation.id },
+          runId: run.id,
+          threadId: run.threadId,
+        });
+        await bestEffort(
+          "announce an invitation a bot created",
+          deps.events.publishOrganizationChange?.(organizationId),
+        );
+      }
+      const url = new URL(`/join/${invitation.id}`, webOrigin).toString();
+      const emailed =
+        invitation.send && sendEmail
+          ? await sendEmail({ inviterId: run.userId, invitation, url })
+          : false;
+      const replacedPending = pending && invitation.created;
+      const notes = [
+        emailed
+          ? `The invite was emailed to ${invitation.email}. You can also send them this link.`
+          : "No email was sent. Give this link to the person you invited.",
+        ...(replacedPending ? ["The earlier invite link for this address no longer works."] : []),
+      ];
+      return call.finish({
+        ok: true,
+        email: invitation.email,
+        url,
+        emailed,
+        note: notes.join(" "),
+        ...(replacedPending ? { replacedPending: true } : {}),
+      });
+    } catch (error) {
+      if (error instanceof OrganizationAdminRequiredError || error instanceof IsolationError)
+        return call.finish({ error: INVITE_ADMIN_ERROR });
+      if (error instanceof AlreadyOrganizationMemberError)
+        return call.finish({ error: `${email} is already a member of this organization.` });
+      if (
+        error instanceof OrganizationInvitationLimitError ||
+        error instanceof OrganizationInvitationRateError
+      )
+        return call.finish({ error: error.message });
       throw error;
     }
   },

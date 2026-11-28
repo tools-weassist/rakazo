@@ -137,3 +137,22 @@ describe("template setup and dates", () => {
     }
   });
 });
+
+describe("VA invite question", () => {
+  it.each(["delegation-coach", "night-shift-handoff", "va-onboarding-kit"])(
+    "%s asks for the VA's email right after their name, in plain Wea copy",
+    (id) => {
+      const lines = findBotTemplate(id)?.instructions.split("\n") ?? [];
+      const first = lines.findIndex((line) => line.startsWith("1. "));
+      expect(lines[first], id).toMatch(/name/i);
+      const next = lines[first + 1] ?? "";
+      expect(next, id).toMatch(/^2\. .*VA's email address, so I can invite them to Wea\./);
+      expect(
+        lines.some((line) => line.includes("invite_member")),
+        id,
+      ).toBe(true);
+      const added = [next, ...lines.filter((line) => line.includes("invite_member"))].join("\n");
+      expect(added, id).not.toMatch(/[\u2013\u2014]| - |!|WeAssist/);
+    },
+  );
+});

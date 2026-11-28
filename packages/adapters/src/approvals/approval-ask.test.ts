@@ -249,6 +249,44 @@ describe("buildApprovalAskBlock", () => {
     if (block.kind !== "ask") throw new Error("expected ask block");
     expect(block.detail).toContain("stay separate from other spaces");
   });
+
+  it("asks to create an invite with only create or cancel", () => {
+    const block = buildApprovalAskBlock(
+      "effect-1",
+      "invite_member",
+      { email: "ana@example.com" },
+      [],
+    );
+
+    expect(block).toMatchObject({
+      kind: "ask",
+      text: "Invite ana@example.com to your organization?",
+      actions: [
+        { id: "allow", label: "Create invite", outcome: "created" },
+        { id: "deny", label: "Cancel", outcome: "cancelled" },
+      ],
+    });
+    if (block.kind !== "ask") throw new Error("expected ask block");
+    expect(block.actions?.map((action) => action.id)).not.toContain("always");
+    expect(block.detail).toContain(
+      "Sends ana@example.com an invite by email when email is on. Otherwise you get a link to send.",
+    );
+    expect(block.detail).not.toContain("pending");
+  });
+
+  it("warns before approval that the invite cancels a pending one, without listing the flag", () => {
+    const block = buildApprovalAskBlock(
+      "effect-1",
+      "invite_member",
+      { email: "ana@example.com", replaces_pending_invite: true },
+      [],
+    );
+    if (block.kind !== "ask") throw new Error("expected ask block");
+    expect(block.detail).toContain(
+      "This address already has a pending invite. Approving cancels the earlier invite link for this address.",
+    );
+    expect(block.detail).not.toMatch(/replaces/i);
+  });
 });
 
 it("shows the instruction change as a line diff with Apply and Dismiss", () => {

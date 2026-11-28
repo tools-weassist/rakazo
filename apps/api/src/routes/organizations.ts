@@ -1,5 +1,5 @@
 import { ORPCError } from "@orpc/server";
-import { organizationInvitationEmail } from "@rakazo/auth";
+import { organizationInvitationEmail, sendInvitationEmail } from "@rakazo/auth";
 import {
   acceptOrganizationInvitation,
   cancelOrganizationInvitation,
@@ -21,7 +21,7 @@ import {
 } from "@rakazo/db";
 import { bestEffort } from "@rakazo/logging";
 import { deleteOrganization } from "../account/account-deletion.js";
-import { invitationRecipientKey, sendInvitationEmail } from "../email/invitation-email.js";
+import { invitationRecipientKey } from "../email/invitation-email.js";
 import type { RouterDeps } from "../router.js";
 import { afterSpaceDeparture } from "../spaces/space-departure.js";
 import type { RouterContext } from "./context.js";

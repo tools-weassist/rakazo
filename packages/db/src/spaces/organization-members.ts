@@ -128,6 +128,16 @@ async function memberRole(
   return member ? organizationRole(member.role) : null;
 }
 
+/** Whether this user may invite people: the owner or an admin, as requireManager checks. */
+export async function isOrganizationManager(
+  db: Pick<PrismaClient, "member">,
+  organizationId: string,
+  userId: string,
+): Promise<boolean> {
+  const role = await memberRole(db, organizationId, userId);
+  return role !== null && role !== "member";
+}
+
 /** Throws `IsolationError` for a non-member, so the organization's existence stays private. */
 async function requireManager(
   db: Pick<PrismaClient, "member">,

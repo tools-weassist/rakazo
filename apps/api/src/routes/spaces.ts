@@ -1,5 +1,5 @@
 import { ORPCError } from "@orpc/server";
-import { spaceInvitationEmail } from "@rakazo/auth";
+import { sendInvitationEmail, spaceInvitationEmail } from "@rakazo/auth";
 import type { Actor, SpaceNavigation } from "@rakazo/contracts";
 import type { createGroupRepos, createRepos, PrismaClient } from "@rakazo/db";
 import {
@@ -29,7 +29,7 @@ import {
 } from "@rakazo/db";
 import { hasChatHistory } from "../account/first-bot.js";
 import { otherSpaceOfBot, otherSpaceOfGroup } from "../bots/bot-space.js";
-import { invitationRecipientKey, sendInvitationEmail } from "../email/invitation-email.js";
+import { invitationRecipientKey } from "../email/invitation-email.js";
 import type { RouterDeps } from "../router.js";
 import { listRoutinesDto } from "../routines/routines.js";
 import { deleteSpaceWithContent } from "../spaces/space-deletion.js";

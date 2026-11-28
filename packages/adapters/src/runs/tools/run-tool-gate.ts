@@ -391,6 +391,7 @@ export async function gateToolCall(
           guardedInNeverAsk && mode === "never"
             ? !ctx.source.ownerStartedRun || (await isRunTainted(ctx))
             : undefined,
+        askInNeverAsk: name === "invite_member",
         consequential: requiresApprovalByDefault,
         reviewOnly,
         checkerConfigured,
