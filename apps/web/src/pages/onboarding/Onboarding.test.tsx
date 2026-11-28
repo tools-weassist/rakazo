@@ -126,7 +126,7 @@ it("goes back from the model step to the questions with the answers kept", async
   );
   const click = async (name: string) => act(async () => buttonNamed(name)!.click());
   // Chief's hello, then the name screen prefilled from the account.
-  await click("Continue");
+  await click("Let's go!");
   expect(
     document.querySelector<HTMLInputElement>('input[aria-label="Your first name"]')?.value,
   ).toBe("Survey");
