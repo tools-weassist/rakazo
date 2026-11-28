@@ -269,7 +269,7 @@ describe("buildApprovalAskBlock", () => {
     if (block.kind !== "ask") throw new Error("expected ask block");
     expect(block.actions?.map((action) => action.id)).not.toContain("always");
     expect(block.detail).toContain(
-      "Creates an invite link. It is also emailed when this server sends email.",
+      "Sends ana@example.com an invite by email when email is on. Otherwise you get a link to send.",
     );
     expect(block.detail).not.toContain("pending");
   });
@@ -283,7 +283,7 @@ describe("buildApprovalAskBlock", () => {
     );
     if (block.kind !== "ask") throw new Error("expected ask block");
     expect(block.detail).toContain(
-      "This address already has a pending invite. Approving cancels that earlier link.",
+      "This address already has a pending invite. Approving cancels the earlier invite link for this address.",
     );
     expect(block.detail).not.toMatch(/replaces/i);
   });

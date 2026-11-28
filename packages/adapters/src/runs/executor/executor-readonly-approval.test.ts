@@ -54,6 +54,23 @@ vi.mock("../../tools/fleet-tools.js", async (importOriginal) => ({
   createFleetGroup: createFleetGroupMock,
 }));
 
+// Invites need organization tables; the gate is what this file checks, not the create itself.
+const inviteDb = vi.hoisted(() => ({
+  createOrganizationInvitation: vi.fn(async (_prisma: unknown, input: { email: string }) => ({
+    id: "inv-1",
+    email: input.email,
+    organizationName: "Acme",
+    inviterName: "Owner",
+    created: true,
+    send: false,
+  })),
+  isOrganizationManager: vi.fn(async () => true),
+}));
+vi.mock("@rakazo/db", async (importOriginal) => ({
+  ...(await importOriginal<object>()),
+  ...inviteDb,
+}));
+
 const reviewMock = vi.fn();
 const autoReviewProvider: AutoReviewProvider = {
   describe: () => ({
@@ -117,7 +134,10 @@ function fixture({
   browser,
   spendingLimit = null,
   memoryProvider,
+  invitations,
 }: {
+  /** What invite_member needs; without it the tool is not offered. */
+  invitations?: { webOrigin: string; recipientKey: (email: string) => string };
   /** The Space's semantic memory provider; none by default. */
   memoryProvider?: Record<string, unknown>;
   /** A page browser on a graphical computer, so browser_act and computer_act are offered. */
@@ -654,6 +674,7 @@ function fixture({
     shutdownSignal,
     web,
     userDevices,
+    invitations,
   } as unknown as Parameters<typeof createRunExecutor>[0]);
   return {
     prisma: transactionalPrisma,
@@ -1718,6 +1739,97 @@ describe("create_space", () => {
     expect(f.pauseRunForInput).not.toHaveBeenCalled();
     expect(f.effects).toHaveLength(1);
     expect(f.effects[0]?.status).not.toBe("intended");
+  });
+});
+
+describe("invite_member", () => {
+  const invitations = {
+    webOrigin: "https://app.example.com",
+    recipientKey: (email: string) => `k:${email}`,
+  };
+  function inviteFixture(options: Parameters<typeof fixture>[0] = {}) {
+    const f = fixture({ name: "invite_member", builtin: true, invitations, ...options });
+    Object.assign(f.prisma.space, {
+      findUniqueOrThrow: vi.fn(async () => ({ organizationId: "org-1" })),
+    });
+    Object.assign(f.prisma, { invitation: { findFirst: vi.fn(async () => ({ id: "inv-0" })) } });
+    f.setCalls([{ args: { email: " Ana@Example.com " }, executionId: "call-1" }]);
+    return f;
+  }
+  beforeEach(() => {
+    inviteDb.createOrganizationInvitation.mockClear();
+    inviteDb.isOrganizationManager.mockClear();
+  });
+
+  it.each([
+    ["Ask", {}],
+    ["Auto", { autoReview: true }],
+  ])("creates nothing until the owner approves on a card in %s", async (_mode, options) => {
+    const f = inviteFixture(options);
+    await f.run();
+    expect(f.offeredTools()).toContain("invite_member");
+    expect(f.pauseRunForInput).toHaveBeenCalledOnce();
+    expect(inviteDb.createOrganizationInvitation).not.toHaveBeenCalled();
+    expect(f.effects).toHaveLength(1);
+    expect(f.effects[0]?.status).toBe("intended");
+    // The card's request is the resolved one, with the pending warning set before approval.
+    expect(f.effects[0]?.request).toEqual({
+      email: "ana@example.com",
+      replaces_pending_invite: true,
+    });
+  });
+
+  it("runs without a card in Never ask, as every other explicit-approval tool does", async () => {
+    // planActionGate: Never ask allows everything but a block or a steerable call.
+    const f = inviteFixture({ skipApprovals: true });
+    await f.run();
+    expect(f.pauseRunForInput).not.toHaveBeenCalled();
+    expect(inviteDb.createOrganizationInvitation).toHaveBeenCalledOnce();
+  });
+
+  it("creates the invite once after approval and returns the link", async () => {
+    const f = inviteFixture();
+    await f.run();
+    expect(inviteDb.createOrganizationInvitation).not.toHaveBeenCalled();
+    f.effects[0]!.status = "approved";
+    f.setCalls([{ args: { email: "someone-else@example.com" }, executionId: "call-2" }]);
+    await f.run();
+    expect(inviteDb.createOrganizationInvitation).toHaveBeenCalledOnce();
+    expect(inviteDb.createOrganizationInvitation).toHaveBeenCalledWith(
+      expect.anything(),
+      expect.objectContaining({ email: "ana@example.com", organizationId: "org-1" }),
+    );
+    expect(f.results.at(-1)).toMatchObject({
+      ok: true,
+      url: "https://app.example.com/join/inv-1",
+      emailed: false,
+      replacedPending: true,
+    });
+    expect(f.pauseRunForInput).toHaveBeenCalledOnce();
+  });
+
+  it("creates nothing when the owner denies the card", async () => {
+    const f = inviteFixture();
+    await f.run();
+    f.effects[0]!.status = "denied";
+    await f.run();
+    expect(inviteDb.createOrganizationInvitation).not.toHaveBeenCalled();
+  });
+
+  it("is not offered without the invitations deps field, and its guidance is left out", async () => {
+    const f = fixture({ name: "invite_member", builtin: true });
+    f.setCalls([{ args: { email: "ana@example.com" }, executionId: "call-1" }]);
+    await f.run(true);
+    expect(f.offeredTools()).not.toContain("invite_member");
+    expect(f.instructions()).not.toContain("invite_member");
+    expect(inviteDb.createOrganizationInvitation).not.toHaveBeenCalled();
+    expect(f.pauseRunForInput).not.toHaveBeenCalled();
+  });
+
+  it("puts its guidance in the instructions when it is offered", async () => {
+    const f = inviteFixture();
+    await f.run();
+    expect(f.instructions()).toContain("invite_member invites someone");
   });
 });
 

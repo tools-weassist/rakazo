@@ -242,6 +242,7 @@ function modelTurnRequest(
           : disabledBuiltinTools,
       offeredFleetTools: offeredFleetTools(strategicBuiltins),
       followUpsOffered: followUpsOffered(strategicBuiltins, ownerStartedRun, run.trigger),
+      inviteMemberOffered: strategicBuiltins.some((tool) => tool.name === "invite_member"),
       backgroundHelpersAllowed: backgroundHelpersAllowed({
         trigger: run.trigger,
       }),

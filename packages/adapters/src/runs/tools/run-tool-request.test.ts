@@ -699,7 +699,7 @@ describe("prepareToolRequest: invite_member", () => {
     });
     const card = buildApprovalAskBlock("effect-1", "invite_member", prepared.args, []);
     if (card.kind !== "ask") throw new Error("expected ask block");
-    expect(card.detail).toContain("Approving cancels that earlier link.");
+    expect(card.detail).toContain("Approving cancels the earlier invite link for this address.");
   });
 
   it("refuses an invalid address before any card", async () => {

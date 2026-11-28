@@ -435,6 +435,8 @@ export function userTurnInstructions(parts: {
   offeredFleetTools?: readonly string[];
   /** The run can set its own follow-ups (see followUpsOffered). */
   followUpsOffered?: boolean;
+  /** The run was offered invite_member. */
+  inviteMemberOffered?: boolean;
   /** Whether this turn may start a background helper (only in the bot's own app chat). */
   backgroundHelpersAllowed?: boolean;
   userComputer?: UserComputerState;
@@ -457,11 +459,14 @@ export function userTurnInstructions(parts: {
       "create_space",
       "create_space proposes a new privacy boundary inside the current organization. Use it when the user asks to create a space or separate data between teams or projects. Never claim the space exists before the tool succeeds.",
     ),
-    offeredBuiltinClause(
-      parts.disabledBuiltinTools,
-      "invite_member",
-      "invite_member invites someone to the user's organization by email; the user approves each invite on a card first. The app sends no email, so give the user the returned link to send. Never claim the invite exists before the tool succeeds.",
-    ),
+    // Only where run-tool-selection offers it: the owner's own chat on a server with invites.
+    parts.inviteMemberOffered
+      ? offeredBuiltinClause(
+          parts.disabledBuiltinTools,
+          "invite_member",
+          "invite_member invites someone to the user's organization by email; the user approves each invite on a card first. When the result says no email was sent, give the user the returned link to send. Never claim the invite exists before the tool succeeds.",
+        )
+      : undefined,
     spawnBotClause(parts.disabledBuiltinTools),
     offeredBuiltinClause(
       parts.disabledBuiltinTools,

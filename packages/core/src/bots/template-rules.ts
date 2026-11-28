@@ -6,4 +6,4 @@ export const DATE_RULE =
 
 /** The VA's email turns into an organization invite only through invite_member's approval card. */
 export const VA_INVITE_RULE =
-  "- Once you have the VA's email address, invite them with invite_member. The owner approves the invite on a card, then give the owner the link to send. Never say the invite exists before it succeeds.";
+  "- Once you have the VA's email address, invite them with invite_member. The owner approves the invite on a card. If it was not emailed, give the owner the link to send. Never say the invite exists before it succeeds.";

@@ -153,7 +153,7 @@ export const fleetTools: ConnectorTool[] = [
   {
     name: "invite_member",
     description:
-      "Invite a person to the user's organization by email address, for example the VA the user just named. Nothing is created until the user approves the invite on a card. The app sends no email: give the user the returned link to send them.",
+      "Invite a person to the user's organization by email address, for example the VA the user just named. Nothing is created until the user approves the invite on a card. The invite is emailed when this server sends email; otherwise give the user the returned link to send them.",
     inputSchema: {
       type: "object",
       properties: {

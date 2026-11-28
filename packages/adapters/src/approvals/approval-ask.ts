@@ -337,9 +337,13 @@ function formatApprovalDetail(
     );
   }
   if (toolName === "invite_member") {
-    lines.push("Creates an invite link. It is also emailed when this server sends email.");
+    lines.push(
+      `Sends ${String(args.email ?? "")} an invite by email when email is on. Otherwise you get a link to send.`,
+    );
     if (args.replaces_pending_invite === true)
-      lines.push("This address already has a pending invite. Approving cancels that earlier link.");
+      lines.push(
+        "This address already has a pending invite. Approving cancels the earlier invite link for this address.",
+      );
   }
   // A fetch carries data in its path and query, so the card shows the whole URL.
   const shown = (values: Record<string, unknown>) =>
