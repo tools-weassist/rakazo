@@ -160,7 +160,7 @@ export async function message(
                   letterSpacing: "-0.5px",
                 }}
               >
-                rakazo
+                Wea
               </Text>
             )}
             {content}
