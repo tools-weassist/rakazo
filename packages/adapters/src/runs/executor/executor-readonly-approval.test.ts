@@ -1779,12 +1779,26 @@ describe("invite_member", () => {
     });
   });
 
-  it("runs without a card in Never ask, as every other explicit-approval tool does", async () => {
-    // planActionGate: Never ask allows everything but a block or a steerable call.
+  it("stops at the card in Never ask and creates nothing before approval", async () => {
     const f = inviteFixture({ skipApprovals: true });
     await f.run();
-    expect(f.pauseRunForInput).not.toHaveBeenCalled();
+    expect(f.pauseRunForInput).toHaveBeenCalledOnce();
+    expect(inviteDb.createOrganizationInvitation).not.toHaveBeenCalled();
+    expect(f.effects[0]?.status).toBe("intended");
+  });
+
+  it("creates once after approval in Never ask, and nothing after a deny", async () => {
+    const approved = inviteFixture({ skipApprovals: true });
+    await approved.run();
+    approved.effects[0]!.status = "approved";
+    await approved.run();
     expect(inviteDb.createOrganizationInvitation).toHaveBeenCalledOnce();
+    inviteDb.createOrganizationInvitation.mockClear();
+    const denied = inviteFixture({ skipApprovals: true });
+    await denied.run();
+    denied.effects[0]!.status = "denied";
+    await denied.run();
+    expect(inviteDb.createOrganizationInvitation).not.toHaveBeenCalled();
   });
 
   it("creates the invite once after approval and returns the link", async () => {

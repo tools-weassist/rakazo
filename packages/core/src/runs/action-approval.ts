@@ -792,6 +792,8 @@ export function planActionGate(input: {
   mandatory?: boolean;
   /** Never ask refuses it: the owner did not start this run, or outside content entered it. */
   steerable?: boolean;
+  /** Asks a person even in Never ask (a block or a steerable call still refuses it first). */
+  askInNeverAsk?: boolean;
   consequential: boolean;
   /**
    * A call outside content may have steered (a connector read, a memory or skill save, a routine
@@ -806,7 +808,9 @@ export function planActionGate(input: {
   purchase?: boolean;
 }): "ask" | "allow" | "judge" | "deny" {
   if (input.resolved.decision === "deny") return "deny";
-  if (input.mode === "never") return input.steerable ? "deny" : "allow";
+  if (input.mode === "never") {
+    return input.steerable ? "deny" : input.askInNeverAsk ? "ask" : "allow";
+  }
   if (input.purchase || input.mandatory) return "ask";
   if (input.resolved.decision === "ask") return "ask";
   const review = input.mode === "auto" && input.checkerConfigured ? "judge" : "ask";
