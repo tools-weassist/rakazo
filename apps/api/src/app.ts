@@ -100,7 +100,7 @@ import {
   createAuth,
   createDirectory,
   isBlockedAuthPath,
-  organizationInvitationEmail,
+  organizationInvitationSender,
   publicSignInProviders,
 } from "@rakazo/auth";
 import type { Actor, AuthCapabilities, ModelCredential } from "@rakazo/contracts";
@@ -166,7 +166,6 @@ import { storeInboundAttachment } from "./content/artifacts.js";
 import { mountSharedPages } from "./content/shared-pages.js";
 import { configuredEmailProvider } from "./email/email.js";
 import { mountEmailInboundRoute } from "./email/email-inbound.js";
-import { sendInvitationEmail } from "./email/invitation-email.js";
 import { lifecycleEmailScheduler } from "./email/lifecycle-email.js";
 import { marketingEmailRoutes, sendWelcomeEmail } from "./email/marketing-email.js";
 import { sendReferralEmails } from "./email/referral-email.js";
@@ -736,22 +735,12 @@ async function buildApp(overrides: CreateAppOverrides): Promise<AppHandles> {
       artifacts,
       secretStore: secrets,
       secretHttp: remoteConnectors,
-      invitations: {
-        ...invitationLinks(invitationRecipientSecret(env.authSecret), env.webOrigin),
+      invitations: (() => {
+        const links = invitationLinks(invitationRecipientSecret(env.authSecret), env.webOrigin);
         // The Members screen's email path, so a bot's approved invite is emailed the same way.
-        ...(email
-          ? {
-              email: ({ inviterId, invitation, url }) =>
-                sendInvitationEmail(
-                  { prisma, email, onEmailError },
-                  inviterId,
-                  invitation.email,
-                  (locale) =>
-                    organizationInvitationEmail(invitation.email, { ...invitation, url }, locale),
-                ),
-            }
-          : {}),
-      },
+        const send = organizationInvitationSender({ prisma, email, onEmailError });
+        return send ? { ...links, email: send } : links;
+      })(),
       notifications,
       jobs,
       events,

@@ -1,10 +1,13 @@
 import { setTimeout as sleep } from "node:timers/promises";
 import type { JobPublisher, JobQueueOrder, JobWorkerHost } from "@rakazo/adapter-kit";
+import { EmailRecipientRejectedError } from "@rakazo/adapter-kit";
 import { liveModelCatalogEnabled, unwrapEnvFromKeyManager } from "@rakazo/adapters";
 import { configuredMeetingMedia } from "@rakazo/adapters/meeting-media";
+import { organizationInvitationSender } from "@rakazo/auth";
 import { loadRootEnv } from "@rakazo/core/node/load-root-env";
 import { stopOnShutdownSignals } from "@rakazo/core/node/shutdown-signals";
 import { startWorkerHealth } from "./health.js";
+import { invitationEmailProvider } from "./invitation-email.js";
 import { createWorkerSecretStore } from "./secret-store.js";
 
 loadRootEnv();
@@ -265,6 +268,21 @@ async function main() {
           smtpUrl: process.env.SMTP_URL?.trim() || undefined,
         })
       : undefined;
+  // Invites read the API's mail settings without that switch, so a bot's approved invite is
+  // emailed whichever process runs it; incomplete settings mean a link, never a failed start.
+  const invitationEmail = invitationEmailProvider(process.env, () =>
+    logger.warn("Account email settings are incomplete; bot invites return a link only"),
+  );
+  const invitationLinkDeps = invitationLinksFromEnv(process.env);
+  const invitationSender = organizationInvitationSender({
+    prisma,
+    email: invitationEmail,
+    onEmailError: (error) => {
+      if (error instanceof EmailRecipientRejectedError) {
+        logger.warn("invitation email delivery failed", { "error.message": error.message });
+      } else logger.error("invitation email delivery failed", error);
+    },
+  });
   const lifecycleEmail = accountEmail
     ? createLifecycleEmailSender({ prisma, email: accountEmail, jobs, analytics })
     : undefined;
@@ -318,7 +336,10 @@ async function main() {
     onTicketChange: ticketChanges,
     // Bots use a separate sending connection from account email.
     email,
-    invitations: invitationLinksFromEnv(process.env),
+    invitations:
+      invitationLinkDeps && invitationSender
+        ? { ...invitationLinkDeps, email: invitationSender }
+        : invitationLinkDeps,
     lifecycleEmail,
     messaging,
     isMessagingInstallationActive: messagingInstallations
@@ -394,6 +415,7 @@ async function main() {
         // A bot's email still on its way finishes before the process exits.
         await email?.drain?.();
         await accountEmail?.drain?.();
+        await invitationEmail?.drain?.();
         await jobs.close();
         await secrets.close();
         await realtime.close();
