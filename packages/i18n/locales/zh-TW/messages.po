@@ -8742,6 +8742,10 @@ msgstr "向左"
 msgid "Let bots use this computer"
 msgstr "允許機器人使用這部電腦"
 
+#: apps/web/src/components/account/SignupSurvey.tsx
+msgid "Let's go!"
+msgstr ""
+
 #: apps/mobile/app/(settings)/general.tsx
 #: apps/web/src/pages/settings/AccountSettingsOverlay.tsx
 #: apps/web/src/pages/shell/use-palette-actions.ts

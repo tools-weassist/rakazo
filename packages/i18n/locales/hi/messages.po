@@ -8741,6 +8741,10 @@ msgstr "बाएँ"
 msgid "Let bots use this computer"
 msgstr "बॉट्स को यह कंप्यूटर उपयोग करने दें"
 
+#: apps/web/src/components/account/SignupSurvey.tsx
+msgid "Let's go!"
+msgstr ""
+
 #: apps/mobile/app/(settings)/general.tsx
 #: apps/web/src/pages/settings/AccountSettingsOverlay.tsx
 #: apps/web/src/pages/shell/use-palette-actions.ts

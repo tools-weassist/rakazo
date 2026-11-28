@@ -8735,6 +8735,10 @@ msgstr "ซ้าย"
 msgid "Let bots use this computer"
 msgstr "อนุญาตให้บอทใช้คอมพิวเตอร์เครื่องนี้"
 
+#: apps/web/src/components/account/SignupSurvey.tsx
+msgid "Let's go!"
+msgstr ""
+
 #: apps/mobile/app/(settings)/general.tsx
 #: apps/web/src/pages/settings/AccountSettingsOverlay.tsx
 #: apps/web/src/pages/shell/use-palette-actions.ts
